@@ -7,13 +7,20 @@ interface Props {
 }
 const { locale } = Astro.props;
 
-// Первое сообщение подставляется само — человеку остаётся дописать суть
-const tgText = encodeURIComponent(
+// Личные контакты на странице не показываются — единственный вход это форма.
+// Что произойдёт после отправки, человек должен понимать заранее.
+const afterSend =
   locale === 'ru'
-    ? 'Здравствуйте! Пишу с сайта. Задача: '
-    : 'Hello! Writing from your website. My task: ',
-);
-const tgLink = `${site.telegramUrl}?text=${tgText}`;
+    ? [
+        'Отвечаю в течение рабочего дня, обычно быстрее',
+        'На первом созвоне честно говорю, берусь или нет',
+        'Ваши данные никуда не передаются и не идут в рассылки',
+      ]
+    : [
+        'I reply within one business day, usually sooner',
+        'On the first call I tell you honestly whether I take it',
+        'Your details go nowhere else and into no mailing list',
+      ];
 
 const budgets =
   locale === 'ru'
@@ -28,26 +35,16 @@ const budgets =
       <h2 class="mt-6 text-big text-steel-50">{tr('contactTitle', locale)}</h2>
       <p class="mt-6 max-w-md text-[1.02rem] leading-relaxed text-steel-300">{tr('contactLead', locale)}</p>
 
-      <div class="mt-10 border-t border-steel-300/20 pt-8">
-        <p class="plate !text-steel-300">{tr('formOr', locale)}</p>
-        <div class="mt-4 space-y-3">
-          <a
-            href={`mailto:${site.email}`}
-            class="flex items-center gap-3 font-mono text-[0.95rem] text-steel-100 transition-colors hover:text-brass"
-          >
-            <span class="text-brass" aria-hidden="true">@</span>{site.email}
-          </a>
-          <a
-            href={tgLink}
-            rel="noopener"
-            target="_blank"
-            class="flex items-center gap-3 font-mono text-[0.95rem] text-steel-100 transition-colors hover:text-brass"
-          >
-            <span class="text-brass" aria-hidden="true">↗</span>
-            {locale === 'ru' ? 'Написать в Telegram' : 'Message me on Telegram'}
-          </a>
-        </div>
-      </div>
+      <ul class="mt-10 space-y-4 border-t border-steel-300/20 pt-8">
+        {
+          afterSend.map((line) => (
+            <li class="flex items-start gap-3 text-[0.95rem] leading-snug text-steel-300">
+              <span class="mt-2 h-1 w-1 shrink-0 bg-brass" aria-hidden="true" />
+              {line}
+            </li>
+          ))
+        }
+      </ul>
     </div>
 
     <form
@@ -55,7 +52,8 @@ const budgets =
       class="grid gap-5 border border-steel-300/25 bg-ink-800 p-6 md:p-9"
       data-endpoint={site.formEndpoint}
       data-key={site.formAccessKey}
-      data-mail={site.email}
+      data-mail={site.formAccessKey ? undefined : site.email}
+      data-relay={site.telegramRelay || undefined}
       novalidate
     >
       <div class="grid gap-5 sm:grid-cols-2">
@@ -142,10 +140,27 @@ const budgets =
       status.style.color = ok ? 'var(--color-moss-200)' : '#e0885f';
     };
 
+    // Заявка уходит в Telegram параллельно с почтой. Ошибка одного канала
+    // не должна ронять отправку — поэтому результат не ждём и не проверяем здесь.
+    const relay = form.dataset.relay;
+    const toTelegram = () => {
+      if (!relay) return;
+      const payload = Object.fromEntries(data.entries());
+      fetch(relay, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      }).catch(() => {
+        /* канал не обязателен: письмо на почту всё равно уйдёт */
+      });
+    };
+
     // Ключ задан — отправляем в фоне, посетителю ничего делать не нужно.
     if (key && endpoint) {
       btn.disabled = true;
       btn.textContent = ru ? 'Отправляю…' : 'Sending…';
+      toTelegram();
       try {
         const name = String(data.get('name') ?? '').trim();
         const contact = String(data.get('contact') ?? '').trim();
@@ -167,6 +182,8 @@ const budgets =
       }
       return;
     }
+
+    toTelegram();
 
     // Запасной путь без сервера: открываем почтовый клиент с готовым письмом.
     const body = [
