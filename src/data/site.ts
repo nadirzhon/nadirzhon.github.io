@@ -7,8 +7,8 @@ export const site = {
   brandMark: 'AN',
   domain: 'autonoma.studio',
   email: 'anodirzon4@gmail.com',
-  telegram: '@your_telegram', // ← заменить
-  telegramUrl: 'https://t.me/your_telegram', // ← заменить
+  telegram: '@NEF4R1US',
+  telegramUrl: 'https://t.me/NEF4R1US',
   phone: '', // необязательно
   city: 'Санкт-Петербург',
   cityEn: 'Saint Petersburg',
