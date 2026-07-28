@@ -1,0 +1,174 @@
+---
+import type { Locale } from '../data/site';
+import { tr, painPoints } from '../data/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+// Сетка недели: 7 строк × 24 часа. Рабочие часы человека — пн–пт, 09:00–17:00.
+const days =
+  locale === 'ru' ? ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'] : ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+const week = days.map((d, di) =>
+  Array.from({ length: 24 }, (_, hi) => ({ day: d, human: di < 5 && hi >= 9 && hi < 17 })),
+);
+---
+
+<section class="border-b border-slate-1/20 py-20 md:py-28">
+  <div class="shell">
+    <div class="reveal grid gap-6 md:grid-cols-[auto_1fr] md:gap-14">
+      <p class="plate md:pt-3">{tr('painPlate', locale)}</p>
+      <div>
+        <h2 class="text-big">{tr('painTitle', locale)}</h2>
+        <p class="mt-5 max-w-2xl text-[1.02rem] leading-relaxed text-slate-2">{tr('painLead', locale)}</p>
+      </div>
+    </div>
+
+    <div class="mt-14 grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      <!-- Симптомы: отмечаются кликом -->
+      <ul id="pain-list" data-stagger class="border-t border-slate-1/25">
+        {
+          painPoints.map((p) => (
+            <li class="border-b border-slate-1/25">
+              <label class="group flex cursor-pointer items-start gap-4 py-4">
+                <input type="checkbox" class="peer sr-only" />
+                <span
+                  aria-hidden="true"
+                  class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center border border-slate-1/50 transition-all duration-200 group-hover:border-ink peer-checked:border-brass peer-checked:bg-brass"
+                >
+                  <span class="tick text-[0.7rem] leading-none font-bold text-ink">✓</span>
+                </span>
+                <span class="text-[0.98rem] leading-snug text-slate-2 transition-colors peer-checked:text-ink">
+                  {p[locale]}
+                </span>
+              </label>
+            </li>
+          ))
+        }
+      </ul>
+
+      <!-- Итог отметок + шкала недели -->
+      <div class="reveal flex flex-col gap-8">
+        <div id="pain-score" class="border border-slate-1/30 bg-steel-100/60 p-6">
+          <div class="flex items-baseline justify-between gap-4">
+            <span class="plate">{locale === 'ru' ? 'Отмечено' : 'Checked'}</span>
+            <span class="font-display text-[2.2rem] leading-none font-bold">
+              <span id="pain-count" class="text-brass">0</span><span class="text-slate-1"
+                >/{painPoints.length}</span
+              >
+            </span>
+          </div>
+          <div class="mt-4 h-1.5 w-full bg-slate-1/20">
+            <div id="pain-bar" class="h-full w-0 bg-brass transition-[width] duration-500 ease-out"></div>
+          </div>
+          <p id="pain-verdict" class="mt-5 text-[0.95rem] leading-relaxed text-slate-2">
+            {tr('painFooter', locale)}
+          </p>
+        </div>
+
+        <figure class="border border-slate-1/30 bg-steel-100/60 p-4 sm:p-5">
+          <figcaption class="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <span class="plate">168 {locale === 'ru' ? 'часов в неделе' : 'hours a week'}</span>
+            <span class="flex items-center gap-4 font-mono text-[0.65rem] tracking-wider">
+              <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 bg-ink"></span>{tr('clockHuman', locale)} 40</span>
+              <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 bg-brass"></span>{tr('clockSystem', locale)} 168</span>
+            </span>
+          </figcaption>
+
+          <div class="space-y-[3px]">
+            {
+              week.map((row, di) => (
+                <div class="flex items-center gap-2">
+                  <span class="w-7 shrink-0 font-mono text-[0.6rem] tracking-wider text-slate-1">{row[0].day}</span>
+                  <div class="grid flex-1 grid-cols-24 gap-[3px]">
+                    {row.map((cell, hi) => (
+                      <span
+                        class:list={['hour-cell aspect-square', cell.human ? 'bg-ink' : 'bg-brass/45']}
+                        style={`--d:${(di * 24 + hi) * 4}ms`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+
+          <p class="mt-4 border-t border-slate-1/20 pt-3 text-[0.78rem] leading-snug text-slate-1">
+            {tr('clockCaption', locale)}
+          </p>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid-cols-24 {
+    grid-template-columns: repeat(24, minmax(0, 1fr));
+  }
+
+  /* Галочка живёт внутри рамки, поэтому её состояние задаём вручную */
+  .tick {
+    transform: scale(0);
+    transition: transform 0.2s var(--ease-station);
+  }
+  input:checked ~ span .tick {
+    transform: scale(1);
+  }
+
+  /* Ячейки заполняются, когда шкала появляется на экране */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal .hour-cell {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    .reveal.is-in .hour-cell {
+      animation: cell-in 0.4s var(--ease-station) forwards;
+      animation-delay: var(--d);
+    }
+    @keyframes cell-in {
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+</style>
+
+<script>
+  const list = document.getElementById('pain-list');
+  const count = document.getElementById('pain-count');
+  const bar = document.getElementById('pain-bar');
+  const verdict = document.getElementById('pain-verdict');
+
+  if (list && count && bar && verdict) {
+    const boxes = Array.from(list.querySelectorAll<HTMLInputElement>('input[type=checkbox]'));
+    const ru = document.documentElement.lang === 'ru';
+    const base = verdict.textContent ?? '';
+
+    const say = (n: number) => {
+      if (n === 0) return base;
+      if (n <= 2)
+        return ru
+          ? 'Два симптома — это ещё не система. Но именно с них она обычно и начинается: через год их будет шесть.'
+          : 'Two symptoms is not yet a system. It is how one usually starts, though — in a year there will be six.';
+      if (n <= 4)
+        return ru
+          ? 'Четыре — это уже не мелочи. Посчитайте ниже, во что обходится ручная работа за год, прежде чем нанимать ещё одного человека.'
+          : 'Four is past the point of small stuff. Work out below what manual work costs per year before hiring another person.';
+      return ru
+        ? 'Больше половины. Вы уже платите за автоматизацию — зарплатой, переработками и потерянными заявками. Разница только в том, что эти деньги не возвращаются.'
+        : 'More than half. You already pay for automation — in salaries, overtime and lost leads. The difference is that money never comes back.';
+    };
+
+    const update = () => {
+      const n = boxes.filter((b) => b.checked).length;
+      count.textContent = String(n);
+      bar.style.width = `${(n / boxes.length) * 100}%`;
+      verdict.textContent = say(n);
+    };
+
+    boxes.forEach((b) => b.addEventListener('change', update));
+  }
+</script>

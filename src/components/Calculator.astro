@@ -29,7 +29,10 @@ const outputs = [
 const ctaHref = locale === 'ru' ? '/#kontakt' : '/en/#contact';
 ---
 
-<section class="on-dark relative overflow-hidden bg-ink py-20 text-steel-100 md:py-28">
+<section
+  id={locale === 'ru' ? 'raschet' : 'calculator'}
+  class="on-dark relative scroll-mt-20 overflow-hidden bg-ink py-20 text-steel-100 md:py-28"
+>
   <div class="rule-ticks absolute top-0 right-0 left-0 opacity-25"></div>
 
   <div class="shell">

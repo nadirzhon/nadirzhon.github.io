@@ -1,7 +1,7 @@
 ---
 import type { Locale } from '../data/site';
 import { tr } from '../data/i18n';
-import { services, type Service } from '../data/services';
+import { orderedServices, type Service } from '../data/services';
 
 interface Props {
   service: Service;
@@ -13,7 +13,7 @@ const home = locale === 'ru' ? '/' : '/en/';
 const contact = locale === 'ru' ? '/#kontakt' : '/en/#contact';
 const fmt = (n: number) =>
   locale === 'ru' ? `${n.toLocaleString('ru-RU')} ₽` : `€${Math.round(n / 100).toLocaleString('en-US')}`;
-const others = services.filter((o) => o.code !== s.code);
+const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
 ---
 
 <article>

@@ -1,0 +1,87 @@
+---
+/**
+ * Слой движения для всей страницы: инерционный скролл, появление блоков,
+ * счётчики цифр и параллакс. Всё выключается при prefers-reduced-motion.
+ */
+---
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!reduce) {
+    (async () => {
+      const [{ default: Lenis }, { gsap }, { ScrollTrigger }] = await Promise.all([
+        import('lenis'),
+        import('gsap'),
+        import('gsap/ScrollTrigger'),
+      ]);
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // --- Инерционный скролл: главный источник ощущения «дорого» ---
+      const lenis = new Lenis({ duration: 1.05, smoothWheel: true, touchMultiplier: 1.6 });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((t) => lenis.raf(t * 1000));
+      gsap.ticker.lagSmoothing(0);
+
+      // Якорные ссылки должны попадать в цель через Lenis, а не мимо
+      document.querySelectorAll<HTMLAnchorElement>('a[href*="#"]').forEach((a) => {
+        const url = new URL(a.href, location.href);
+        if (url.pathname !== location.pathname || url.hash.length < 2) return;
+        a.addEventListener('click', (e) => {
+          const target = document.querySelector(url.hash);
+          if (!target) return;
+          e.preventDefault();
+          lenis.scrollTo(target as HTMLElement, { offset: -70, duration: 1.3 });
+        });
+      });
+
+      // --- Строки списков идут волной, а не все разом ---
+      document.querySelectorAll<HTMLElement>('[data-stagger]').forEach((group) => {
+        gsap.fromTo(
+          group.children,
+          { y: 26, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: 'power3.out',
+            stagger: 0.055,
+            scrollTrigger: { trigger: group, start: 'top 86%', once: true },
+          },
+        );
+      });
+
+      // --- Цифры досчитываются на глазах ---
+      document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
+        const raw = el.textContent ?? '';
+        const num = parseFloat(raw.replace(/[^\d.,]/g, '').replace(/\s/g, '').replace(',', '.'));
+        if (!isFinite(num)) return;
+        const prefix = raw.slice(0, raw.search(/[\d]/));
+        const suffix = raw.slice(raw.search(/[\d]/) + String(num).length);
+        const obj = { v: 0 };
+        gsap.to(obj, {
+          v: num,
+          duration: 1.6,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+          onUpdate: () => {
+            const shown = num % 1 === 0 ? Math.round(obj.v).toLocaleString(document.documentElement.lang) : obj.v.toFixed(1);
+            el.textContent = prefix + shown + suffix;
+          },
+        });
+      });
+
+      // --- Лёгкий параллакс тёмных секций ---
+      document.querySelectorAll<HTMLElement>('[data-parallax]').forEach((el) => {
+        gsap.fromTo(
+          el,
+          { yPercent: -4 },
+          { yPercent: 4, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 0.6 } },
+        );
+      });
+
+      ScrollTrigger.refresh();
+    })();
+  }
+</script>
