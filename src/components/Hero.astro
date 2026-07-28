@@ -1,5 +1,5 @@
 ---
-import type { Locale } from '../data/site';
+import { url, type Locale } from '../data/site';
 import { tr } from '../data/i18n';
 import ParticleField from './ParticleField.astro';
 
@@ -8,8 +8,8 @@ interface Props {
 }
 const { locale } = Astro.props;
 
-const ctaPrimary = locale === 'ru' ? '/#raschet' : '/en/#calculator';
-const ctaSecond = locale === 'ru' ? '/#uslugi' : '/en/#services';
+const ctaPrimary = url(locale === 'ru' ? '/#raschet' : '/en/#calculator');
+const ctaSecond = url(locale === 'ru' ? '/#uslugi' : '/en/#services');
 
 // Разбиваем заголовок на слова — каждое всплывает отдельно
 const lines = [tr('heroLine1', locale), tr('heroLine2', locale), tr('heroLine3', locale)];

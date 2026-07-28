@@ -1,4 +1,5 @@
 ---
+import { url } from '../../data/site';
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { tr } from '../../data/i18n';
@@ -18,7 +19,7 @@ const d = item.data;
     <header class="border-b border-slate-1/20 py-14 md:py-20">
       <div class="shell">
         <nav class="flex items-center gap-2 font-mono text-[0.7rem] tracking-widest text-slate-1 uppercase">
-          <a href="/keysy/" class="transition-colors hover:text-ink">{tr('casesAll', 'ru')}</a>
+          <a href={url("/keysy/")} class="transition-colors hover:text-ink">{tr('casesAll', 'ru')}</a>
           <span aria-hidden="true">/</span><span>{d.year}</span>
         </nav>
 
@@ -59,7 +60,7 @@ const d = item.data;
       <div class="prose"><Content /></div>
 
       <div class="mt-16 border-t border-slate-1/25 pt-10">
-        <a href="/#kontakt" class="btn btn-primary">{tr('navContact', 'ru')} <span aria-hidden="true">→</span></a>
+        <a href={url("/#kontakt")} class="btn btn-primary">{tr('navContact', 'ru')} <span aria-hidden="true">→</span></a>
       </div>
     </div>
   </article>

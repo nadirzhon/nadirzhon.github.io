@@ -1,4 +1,5 @@
 ---
+import { url } from '../../data/site';
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { tr } from '../../data/i18n';
@@ -17,7 +18,7 @@ const date = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', y
 <Base locale="ru" altPath="/en/journal/" title={d.title} description={d.description} ogType="article">
   <article class="shell py-14 md:py-20">
     <nav class="flex items-center gap-2 font-mono text-[0.7rem] tracking-widest text-slate-1 uppercase">
-      <a href="/blog/" class="transition-colors hover:text-ink">{tr('blogBack', 'ru')}</a>
+      <a href={url("/blog/")} class="transition-colors hover:text-ink">{tr('blogBack', 'ru')}</a>
       <span aria-hidden="true">/</span><span>{date}</span>
       <span aria-hidden="true">/</span><span>{d.readingTime} {tr('minRead', 'ru')}</span>
     </nav>
@@ -35,7 +36,7 @@ const date = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', y
         Если у вас похожая задача — молчаливые отказы, рутина, которую пора отдать машине, или система, которую страшно
         трогать, — расскажите о ней. Первый разговор бесплатный и ни к чему не обязывает.
       </p>
-      <a href="/#kontakt" class="btn btn-primary mt-6">Обсудить задачу <span aria-hidden="true">→</span></a>
+      <a href={url("/#kontakt")} class="btn btn-primary mt-6">Обсудить задачу <span aria-hidden="true">→</span></a>
     </aside>
   </article>
 </Base>

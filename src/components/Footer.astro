@@ -1,5 +1,5 @@
 ---
-import { site, type Locale } from '../data/site';
+import { site, url, type Locale } from '../data/site';
 import { tr } from '../data/i18n';
 import { orderedServices } from '../data/services';
 
@@ -35,7 +35,7 @@ const base = locale === 'ru' ? '/uslugi' : '/en/services';
           orderedServices.map((s) => (
             <li>
               <a
-                href={`${base}/${s.slug[locale]}/`}
+                href={url(`${base}/${s.slug[locale]}/`)}
                 class="text-[0.9rem] text-steel-200 transition-colors hover:text-brass"
               >
                 {s.title[locale]}
@@ -51,25 +51,25 @@ const base = locale === 'ru' ? '/uslugi' : '/en/services';
       <ul class="mt-4 space-y-2.5">
         <li>
           <a
-            href={locale === 'ru' ? '/keysy/' : '/en/work/'}
+            href={url(locale === 'ru' ? '/keysy/' : '/en/work/')}
             class="text-[0.9rem] transition-colors hover:text-brass">{tr('navCases', locale)}</a
           >
         </li>
         <li>
           <a
-            href={locale === 'ru' ? '/blog/' : '/en/journal/'}
+            href={url(locale === 'ru' ? '/blog/' : '/en/journal/')}
             class="text-[0.9rem] transition-colors hover:text-brass">{tr('navBlog', locale)}</a
           >
         </li>
         <li>
           <a
-            href={locale === 'ru' ? '/#ceny' : '/en/#pricing'}
+            href={url(locale === 'ru' ? '/#ceny' : '/en/#pricing')}
             class="text-[0.9rem] transition-colors hover:text-brass">{tr('navPrices', locale)}</a
           >
         </li>
         <li>
           <a
-            href={locale === 'ru' ? '/#kontakt' : '/en/#contact'}
+            href={url(locale === 'ru' ? '/#kontakt' : '/en/#contact')}
             class="text-[0.9rem] transition-colors hover:text-brass">{tr('navContact', locale)}</a
           >
         </li>

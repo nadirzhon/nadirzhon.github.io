@@ -9,8 +9,8 @@ const { locale } = Astro.props;
 
 const budgets =
   locale === 'ru'
-    ? ['до 250 000 ₽', '250 000 — 600 000 ₽', '600 000 — 1 500 000 ₽', 'больше 1 500 000 ₽', 'пока не знаю']
-    : ['under €2,500', '€2,500 — €6,000', '€6,000 — €15,000', 'over €15,000', 'not sure yet'];
+    ? ['до 100 000 ₽', '100 000 — 300 000 ₽', '300 000 — 700 000 ₽', 'больше 700 000 ₽', 'пока не знаю']
+    : ['under €1,000', '€1,000 — €3,000', '€3,000 — €7,000', 'over €7,000', 'not sure yet'];
 ---
 
 <section id={locale === 'ru' ? 'kontakt' : 'contact'} class="on-dark scroll-mt-20 bg-ink py-20 text-steel-100 md:py-28">

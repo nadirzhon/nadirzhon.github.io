@@ -1,4 +1,5 @@
 ---
+import { url } from '../data/site';
 import Base from '../layouts/Base.astro';
 ---
 
@@ -10,8 +11,8 @@ import Base from '../layouts/Base.astro';
       Ссылка устарела или в адресе опечатка. С главной можно дойти до всего остального.
     </p>
     <div class="mt-9 flex flex-wrap gap-3">
-      <a href="/" class="btn btn-primary">На главную</a>
-      <a href="/keysy/" class="btn btn-ghost">Кейсы</a>
+      <a href={url("/")} class="btn btn-primary">На главную</a>
+      <a href={url("/keysy/")} class="btn btn-ghost">Кейсы</a>
     </div>
   </section>
 </Base>
