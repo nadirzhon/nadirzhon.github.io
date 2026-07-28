@@ -5,7 +5,7 @@
 export const site = {
   brand: 'AUTONOMA',
   brandMark: 'AN',
-  domain: 'autonoma.studio',
+  domain: 'nadirzhon.github.io',
   email: 'anodirzon4@gmail.com',
   telegram: '@NEF4R1US',
   telegramUrl: 'https://t.me/NEF4R1US',
