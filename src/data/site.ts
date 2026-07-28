@@ -29,6 +29,11 @@ export const site = {
    */
   formAccessKey: '53dc5b82-fa67-40b1-a143-509c185829c6',
   formEndpoint: 'https://api.web3forms.com/submit',
+  /**
+   * Дублирование заявок в Telegram. Пока пусто — заявки идут только на почту.
+   * Как включить за десять минут: worker/README.md
+   */
+  telegramRelay: '',
 } as const;
 
 export type Locale = 'ru' | 'en';
