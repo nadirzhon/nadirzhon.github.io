@@ -20,9 +20,9 @@ npm run preview  # посмотреть собранное
 |---|---|
 | `brand`, `brandMark` | Название и две буквы в логотипе |
 | `domain` | Домен без протокола |
-| `email`, `telegram`, `telegramUrl` | Контакты. **Telegram сейчас заглушка** |
+| `email`, `telegram`, `telegramUrl` | Контакты |
 | `city` / `cityEn` | Город в подвале |
-| `formEndpoint`, `formAccessKey` | Приём заявок, см. ниже |
+| `formAccessKey` | Ключ приёма заявок, см. ниже |
 
 Ещё два места с доменом: `astro.config.mjs` (поле `site` — от него строятся sitemap и canonical) и `public/robots.txt`.
 
@@ -66,17 +66,17 @@ npm run preview  # посмотреть собранное
 
 ## Публикация
 
-Сайт статический, подойдёт любой хостинг. Самый быстрый путь — Vercel:
+Сайт уже опубликован на GitHub Pages: **https://nadirzhon.github.io/studio-site/**
+Каждый `git push` в `main` пересобирает и выкладывает его — вручную ничего запускать не нужно.
 
-```bash
-npx vercel        # первый раз спросит про проект
-npx vercel --prod # выложить
-```
+Адрес берётся из окружения (`SITE_URL`, `BASE_PATH` в `.github/workflows/deploy.yml`), а все внутренние
+ссылки идут через `url()` из `site.ts`. Поэтому переезд на свой домен — это правка двух строк в workflow
+и запись CNAME у регистратора, без единого изменения в коде.
 
-Netlify: `npx netlify deploy --prod --dir=dist` (перед этим `npm run build`).
-Свой сервер: соберите `npm run build` и положите содержимое `dist/` в корень nginx.
+Другие варианты, если понадобятся: `npx vercel --prod` или `npx netlify deploy --prod --dir=dist`
+(перед этим `npm run build`); свой сервер — положить содержимое `dist/` в корень nginx.
 
-После первой публикации подключите домен в панели хостинга и добавьте сайт в
+После подключения домена добавьте сайт в
 [Яндекс.Вебмастер](https://webmaster.yandex.ru) и [Google Search Console](https://search.google.com/search-console) —
 карта сайта уже генерируется по адресу `/sitemap-index.xml`.
 
