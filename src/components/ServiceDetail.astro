@@ -1,0 +1,117 @@
+---
+import type { Locale } from '../data/site';
+import { tr } from '../data/i18n';
+import { services, type Service } from '../data/services';
+
+interface Props {
+  service: Service;
+  locale: Locale;
+}
+const { service: s, locale } = Astro.props;
+const base = locale === 'ru' ? '/uslugi' : '/en/services';
+const home = locale === 'ru' ? '/' : '/en/';
+const contact = locale === 'ru' ? '/#kontakt' : '/en/#contact';
+const fmt = (n: number) =>
+  locale === 'ru' ? `${n.toLocaleString('ru-RU')} ₽` : `€${Math.round(n / 100).toLocaleString('en-US')}`;
+const others = services.filter((o) => o.code !== s.code);
+---
+
+<article>
+  <!-- Заголовок -->
+  <section class="border-b border-slate-1/20 py-14 md:py-20">
+    <div class="shell">
+      <nav class="flex items-center gap-2 font-mono text-[0.7rem] tracking-widest text-slate-1 uppercase">
+        <a href={home} class="transition-colors hover:text-ink">{tr('backHome', locale)}</a>
+        <span aria-hidden="true">/</span>
+        <span>{s.code}</span>
+      </nav>
+
+      <div class="mt-8 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+        <div>
+          <h1 class="text-big">{s.title[locale]}</h1>
+          <p class="mt-4 font-display text-[1.15rem] leading-snug font-medium text-brass md:text-[1.35rem]">
+            {s.tagline[locale]}
+          </p>
+          <p class="mt-7 max-w-2xl text-[1.02rem] leading-relaxed text-slate-2">{s.intro[locale]}</p>
+          <a href={contact} class="btn btn-primary mt-9">{tr('navContact', locale)} <span aria-hidden="true">→</span></a>
+        </div>
+
+        <aside class="self-start border border-slate-1/30 bg-steel-100/60">
+          <dl class="divide-y divide-slate-1/20">
+            <div class="px-6 py-5">
+              <dt class="plate">{tr('serviceFrom', locale)}</dt>
+              <dd class="mt-2 font-display text-[1.7rem] font-bold">{fmt(s.priceFrom)}</dd>
+            </div>
+            <div class="px-6 py-5">
+              <dt class="plate">{tr('serviceTerm', locale)}</dt>
+              <dd class="mt-2 text-[0.95rem] text-slate-2">{s.timeline[locale]}</dd>
+            </div>
+            <div class="px-6 py-5">
+              <dt class="plate">{tr('serviceWho', locale)}</dt>
+              <dd class="mt-2 text-[0.95rem] leading-relaxed text-slate-2">{s.forWhom[locale]}</dd>
+            </div>
+            <div class="px-6 py-5">
+              <dt class="plate">{tr('serviceStack', locale)}</dt>
+              <dd class="mt-3 flex flex-wrap gap-1.5">
+                {
+                  s.stack.map((x) => (
+                    <span class="border border-slate-1/30 px-2 py-1 font-mono text-[0.66rem] text-slate-1">{x}</span>
+                  ))
+                }
+              </dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Что получаете -->
+  <section class="border-b border-slate-1/20 py-16 md:py-24">
+    <div class="shell grid gap-8 md:grid-cols-[auto_1fr] md:gap-14">
+      <p class="plate md:pt-3">{tr('serviceGet', locale)}</p>
+      <ul class="max-w-3xl divide-y divide-slate-1/20 border-y border-slate-1/20">
+        {
+          s.deliverables[locale].map((d, i) => (
+            <li class="reveal flex gap-6 py-5">
+              <span class="font-mono text-[0.75rem] text-brass">{String(i + 1).padStart(2, '0')}</span>
+              <span class="text-[1rem] leading-relaxed text-slate-2">{d}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {
+    s.caveat && (
+      <section class="on-dark bg-ink py-14 text-steel-100 md:py-16">
+        <div class="shell grid gap-6 md:grid-cols-[auto_1fr] md:gap-14">
+          <p class="plate !text-brass md:pt-1">{tr('serviceHonest', locale)}</p>
+          <p class="max-w-3xl text-[1.02rem] leading-relaxed text-steel-200">{s.caveat[locale]}</p>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Соседние услуги -->
+  <section class="border-t border-slate-1/20 py-16 md:py-20">
+    <div class="shell">
+      <p class="plate">{tr('servicesPlate', locale)}</p>
+      <ul class="mt-7 grid gap-px bg-slate-1/25 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          others.map((o) => (
+            <li>
+              <a href={`${base}/${o.slug[locale]}/`} class="group block h-full bg-steel-50 p-6 transition-colors hover:bg-ink">
+                <span class="font-mono text-[0.7rem] tracking-widest text-slate-1 group-hover:text-brass">{o.code}</span>
+                <span class="mt-3 block font-display text-[1.05rem] leading-tight font-bold group-hover:text-steel-50">
+                  {o.title[locale]}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</article>

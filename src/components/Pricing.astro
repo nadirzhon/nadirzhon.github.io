@@ -1,0 +1,73 @@
+---
+import type { Locale } from '../data/site';
+import { tr, packages } from '../data/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const cta = locale === 'ru' ? '/#kontakt' : '/en/#contact';
+---
+
+<section id={locale === 'ru' ? 'ceny' : 'pricing'} class="scroll-mt-20 border-b border-slate-1/20 py-20 md:py-28">
+  <div class="shell">
+    <div class="reveal grid gap-6 md:grid-cols-[auto_1fr] md:gap-14">
+      <p class="plate md:pt-3">{tr('pricePlate', locale)}</p>
+      <div>
+        <h2 class="text-big">{tr('priceTitle', locale)}</h2>
+        <p class="mt-5 max-w-2xl text-[1.02rem] leading-relaxed text-slate-2">{tr('priceLead', locale)}</p>
+      </div>
+    </div>
+
+    <div class="mt-14 grid gap-px bg-slate-1/25 lg:grid-cols-3">
+      {
+        packages.map((p) => (
+          <div
+            class:list={[
+              'reveal flex flex-col p-7 md:p-9',
+              p.accent ? 'bg-ink text-steel-100 on-dark' : 'bg-steel-50',
+            ]}
+          >
+            <div class="flex items-center justify-between">
+              <span class:list={['plate', p.accent && '!text-brass']}>{p.code}</span>
+              {p.accent && (
+                <span class="border border-brass px-2 py-0.5 font-mono text-[0.62rem] tracking-widest text-brass uppercase">
+                  {locale === 'ru' ? 'чаще всего' : 'most chosen'}
+                </span>
+              )}
+            </div>
+
+            <h3 class:list={['mt-5 text-[1.5rem]', p.accent && 'text-steel-50']}>{p.name[locale]}</h3>
+
+            <p class:list={['mt-4 font-display text-[1.9rem] font-bold', p.accent ? 'text-brass' : 'text-ink']}>
+              {p.price[locale]}
+            </p>
+            <p class:list={['font-mono text-[0.7rem] tracking-widest uppercase', p.accent ? 'text-steel-300' : 'text-slate-1']}>
+              {p.unit[locale]}
+            </p>
+
+            <p class:list={['mt-5 text-[0.92rem] leading-relaxed', p.accent ? 'text-steel-200' : 'text-slate-2']}>
+              {p.for[locale]}
+            </p>
+
+            <ul class:list={['mt-7 flex-1 space-y-3 border-t pt-6', p.accent ? 'border-steel-300/25' : 'border-slate-1/25']}>
+              {p.items[locale].map((i) => (
+                <li class="flex gap-3 text-[0.9rem] leading-snug">
+                  <span class:list={['mt-2 h-1 w-1 shrink-0', p.accent ? 'bg-brass' : 'bg-moss']} aria-hidden="true" />
+                  <span class={p.accent ? 'text-steel-200' : 'text-slate-2'}>{i}</span>
+                </li>
+              ))}
+            </ul>
+
+            <a
+              href={cta}
+              class:list={['btn mt-8 justify-center', p.accent ? '!border-brass !bg-brass !text-ink hover:!bg-brass-200' : 'btn-ghost']}
+            >
+              {tr('priceCta', locale)}
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

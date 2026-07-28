@@ -1,0 +1,117 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site, type Locale } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  /** Путь этой же страницы на другом языке */
+  altPath: string;
+  ogType?: string;
+}
+
+const { title, description, locale, altPath, ogType = 'website' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const full = `${title} — ${site.brand}`;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{full}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={locale === 'ru' ? 'en' : 'ru'} href={new URL(altPath, Astro.site).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site).href} />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={full} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={locale === 'ru' ? 'ru_RU' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#121611" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    />
+
+    <noscript>
+      <style>
+        .reveal {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+        .hour-cell {
+          opacity: 1 !important;
+          transform: none !important;
+          animation: none !important;
+        }
+      </style>
+    </noscript>
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ProfessionalService',
+        name: site.brand,
+        description,
+        url: `https://${site.domain}`,
+        email: site.email,
+        areaServed: ['RU', 'EU', 'Worldwide'],
+        knowsAbout: [
+          'AI automation',
+          'Algorithmic trading infrastructure',
+          'Web development',
+          'Backend engineering',
+          'iOS and Android development',
+        ],
+      })}
+    />
+  </head>
+
+  <body>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-ink focus:px-4 focus:py-2 focus:text-steel-50"
+    >
+      {locale === 'ru' ? 'К содержанию' : 'Skip to content'}
+    </a>
+
+    <Header locale={locale} altPath={altPath} />
+    <main id="main"><slot /></main>
+    <Footer locale={locale} />
+
+    <script>
+      // Появление секций при скролле — один наблюдатель на страницу.
+      const targets = document.querySelectorAll('.reveal');
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        targets.forEach((el) => el.classList.add('is-in'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -12% 0px', threshold: 0.05 },
+        );
+        targets.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>

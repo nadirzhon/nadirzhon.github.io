@@ -1,0 +1,170 @@
+---
+import { site, type Locale } from '../data/site';
+import { tr } from '../data/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const budgets =
+  locale === 'ru'
+    ? ['до 250 000 ₽', '250 000 — 600 000 ₽', '600 000 — 1 500 000 ₽', 'больше 1 500 000 ₽', 'пока не знаю']
+    : ['under €2,500', '€2,500 — €6,000', '€6,000 — €15,000', 'over €15,000', 'not sure yet'];
+---
+
+<section id={locale === 'ru' ? 'kontakt' : 'contact'} class="on-dark scroll-mt-20 bg-ink py-20 text-steel-100 md:py-28">
+  <div class="shell grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+    <div>
+      <p class="plate !text-brass">{tr('contactPlate', locale)}</p>
+      <h2 class="mt-6 text-big text-steel-50">{tr('contactTitle', locale)}</h2>
+      <p class="mt-6 max-w-md text-[1.02rem] leading-relaxed text-steel-300">{tr('contactLead', locale)}</p>
+
+      <div class="mt-10 border-t border-steel-300/20 pt-8">
+        <p class="plate !text-steel-300">{tr('formOr', locale)}</p>
+        <div class="mt-4 space-y-3">
+          <a
+            href={`mailto:${site.email}`}
+            class="flex items-center gap-3 font-mono text-[0.95rem] text-steel-100 transition-colors hover:text-brass"
+          >
+            <span class="text-brass" aria-hidden="true">@</span>{site.email}
+          </a>
+          <a
+            href={site.telegramUrl}
+            rel="noopener"
+            class="flex items-center gap-3 font-mono text-[0.95rem] text-steel-100 transition-colors hover:text-brass"
+          >
+            <span class="text-brass" aria-hidden="true">↗</span>Telegram {site.telegram}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <form
+      id="brief-form"
+      class="grid gap-5 border border-steel-300/25 bg-ink-800 p-6 md:p-9"
+      data-endpoint={site.formEndpoint}
+      data-key={site.formAccessKey}
+      data-mail={site.email}
+      novalidate
+    >
+      <div class="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label for="f-name" class="plate !text-steel-300">{tr('formName', locale)}</label>
+          <input id="f-name" name="name" type="text" required class="field" autocomplete="name" />
+        </div>
+        <div>
+          <label for="f-contact" class="plate !text-steel-300">{tr('formContact', locale)}</label>
+          <input id="f-contact" name="contact" type="text" required class="field" autocomplete="email" />
+        </div>
+      </div>
+
+      <div>
+        <label for="f-budget" class="plate !text-steel-300">{tr('formBudget', locale)}</label>
+        <select id="f-budget" name="budget" class="field">
+          {budgets.map((b) => <option value={b}>{b}</option>)}
+        </select>
+      </div>
+
+      <div>
+        <label for="f-task" class="plate !text-steel-300">{tr('formTask', locale)}</label>
+        <textarea id="f-task" name="task" rows="5" required class="field resize-y" placeholder={tr('formTaskHint', locale)}
+        ></textarea>
+      </div>
+
+      <!-- Ловушка для ботов -->
+      <input type="text" name="company_website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+
+      <button type="submit" class="btn !border-brass !bg-brass !text-ink justify-center hover:!bg-brass-200">
+        {tr('formSend', locale)}
+      </button>
+
+      <p id="form-status" role="status" aria-live="polite" class="hidden font-mono text-[0.8rem] text-moss-200"></p>
+      <p class="text-[0.76rem] leading-relaxed text-steel-300/60">{tr('formPrivacy', locale)}</p>
+    </form>
+  </div>
+</section>
+
+<style>
+  .field {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.75rem 0.9rem;
+    background: var(--color-ink);
+    border: 1px solid color-mix(in oklab, var(--color-steel-300) 30%, transparent);
+    color: var(--color-steel-50);
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease;
+  }
+  .field::placeholder {
+    color: color-mix(in oklab, var(--color-steel-300) 55%, transparent);
+  }
+  .field:focus {
+    border-color: var(--color-brass);
+    outline: none;
+  }
+  .field:user-invalid {
+    border-color: #b4522f;
+  }
+</style>
+
+<script>
+  const form = document.getElementById('brief-form') as HTMLFormElement | null;
+  const status = document.getElementById('form-status');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const data = new FormData(form);
+    if (data.get('company_website')) return; // бот
+
+    const ru = document.documentElement.lang === 'ru';
+    const endpoint = form.dataset.endpoint;
+    const key = form.dataset.key;
+    const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+
+    const show = (text: string, ok: boolean) => {
+      if (!status) return;
+      status.textContent = text;
+      status.classList.remove('hidden');
+      status.style.color = ok ? 'var(--color-moss-200)' : '#e0885f';
+    };
+
+    // Настоящая отправка — если в site.ts задан endpoint.
+    if (endpoint && key) {
+      btn.disabled = true;
+      btn.textContent = ru ? 'Отправляю…' : 'Sending…';
+      try {
+        data.append('access_key', key);
+        data.append('subject', ru ? 'Заявка с сайта' : 'New enquiry');
+        const res = await fetch(endpoint, { method: 'POST', body: data });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        show(ru ? 'Отправлено. Отвечу в течение рабочего дня.' : 'Sent. I’ll reply within one business day.', true);
+      } catch {
+        show(ru ? 'Не удалось отправить. Напишите напрямую — контакты слева.' : 'Sending failed. Write to me directly.', false);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = ru ? 'Отправить' : 'Send';
+      }
+      return;
+    }
+
+    // Запасной путь без сервера: открываем почтовый клиент с готовым письмом.
+    const body = [
+      `${ru ? 'Имя' : 'Name'}: ${data.get('name')}`,
+      `${ru ? 'Связь' : 'Contact'}: ${data.get('contact')}`,
+      `${ru ? 'Бюджет' : 'Budget'}: ${data.get('budget')}`,
+      '',
+      String(data.get('task') ?? ''),
+    ].join('\n');
+
+    window.location.href = `mailto:${form.dataset.mail}?subject=${encodeURIComponent(
+      ru ? 'Заявка с сайта' : 'New enquiry',
+    )}&body=${encodeURIComponent(body)}`;
+
+    show(ru ? 'Открыл почтовый клиент — осталось нажать «Отправить».' : 'Opened your mail client — just hit send.', true);
+  });
+</script>

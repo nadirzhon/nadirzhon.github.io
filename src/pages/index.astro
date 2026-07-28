@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Services from '../components/Services.astro';
+import Calculator from '../components/Calculator.astro';
+import Method from '../components/Method.astro';
+import CaseList from '../components/CaseList.astro';
+import Pricing from '../components/Pricing.astro';
+import Faq from '../components/Faq.astro';
+import Contact from '../components/Contact.astro';
+---
+
+<Base
+  locale="ru"
+  altPath="/en/"
+  title="Разработка систем, которые работают без вас"
+  description="Инженерная студия полного цикла: AI-автоматизация бизнеса, торговые и финтех-системы, сайты и веб-сервисы, бэкенд, мобильные приложения для iOS и Android. Фиксированная смета, код и доступы ваши с первого дня."
+>
+  <Hero locale="ru" />
+  <Services locale="ru" />
+  <Calculator locale="ru" />
+  <Method locale="ru" />
+  <CaseList locale="ru" limit={4} />
+  <Pricing locale="ru" />
+  <Faq locale="ru" />
+  <Contact locale="ru" />
+</Base>

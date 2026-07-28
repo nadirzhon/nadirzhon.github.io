@@ -1,0 +1,86 @@
+---
+import { site, type Locale } from '../data/site';
+import { tr } from '../data/i18n';
+import { services } from '../data/services';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const year = new Date().getFullYear();
+const base = locale === 'ru' ? '/uslugi' : '/en/services';
+---
+
+<footer class="on-dark bg-ink text-steel-200">
+  <div class="rule-ticks opacity-25"></div>
+  <div class="shell grid gap-10 py-16 md:grid-cols-[1.4fr_1fr_1fr] md:py-20">
+    <div>
+      <div class="flex items-center gap-2.5">
+        <span class="grid h-8 w-8 place-items-center border border-steel-300 font-mono text-[0.7rem] font-bold">
+          {site.brandMark}
+        </span>
+        <span class="font-display text-[0.95rem] font-bold text-steel-50">{site.brand}</span>
+      </div>
+      <p class="mt-5 max-w-xs text-[0.9rem] leading-relaxed text-steel-300">{tr('footerLine', locale)}</p>
+      <div class="mt-6 flex flex-wrap gap-2">
+        <a href={`mailto:${site.email}`} class="btn btn-ghost !px-4 !py-2">{site.email}</a>
+        <a href={site.telegramUrl} class="btn btn-ghost !px-4 !py-2" rel="noopener">Telegram</a>
+      </div>
+    </div>
+
+    <div>
+      <p class="plate !text-brass">{tr('navServices', locale)}</p>
+      <ul class="mt-4 space-y-2.5">
+        {
+          services.map((s) => (
+            <li>
+              <a
+                href={`${base}/${s.slug[locale]}/`}
+                class="text-[0.9rem] text-steel-200 transition-colors hover:text-brass"
+              >
+                {s.title[locale]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div>
+      <p class="plate !text-brass">{locale === 'ru' ? 'Разделы' : 'Sections'}</p>
+      <ul class="mt-4 space-y-2.5">
+        <li>
+          <a
+            href={locale === 'ru' ? '/keysy/' : '/en/work/'}
+            class="text-[0.9rem] transition-colors hover:text-brass">{tr('navCases', locale)}</a
+          >
+        </li>
+        <li>
+          <a
+            href={locale === 'ru' ? '/blog/' : '/en/journal/'}
+            class="text-[0.9rem] transition-colors hover:text-brass">{tr('navBlog', locale)}</a
+          >
+        </li>
+        <li>
+          <a
+            href={locale === 'ru' ? '/#ceny' : '/en/#pricing'}
+            class="text-[0.9rem] transition-colors hover:text-brass">{tr('navPrices', locale)}</a
+          >
+        </li>
+        <li>
+          <a
+            href={locale === 'ru' ? '/#kontakt' : '/en/#contact'}
+            class="text-[0.9rem] transition-colors hover:text-brass">{tr('navContact', locale)}</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-steel-300/15">
+    <div class="shell flex flex-col gap-2 py-6 font-mono text-[0.7rem] tracking-wider text-steel-300 sm:flex-row sm:justify-between">
+      <span>© {year} {site.brand}. {tr('footerRights', locale)}.</span>
+      <span>{locale === 'ru' ? site.city : site.cityEn}</span>
+    </div>
+  </div>
+</footer>

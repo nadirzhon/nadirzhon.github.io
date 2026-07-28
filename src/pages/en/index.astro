@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import Hero from '../../components/Hero.astro';
+import Services from '../../components/Services.astro';
+import Calculator from '../../components/Calculator.astro';
+import Method from '../../components/Method.astro';
+import CaseList from '../../components/CaseList.astro';
+import Pricing from '../../components/Pricing.astro';
+import Faq from '../../components/Faq.astro';
+import Contact from '../../components/Contact.astro';
+---
+
+<Base
+  locale="en"
+  altPath="/"
+  title="Software that runs without you"
+  description="Full-cycle engineering studio: AI automation, trading and fintech infrastructure, websites and web apps, backend systems, iOS and Android apps. Fixed quotes, and the code is yours from day one."
+>
+  <Hero locale="en" />
+  <Services locale="en" />
+  <Calculator locale="en" />
+  <Method locale="en" />
+  <CaseList locale="en" limit={4} />
+  <Pricing locale="en" />
+  <Faq locale="en" />
+  <Contact locale="en" />
+</Base>
