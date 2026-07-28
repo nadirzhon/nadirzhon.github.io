@@ -32,15 +32,24 @@ jobs:
       - name: Определить адрес сайта
         id: addr
         run: |
+          REPO='${{ github.event.repository.name }}'
+          OWNER='${{ github.repository_owner }}'
           if [ -f public/CNAME ]; then
+            # Свой домен — сайт лежит в корне
             DOMAIN=$(tr -d '[:space:]' < public/CNAME)
             echo "site=https://$DOMAIN" >> "$GITHUB_OUTPUT"
             echo "base=/" >> "$GITHUB_OUTPUT"
             echo "Свой домен: $DOMAIN"
+          elif [ "$REPO" = "$OWNER.github.io" ]; then
+            # Главный сайт пользователя — тоже в корне, без префикса
+            echo "site=https://$REPO" >> "$GITHUB_OUTPUT"
+            echo "base=/" >> "$GITHUB_OUTPUT"
+            echo "Главный сайт: https://$REPO"
           else
-            echo "site=https://${{ github.repository_owner }}.github.io" >> "$GITHUB_OUTPUT"
-            echo "base=/${{ github.event.repository.name }}/" >> "$GITHUB_OUTPUT"
-            echo "Адрес GitHub Pages по умолчанию"
+            # Обычный репозиторий — сайт лежит в подпапке с его именем
+            echo "site=https://$OWNER.github.io" >> "$GITHUB_OUTPUT"
+            echo "base=/$REPO/" >> "$GITHUB_OUTPUT"
+            echo "Проектная страница: https://$OWNER.github.io/$REPO/"
           fi
 
       - name: Сборка сайта

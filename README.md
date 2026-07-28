@@ -66,7 +66,7 @@ npm run preview  # посмотреть собранное
 
 ## Публикация
 
-Сайт уже опубликован на GitHub Pages: **https://nadirzhon.github.io/studio-site/**
+Сайт уже опубликован на GitHub Pages: **https://nadirzhon.github.io/**
 Каждый `git push` в `main` пересобирает и выкладывает его — вручную ничего запускать не нужно.
 
 ### Переезд на свой домен
