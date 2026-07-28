@@ -7,7 +7,10 @@ export const site = {
   brandMark: 'AN',
   domain: 'nadirzhon.github.io',
   email: 'anodirzon4@gmail.com',
-  telegram: '@NEF4R1US',
+  /**
+   * Ник нигде не показывается на странице — только адрес ссылки.
+   * Так его не собирают парсеры контактов и не растаскивают по спам-базам.
+   */
   telegramUrl: 'https://t.me/NEF4R1US',
   phone: '', // необязательно
   city: 'Санкт-Петербург',
