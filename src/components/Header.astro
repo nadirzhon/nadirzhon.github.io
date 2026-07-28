@@ -1,0 +1,101 @@
+---
+import { site, type Locale } from '../data/site';
+import { tr } from '../data/i18n';
+
+interface Props {
+  locale: Locale;
+  altPath: string;
+}
+const { locale, altPath } = Astro.props;
+const home = locale === 'ru' ? '/' : '/en/';
+
+const nav = [
+  { label: tr('navServices', locale), href: locale === 'ru' ? '/#uslugi' : '/en/#services' },
+  { label: tr('navCases', locale), href: locale === 'ru' ? '/keysy/' : '/en/work/' },
+  { label: tr('navMethod', locale), href: locale === 'ru' ? '/#metod' : '/en/#method' },
+  { label: tr('navPrices', locale), href: locale === 'ru' ? '/#ceny' : '/en/#pricing' },
+  { label: tr('navBlog', locale), href: locale === 'ru' ? '/blog/' : '/en/journal/' },
+];
+const contactHref = locale === 'ru' ? '/#kontakt' : '/en/#contact';
+---
+
+<header
+  id="site-header"
+  class="sticky top-0 z-40 border-b border-slate-1/20 bg-steel-50/85 backdrop-blur-md transition-shadow"
+>
+  <div class="shell flex h-16 items-center justify-between gap-4 md:h-[4.5rem]">
+    <a href={home} class="group flex items-center gap-2.5" aria-label={site.brand}>
+      <span
+        class="grid h-8 w-8 place-items-center border border-ink font-mono text-[0.7rem] font-bold tracking-tight transition-colors group-hover:bg-brass"
+      >
+        {site.brandMark}
+      </span>
+      <span class="font-display text-[0.95rem] font-bold tracking-[-0.02em]">{site.brand}</span>
+    </a>
+
+    <nav class="hidden items-center gap-7 lg:flex" aria-label={locale === 'ru' ? 'Основное меню' : 'Main'}>
+      {
+        nav.map((i) => (
+          <a
+            href={i.href}
+            class="relative py-1 text-[0.9rem] font-medium text-slate-2 transition-colors hover:text-ink after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-brass after:transition-all hover:after:w-full"
+          >
+            {i.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a
+        href={altPath}
+        class="border border-slate-1/40 px-2.5 py-1.5 font-mono text-[0.7rem] font-medium tracking-widest transition-colors hover:border-ink hover:bg-ink hover:text-steel-50"
+        hreflang={locale === 'ru' ? 'en' : 'ru'}
+      >
+        {tr('langSwitch', locale)}
+      </a>
+      <a href={contactHref} class="btn btn-primary hidden !px-4 !py-2.5 sm:inline-flex">
+        {tr('navContact', locale)}
+      </a>
+      <button
+        type="button"
+        id="menu-btn"
+        class="grid h-9 w-9 place-items-center border border-slate-1/40 lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        aria-label={locale === 'ru' ? 'Меню' : 'Menu'}
+      >
+        <span class="relative block h-px w-4 bg-ink before:absolute before:-top-1.5 before:h-px before:w-4 before:bg-ink
+          after:absolute after:top-1.5 after:h-px after:w-4 after:bg-ink"></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-nav" class="hidden border-t border-slate-1/20 bg-steel-50 lg:hidden">
+    <nav class="shell flex flex-col py-2">
+      {
+        nav.map((i) => (
+          <a href={i.href} class="border-b border-slate-1/15 py-3.5 text-[0.95rem] font-medium">
+            {i.label}
+          </a>
+        ))
+      }
+      <a href={contactHref} class="btn btn-primary my-4 justify-center">{tr('navContact', locale)}</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('menu-btn');
+  const panel = document.getElementById('mobile-nav');
+  btn?.addEventListener('click', () => {
+    const open = panel?.classList.toggle('hidden') === false;
+    btn.setAttribute('aria-expanded', String(open));
+  });
+  panel?.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => {
+      panel.classList.add('hidden');
+      btn?.setAttribute('aria-expanded', 'false');
+    }),
+  );
+</script>

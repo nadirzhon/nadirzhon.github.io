@@ -1,0 +1,20 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ServiceDetail from '../../../components/ServiceDetail.astro';
+import { services } from '../../../data/services';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug.en }, props: { service: s } }));
+}
+
+const { service } = Astro.props;
+---
+
+<Base
+  locale="en"
+  altPath={`/uslugi/${service.slug.ru}/`}
+  title={service.title.en}
+  description={`${service.tagline.en}. ${service.intro.en.slice(0, 130)}…`}
+>
+  <ServiceDetail service={service} locale="en" />
+</Base>

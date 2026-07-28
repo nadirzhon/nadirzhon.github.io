@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { tr } from '../../data/i18n';
+---
+
+<Base
+  locale="ru"
+  altPath="/en/journal/"
+  title="Инженерный журнал"
+  description="Разборы задач, ошибок и решений из практики: надёжность систем, автоматизация, торговая инфраструктура."
+>
+  <section class="border-b border-slate-1/20 py-14 md:py-20">
+    <div class="shell">
+      <p class="plate">{tr('blogPlate', 'ru')}</p>
+      <h1 class="mt-6 text-big">{tr('blogTitle', 'ru')}</h1>
+      <p class="mt-5 max-w-2xl text-[1.02rem] leading-relaxed text-slate-2">{tr('blogLead', 'ru')}</p>
+    </div>
+  </section>
+
+  <div class="shell py-14 md:py-16"><PostList locale="ru" /></div>
+</Base>

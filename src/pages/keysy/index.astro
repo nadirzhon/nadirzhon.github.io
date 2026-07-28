@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import CaseList from '../../components/CaseList.astro';
+import { tr } from '../../data/i18n';
+---
+
+<Base
+  locale="ru"
+  altPath="/en/work/"
+  title="Кейсы"
+  description="Разборы проектов: что было до, что построено, где было больно и что изменилось в цифрах."
+>
+  <section class="border-b border-slate-1/20 py-14 md:py-20">
+    <div class="shell">
+      <p class="plate">{tr('casesPlate', 'ru')}</p>
+      <h1 class="mt-6 text-big">{tr('casesTitle', 'ru')}</h1>
+      <p class="mt-5 max-w-2xl text-[1.02rem] leading-relaxed text-slate-2">
+        Каждый разбор устроен одинаково: задача, решение, место где было больно, результат. Цифры привожу только те,
+        которые может подтвердить клиент.
+      </p>
+    </div>
+  </section>
+  <CaseList locale="ru" showHeading={false} />
+</Base>

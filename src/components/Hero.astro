@@ -1,0 +1,130 @@
+---
+import type { Locale } from '../data/site';
+import { tr } from '../data/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+// Сетка недели: 7 строк × 24 часа. Рабочие часы человека — пн–пт, 09:00–17:00.
+const days =
+  locale === 'ru' ? ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'] : ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+const week = days.map((d, di) =>
+  Array.from({ length: 24 }, (_, hi) => ({ day: d, hour: hi, human: di < 5 && hi >= 9 && hi < 17 })),
+);
+const ctaPrimary = locale === 'ru' ? '/#kontakt' : '/en/#contact';
+const ctaSecond = locale === 'ru' ? '/keysy/' : '/en/work/';
+---
+
+<section class="relative overflow-hidden border-b border-slate-1/20">
+  <!-- Тонкая измерительная сетка на фоне -->
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 opacity-[0.055]"
+    style="background-image:linear-gradient(to right,#121611 1px,transparent 1px),linear-gradient(to bottom,#121611 1px,transparent 1px);background-size:clamp(48px,7vw,96px) clamp(48px,7vw,96px)"
+  >
+  </div>
+
+  <div class="shell relative grid min-w-0 gap-14 pt-14 pb-16 md:pt-20 lg:grid-cols-[1.18fr_0.82fr] lg:gap-16 lg:pt-24 lg:pb-24">
+    <div class="min-w-0">
+      <p class="plate flex items-center gap-3">
+        <span class="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-moss"></span>
+        {tr('heroPlate', locale)}
+      </p>
+
+      <h1 class="mt-7 text-mega">
+        <span class="block">{tr('heroLine1', locale)}</span>
+        <span class="block">{tr('heroLine2', locale)}</span>
+        <span class="mt-2 block sm:whitespace-nowrap">
+          {tr('heroLine3', locale)}
+          <span class="relative inline-block text-brass">
+            {tr('heroLine4', locale)}
+            <svg
+              class="absolute -bottom-1 left-0 w-full"
+              height="8"
+              viewBox="0 0 100 8"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path d="M0 6 Q 50 0 100 6" fill="none" stroke="#c89b3c" stroke-width="1.6" vector-effect="non-scaling-stroke"
+              ></path>
+            </svg>
+          </span>
+        </span>
+      </h1>
+
+      <p class="mt-8 max-w-xl text-[1.02rem] leading-relaxed text-slate-2 md:text-[1.08rem]">
+        {tr('heroSub', locale)}
+      </p>
+
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href={ctaPrimary} class="btn btn-primary">
+          {tr('heroCta', locale)}
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href={ctaSecond} class="btn btn-ghost">{tr('heroCta2', locale)}</a>
+      </div>
+    </div>
+
+    <!-- Сетка рабочей недели: 168 часов -->
+    <figure class="min-w-0 self-center">
+      <div class="border border-slate-1/30 bg-steel-100/60 p-4 sm:p-5">
+        <figcaption class="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <span class="plate">168 {locale === 'ru' ? 'часов в неделе' : 'hours a week'}</span>
+          <span class="flex items-center gap-4 font-mono text-[0.65rem] tracking-wider">
+            <span class="flex items-center gap-1.5"
+              ><span class="h-2.5 w-2.5 bg-ink"></span>{tr('clockHuman', locale)} 40</span
+            >
+            <span class="flex items-center gap-1.5"
+              ><span class="h-2.5 w-2.5 bg-brass"></span>{tr('clockSystem', locale)} 168</span
+            >
+          </span>
+        </figcaption>
+
+        <div class="space-y-[3px]">
+          {
+            week.map((row, di) => (
+              <div class="flex items-center gap-2">
+                <span class="w-7 shrink-0 font-mono text-[0.6rem] tracking-wider text-slate-1">{row[0].day}</span>
+                <div class="grid flex-1 grid-cols-24 gap-[3px]">
+                  {row.map((cell, hi) => (
+                    <span
+                      class:list={['hour-cell aspect-square', cell.human ? 'bg-ink' : 'bg-brass/45']}
+                      style={`--d:${(di * 24 + hi) * 5}ms`}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <p class="mt-4 border-t border-slate-1/20 pt-3 text-[0.78rem] leading-snug text-slate-1">
+          {tr('clockCaption', locale)}
+        </p>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .grid-cols-24 {
+    grid-template-columns: repeat(24, minmax(0, 1fr));
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hour-cell {
+      opacity: 0;
+      transform: scale(0.55);
+      animation: cell-in 0.42s var(--ease-station) forwards;
+      animation-delay: var(--d);
+    }
+    @keyframes cell-in {
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+</style>
