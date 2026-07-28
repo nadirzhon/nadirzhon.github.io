@@ -27,6 +27,17 @@ export const site = {
 
 export type Locale = 'ru' | 'en';
 
+/**
+ * Внутренняя ссылка с учётом того, где лежит сайт.
+ * На своём домене BASE_URL = '/', на GitHub Pages — '/имя-репозитория/'.
+ * Благодаря этому один и тот же код работает и там, и там.
+ */
+export function url(p: string): string {
+  if (!p.startsWith('/')) return p;
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  return `${base}${p}`;
+}
+
 /** Ссылка с учётом языка: /uslugi → /en/services */
 export function path(locale: Locale, ruPath: string, enPath: string) {
   return locale === 'ru' ? ruPath : `/en${enPath}`;

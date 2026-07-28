@@ -1,12 +1,12 @@
 ---
-import type { Locale } from '../data/site';
+import { url, type Locale } from '../data/site';
 import { tr, packages } from '../data/i18n';
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
-const cta = locale === 'ru' ? '/#kontakt' : '/en/#contact';
+const cta = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
 ---
 
 <section id={locale === 'ru' ? 'ceny' : 'pricing'} class="scroll-mt-20 border-b border-slate-1/20 py-20 md:py-28">

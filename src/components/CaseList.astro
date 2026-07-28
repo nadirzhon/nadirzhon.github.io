@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import type { Locale } from '../data/site';
+import { url, type Locale } from '../data/site';
 import { tr } from '../data/i18n';
 
 interface Props {
@@ -27,7 +27,7 @@ const base = locale === 'ru' ? '/keysy' : '/en/work';
           <div class="flex flex-wrap items-end justify-between gap-6">
             <h2 class="text-big">{tr('casesTitle', locale)}</h2>
             {limit && all.length > limit && (
-              <a href={`${base}/`} class="btn btn-ghost !py-2.5">
+              <a href={url(`${base}/`)} class="btn btn-ghost !py-2.5">
                 {tr('casesAll', locale)} <span aria-hidden="true">→</span>
               </a>
             )}
@@ -54,7 +54,7 @@ const base = locale === 'ru' ? '/keysy' : '/en/work';
               </div>
 
               <h3 class="mt-4 text-[1.4rem] leading-tight md:text-[1.65rem]">
-                <a href={`${base}/${c.id.replace(/-(ru|en)$/, '')}/`} class="after:absolute after:inset-0">
+                <a href={url(`${base}/${c.id.replace(/-(ru|en)$/, '')}/`)} class="after:absolute after:inset-0">
                   {c.data.title}
                 </a>
               </h3>

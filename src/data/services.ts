@@ -11,7 +11,12 @@ export type Service = {
   /** Кому подходит */
   forWhom: { ru: string; en: string };
   timeline: { ru: string; en: string };
+  /** Нижняя граница базового пакета */
   priceFrom: number;
+  /** Что входит в базовую цену — короткой строкой */
+  baseScope: { ru: string; en: string };
+  /** Допы: заказываются сверху базы, каждый со своей ценой */
+  addons: { title: { ru: string; en: string }; price: number }[];
   stack: string[];
   /** Честная оговорка, если она нужна */
   caveat?: { ru: string; en: string };
@@ -51,7 +56,18 @@ export const services: Service[] = [
       en: 'Companies where 2–15 people spend hours on identical operations: support, paperwork, recruiting, procurement, reporting.',
     },
     timeline: { ru: '3–6 недель до первого работающего контура', en: '3–6 weeks to the first working loop' },
-    priceFrom: 250000,
+    priceFrom: 120000,
+    baseScope: {
+      ru: 'Один процесс от начала до конца: разбор, сборка, запуск и месяц присмотра.',
+      en: 'One process end to end: analysis, build, launch and a month of watching it.',
+    },
+    addons: [
+      { title: { ru: 'Каждый следующий процесс в той же системе', en: 'Each additional process in the same system' }, price: 60000 },
+      { title: { ru: 'Панель контроля с историей и выгрузкой', en: 'Control panel with history and exports' }, price: 35000 },
+      { title: { ru: 'Интеграция с вашей CRM или 1С', en: 'Integration with your CRM or ERP' }, price: 40000 },
+      { title: { ru: 'Обучение команды и регламент на бумаге', en: 'Team training and a written playbook' }, price: 20000 },
+      { title: { ru: 'Присмотр и доработки после первого месяца', en: 'Support and tweaks beyond the first month' }, price: 25000 },
+    ],
     stack: ['Claude API', 'Python', 'LangGraph', 'Postgres', 'Redis', 'Docker'],
   },
   {
@@ -87,7 +103,18 @@ export const services: Service[] = [
       en: 'Service and retail businesses where repeat questions eat the working day, and a night-time reply decides whether the sale is yours.',
     },
     timeline: { ru: '2–4 недели до запуска', en: '2–4 weeks to launch' },
-    priceFrom: 180000,
+    priceFrom: 60000,
+    baseScope: {
+      ru: 'Бот в одном канале, обученный на ваших материалах, с приёмом заявок.',
+      en: 'A bot in one channel, trained on your material, taking enquiries.',
+    },
+    addons: [
+      { title: { ru: 'Каждый следующий канал: сайт, Telegram, WhatsApp', en: 'Each extra channel: site, Telegram, WhatsApp' }, price: 25000 },
+      { title: { ru: 'Голосовой ответ на звонки', en: 'Voice answering for phone calls' }, price: 70000 },
+      { title: { ru: 'Оплата и запись прямо в диалоге', en: 'Payments and booking inside the chat' }, price: 45000 },
+      { title: { ru: 'Панель диалогов и отчёт о вопросах', en: 'Conversation dashboard and question report' }, price: 30000 },
+      { title: { ru: 'Ежемесячное дообучение на новых диалогах', en: 'Monthly retraining on new conversations' }, price: 15000 },
+    ],
     stack: ['Claude API', 'Python', 'RAG', 'Telegram Bot API', 'Postgres', 'Redis'],
   },
   {
@@ -123,7 +150,18 @@ export const services: Service[] = [
       en: 'Traders with their own strategy, small funds, and fintech teams who need the engineering, not signals.',
     },
     timeline: { ru: '6–12 недель в зависимости от числа площадок', en: '6–12 weeks depending on venue count' },
-    priceFrom: 600000,
+    priceFrom: 300000,
+    baseScope: {
+      ru: 'Контур под одну площадку: данные, исполнение, учёт, риск-лимиты, мониторинг.',
+      en: 'A loop for one venue: data, execution, accounting, risk limits, monitoring.',
+    },
+    addons: [
+      { title: { ru: 'Каждая дополнительная биржа или брокер', en: 'Each additional exchange or broker' }, price: 120000 },
+      { title: { ru: 'Бэктест на исторических данных', en: 'Backtesting on historical data' }, price: 90000 },
+      { title: { ru: 'Панель наблюдения за системой', en: 'System observation dashboard' }, price: 60000 },
+      { title: { ru: 'Перенос стратегии в код с нуля', en: 'Coding a strategy from scratch' }, price: 150000 },
+      { title: { ru: 'Присмотр за продакшеном, помесячно', en: 'Production watch, per month' }, price: 50000 },
+    ],
     stack: ['Python', 'Rust', 'ClickHouse', 'Postgres', 'Redis', 'Prometheus', 'Docker'],
     caveat: {
       ru: 'Я делаю инфраструктуру и исполнение вашей стратегии. Я не продаю сигналы, не управляю чужими деньгами и не обещаю доходность — прибыль зависит от стратегии и рынка, а не от кода.',
@@ -160,7 +198,19 @@ export const services: Service[] = [
       en: 'Companies that acquire clients through their site and are tired of builders where everything looks the same.',
     },
     timeline: { ru: '2–5 недель для сайта, 6–10 для сервиса', en: '2–5 weeks for a site, 6–10 for an app' },
-    priceFrom: 180000,
+    priceFrom: 45000,
+    baseScope: {
+      ru: 'Лендинг: дизайн, вёрстка, форма заявки, публикация и базовое SEO.',
+      en: 'A landing page: design, build, lead form, launch and baseline SEO.',
+    },
+    addons: [
+      { title: { ru: 'Каждая дополнительная страница', en: 'Each additional page' }, price: 12000 },
+      { title: { ru: 'Многостраничный сайт с блогом', en: 'Multi-page site with a blog' }, price: 60000 },
+      { title: { ru: 'Вторая языковая версия', en: 'A second language version' }, price: 30000 },
+      { title: { ru: 'Личный кабинет или каталог', en: 'Customer portal or catalogue' }, price: 90000 },
+      { title: { ru: 'Наполнение текстами и фотографиями', en: 'Copywriting and imagery' }, price: 25000 },
+      { title: { ru: 'Поддержка и правки, помесячно', en: 'Support and edits, per month' }, price: 12000 },
+    ],
     stack: ['Astro', 'Next.js', 'TypeScript', 'Tailwind', 'Postgres', 'Vercel'],
   },
   {
@@ -193,7 +243,18 @@ export const services: Service[] = [
       en: 'Product teams without a backend engineer, and businesses whose data lives in three systems that never talk.',
     },
     timeline: { ru: '4–12 недель', en: '4–12 weeks' },
-    priceFrom: 300000,
+    priceFrom: 120000,
+    baseScope: {
+      ru: 'Один сервис или API: проектирование, разработка, тесты, развёртывание.',
+      en: 'One service or API: design, build, tests, deployment.',
+    },
+    addons: [
+      { title: { ru: 'Каждая интеграция с внешней системой', en: 'Each integration with an external system' }, price: 45000 },
+      { title: { ru: 'Перенос данных со старой системы', en: 'Migration from a legacy system' }, price: 70000 },
+      { title: { ru: 'Мониторинг и оповещения об отказах', en: 'Monitoring and failure alerts' }, price: 30000 },
+      { title: { ru: 'Нагрузочное тестирование с отчётом', en: 'Load testing with a report' }, price: 40000 },
+      { title: { ru: 'Дежурство по инцидентам, помесячно', en: 'Incident duty, per month' }, price: 35000 },
+    ],
     stack: ['Python', 'FastAPI', 'Rust', 'Postgres', 'Redis', 'Kafka', 'Docker'],
   },
   {
@@ -226,7 +287,18 @@ export const services: Service[] = [
       en: 'Services whose customers already live on their phone, and companies whose staff work in the field.',
     },
     timeline: { ru: '8–14 недель до релиза в сторах', en: '8–14 weeks to store release' },
-    priceFrom: 700000,
+    priceFrom: 250000,
+    baseScope: {
+      ru: 'Приложение на две платформы: до восьми экранов, серверная часть, публикация.',
+      en: 'An app on both platforms: up to eight screens, backend, store submission.',
+    },
+    addons: [
+      { title: { ru: 'Каждый экран сверх восьми', en: 'Each screen beyond eight' }, price: 25000 },
+      { title: { ru: 'Оплата внутри приложения', en: 'In-app payments' }, price: 60000 },
+      { title: { ru: 'Офлайн-режим и синхронизация', en: 'Offline mode and sync' }, price: 55000 },
+      { title: { ru: 'Push-уведомления и сегменты', en: 'Push notifications and segments' }, price: 35000 },
+      { title: { ru: 'Ведение и обновления, помесячно', en: 'Maintenance and updates, per month' }, price: 40000 },
+    ],
     stack: ['React Native', 'Expo', 'Swift', 'Kotlin', 'FastAPI', 'Postgres'],
   },
 ];

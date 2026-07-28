@@ -73,6 +73,17 @@ export const t = {
   serviceGet: { ru: 'Что вы получаете', en: 'What you get' } as Dict,
   serviceWho: { ru: 'Кому подходит', en: 'Who it’s for' } as Dict,
   serviceStack: { ru: 'Стек', en: 'Stack' } as Dict,
+  serviceBase: { ru: 'Входит в базовую цену', en: 'Included in the base price' } as Dict,
+  serviceAddons: { ru: 'Допы по необходимости', en: 'Add-ons if you need them' } as Dict,
+  serviceAddonsLead: {
+    ru: 'Каждый доп считается отдельно и берётся только если он вам нужен. Ничего не включается «по умолчанию», чтобы раздуть смету.',
+    en: 'Each add-on is priced separately and taken only if you need it. Nothing is bundled in by default to inflate the quote.',
+  } as Dict,
+  serviceTotal: { ru: 'Ваша смета', en: 'Your quote' } as Dict,
+  serviceTotalHint: {
+    ru: 'Отметьте нужное — увидите порядок суммы до разговора.',
+    en: 'Tick what you need and see the ballpark before we talk.',
+  } as Dict,
   serviceHonest: { ru: 'Честно о границах', en: 'Where I draw the line' } as Dict,
 
   // --- Калькулятор ---
@@ -92,8 +103,8 @@ export const t = {
   calcResultPayback: { ru: 'Проект окупается за', en: 'Project pays back in' } as Dict,
   calcMonths: { ru: 'мес.', en: 'mo' } as Dict,
   calcFormula: {
-    ru: 'Формула открыта: люди × часы × ставка × 47 рабочих недель. Окупаемость считается от нижней границы проекта в 250 000 ₽ и не учитывает налоги и то, что часть освободившегося времени уйдёт на другие задачи, а не в прибыль.',
-    en: 'The formula is open: people × hours × rate × 47 working weeks. Payback is measured against the €2,500 project floor and ignores taxes and the fact that some freed time goes to other work rather than profit.',
+    ru: 'Формула открыта: люди × часы × ставка × 47 рабочих недель. Окупаемость считается от нижней границы проекта в 90 000 ₽ и не учитывает налоги и то, что часть освободившегося времени уйдёт на другие задачи, а не в прибыль.',
+    en: 'The formula is open: people × hours × rate × 47 working weeks. Payback is measured against the €900 project floor and ignores taxes and the fact that some freed time goes to other work rather than profit.',
   } as Dict,
   calcCta: { ru: 'Проверить расчёт на моём процессе', en: 'Check this against my process' } as Dict,
 
@@ -118,8 +129,8 @@ export const t = {
   pricePlate: { ru: 'Деньги', en: 'Money' } as Dict,
   priceTitle: { ru: 'Форматы работы', en: 'Ways to work' } as Dict,
   priceLead: {
-    ru: 'Цены настоящие, а не «рассчитывается индивидуально». Точная сумма появляется после первого разговора и всегда фиксируется в договоре до старта.',
-    en: 'Real numbers, not “contact us for pricing”. The exact figure comes after the first call and is fixed in the contract before work starts.',
+    ru: 'Цены настоящие, а не «рассчитывается индивидуально». Работает так: есть базовый пакет с понятной границей и есть допы, которые вы берёте только если они вам нужны. Итог фиксируется в договоре до старта и дальше не растёт.',
+    en: 'Real numbers, not “contact us for pricing”. It works like this: a base package with a clear boundary, plus add-ons you take only if you need them. The total is fixed in the contract before work starts and does not grow afterwards.',
   } as Dict,
   priceCta: { ru: 'Выбрать формат', en: 'Choose this' } as Dict,
 
@@ -242,7 +253,7 @@ export const packages = [
   {
     code: 'P-01',
     name: { ru: 'Разведка', en: 'Recon' },
-    price: { ru: '60 000 ₽', en: '€600' },
+    price: { ru: '15 000 ₽', en: '€150' },
     unit: { ru: 'фиксированно', en: 'fixed' },
     for: {
       ru: 'Когда непонятно, стоит ли вообще браться',
@@ -269,7 +280,7 @@ export const packages = [
   {
     code: 'P-02',
     name: { ru: 'Проект', en: 'Project' },
-    price: { ru: 'от 250 000 ₽', en: 'from €2,500' },
+    price: { ru: 'от 90 000 ₽', en: 'from €900' },
     unit: { ru: 'фиксированная смета', en: 'fixed quote' },
     for: { ru: 'Когда есть понятная задача с конечным результатом', en: 'When the task has a definite end state' },
     items: {
@@ -293,7 +304,7 @@ export const packages = [
   {
     code: 'P-03',
     name: { ru: 'Инженер рядом', en: 'Embedded' },
-    price: { ru: 'от 350 000 ₽', en: 'from €3,500' },
+    price: { ru: 'от 150 000 ₽', en: 'from €1,500' },
     unit: { ru: 'в месяц', en: 'per month' },
     for: { ru: 'Когда работа не кончается и нужен свой человек', en: 'When the work never ends and you need your own engineer' },
     items: {

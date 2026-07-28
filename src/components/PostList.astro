@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import type { Locale } from '../data/site';
+import { url, type Locale } from '../data/site';
 import { tr } from '../data/i18n';
 
 interface Props {
@@ -29,7 +29,7 @@ const dateFmt = new Intl.DateTimeFormat(locale === 'ru' ? 'ru-RU' : 'en-GB', {
       {posts.map((p) => (
         <li class="reveal group border-b border-slate-1/25">
           <a
-            href={`${base}/${p.id.replace(/-(ru|en)$/, '')}/`}
+            href={url(`${base}/${p.id.replace(/-(ru|en)$/, '')}/`)}
             class="grid gap-x-8 gap-y-3 py-8 transition-[padding] duration-300 group-hover:px-3 md:grid-cols-[9rem_1fr]"
           >
             <div class="font-mono text-[0.72rem] tracking-widest text-slate-1 uppercase">

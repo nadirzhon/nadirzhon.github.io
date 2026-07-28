@@ -1,5 +1,5 @@
 ---
-import { site, type Locale } from '../data/site';
+import { site, url, type Locale } from '../data/site';
 import { tr } from '../data/i18n';
 
 interface Props {
@@ -9,16 +9,16 @@ interface Props {
   darkHero?: boolean;
 }
 const { locale, altPath, darkHero = false } = Astro.props;
-const home = locale === 'ru' ? '/' : '/en/';
+const home = url(locale === 'ru' ? '/' : '/en/');
 
 const nav = [
-  { label: tr('navServices', locale), href: locale === 'ru' ? '/#uslugi' : '/en/#services' },
-  { label: tr('navCases', locale), href: locale === 'ru' ? '/keysy/' : '/en/work/' },
-  { label: tr('navMethod', locale), href: locale === 'ru' ? '/#metod' : '/en/#method' },
-  { label: tr('navPrices', locale), href: locale === 'ru' ? '/#ceny' : '/en/#pricing' },
-  { label: tr('navBlog', locale), href: locale === 'ru' ? '/blog/' : '/en/journal/' },
+  { label: tr('navServices', locale), href: url(locale === 'ru' ? '/#uslugi' : '/en/#services') },
+  { label: tr('navCases', locale), href: url(locale === 'ru' ? '/keysy/' : '/en/work/') },
+  { label: tr('navMethod', locale), href: url(locale === 'ru' ? '/#metod' : '/en/#method') },
+  { label: tr('navPrices', locale), href: url(locale === 'ru' ? '/#ceny' : '/en/#pricing') },
+  { label: tr('navBlog', locale), href: url(locale === 'ru' ? '/blog/' : '/en/journal/') },
 ];
-const contactHref = locale === 'ru' ? '/#kontakt' : '/en/#contact';
+const contactHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
 ---
 
 <header
@@ -51,7 +51,7 @@ const contactHref = locale === 'ru' ? '/#kontakt' : '/en/#contact';
 
     <div class="flex items-center gap-2">
       <a
-        href={altPath}
+        href={url(altPath)}
         class="border border-slate-1/40 px-2.5 py-1.5 font-mono text-[0.7rem] font-medium tracking-widest transition-colors hover:border-ink hover:bg-ink hover:text-steel-50"
         hreflang={locale === 'ru' ? 'en' : 'ru'}
       >

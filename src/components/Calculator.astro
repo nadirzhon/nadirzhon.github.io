@@ -1,5 +1,5 @@
 ---
-import type { Locale } from '../data/site';
+import { url, type Locale } from '../data/site';
 import { tr } from '../data/i18n';
 
 interface Props {
@@ -10,8 +10,8 @@ const { locale } = Astro.props;
 // Валютные параметры расчёта. floor — нижняя граница стоимости проекта.
 const cfg =
   locale === 'ru'
-    ? { cur: '₽', loc: 'ru-RU', rate: { min: 300, max: 4000, step: 50, def: 900 }, floor: 250000 }
-    : { cur: '€', loc: 'en-US', rate: { min: 10, max: 120, step: 2, def: 30 }, floor: 2500 };
+    ? { cur: '₽', loc: 'ru-RU', rate: { min: 300, max: 4000, step: 50, def: 900 }, floor: 90000 }
+    : { cur: '€', loc: 'en-US', rate: { min: 10, max: 120, step: 2, def: 30 }, floor: 900 };
 
 const sliders = [
   { id: 'people', label: tr('calcPeople', locale), min: 1, max: 40, step: 1, def: 4, suffix: '' },
@@ -26,7 +26,7 @@ const outputs = [
   { id: 'out-hours', label: tr('calcResultHours', locale), accent: false },
   { id: 'out-payback', label: tr('calcResultPayback', locale), accent: false },
 ];
-const ctaHref = locale === 'ru' ? '/#kontakt' : '/en/#contact';
+const ctaHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
 ---
 
 <section
