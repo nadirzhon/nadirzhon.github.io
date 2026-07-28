@@ -8,8 +8,6 @@ import { site, url, type Locale } from '../data/site';
 interface Props {
   title: string;
   description: string;
-  /** Обложка для превью в мессенджерах. По умолчанию общая — /og.jpg */
-  ogImage?: string;
   locale: Locale;
   /** Путь этой же страницы на другом языке */
   altPath: string;
@@ -18,15 +16,7 @@ interface Props {
   darkHero?: boolean;
 }
 
-const {
-  title,
-  description,
-  locale,
-  altPath,
-  ogType = 'website',
-  darkHero = false,
-  ogImage = '/og.jpg',
-} = Astro.props;
+const { title, description, locale, altPath, ogType = 'website', darkHero = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const full = `${title} — ${site.brand}`;
 ---
@@ -48,13 +38,8 @@ const full = `${title} — ${site.brand}`;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={locale === 'ru' ? 'ru_RU' : 'en_US'} />
-    <meta property="og:image" content={new URL(url(ogImage), Astro.site).href} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={title} />
     <meta property="og:site_name" content={site.brand} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content={new URL(url(ogImage), Astro.site).href} />
+    <meta name="twitter:card" content="summary" />
 
     <link rel="icon" href={url("/favicon.svg")} type="image/svg+xml" />
     <meta name="theme-color" content="#121611" />
