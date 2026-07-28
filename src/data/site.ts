@@ -6,7 +6,7 @@ export const site = {
   brand: 'AUTONOMA',
   brandMark: 'AN',
   domain: 'autonoma.studio',
-  email: 'hello@autonoma.studio', // ← заменить
+  email: 'anodirzon4@gmail.com',
   telegram: '@your_telegram', // ← заменить
   telegramUrl: 'https://t.me/your_telegram', // ← заменить
   phone: '', // необязательно
