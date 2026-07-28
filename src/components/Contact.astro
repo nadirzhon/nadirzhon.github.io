@@ -7,6 +7,14 @@ interface Props {
 }
 const { locale } = Astro.props;
 
+// Первое сообщение подставляется само — человеку остаётся дописать суть
+const tgText = encodeURIComponent(
+  locale === 'ru'
+    ? 'Здравствуйте! Пишу с сайта. Задача: '
+    : 'Hello! Writing from your website. My task: ',
+);
+const tgLink = `${site.telegramUrl}?text=${tgText}`;
+
 const budgets =
   locale === 'ru'
     ? ['до 100 000 ₽', '100 000 — 300 000 ₽', '300 000 — 700 000 ₽', 'больше 700 000 ₽', 'пока не знаю']
@@ -30,11 +38,13 @@ const budgets =
             <span class="text-brass" aria-hidden="true">@</span>{site.email}
           </a>
           <a
-            href={site.telegramUrl}
+            href={tgLink}
             rel="noopener"
+            target="_blank"
             class="flex items-center gap-3 font-mono text-[0.95rem] text-steel-100 transition-colors hover:text-brass"
           >
-            <span class="text-brass" aria-hidden="true">↗</span>Telegram {site.telegram}
+            <span class="text-brass" aria-hidden="true">↗</span>
+            {locale === 'ru' ? 'Написать в Telegram' : 'Message me on Telegram'}
           </a>
         </div>
       </div>

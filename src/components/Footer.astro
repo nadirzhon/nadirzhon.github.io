@@ -9,6 +9,9 @@ interface Props {
 const { locale } = Astro.props;
 const year = new Date().getFullYear();
 const base = locale === 'ru' ? '/uslugi' : '/en/services';
+const tgLink = `${site.telegramUrl}?text=${encodeURIComponent(
+  locale === 'ru' ? 'Здравствуйте! Пишу с сайта. Задача: ' : 'Hello! Writing from your website. My task: ',
+)}`;
 ---
 
 <footer class="on-dark bg-ink text-steel-200">
@@ -24,7 +27,7 @@ const base = locale === 'ru' ? '/uslugi' : '/en/services';
       <p class="mt-5 max-w-xs text-[0.9rem] leading-relaxed text-steel-300">{tr('footerLine', locale)}</p>
       <div class="mt-6 flex flex-wrap gap-2">
         <a href={`mailto:${site.email}`} class="btn btn-ghost !px-4 !py-2">{site.email}</a>
-        <a href={site.telegramUrl} class="btn btn-ghost !px-4 !py-2" rel="noopener">Telegram</a>
+        <a href={tgLink} class="btn btn-ghost !px-4 !py-2" rel="noopener" target="_blank">Telegram</a>
       </div>
     </div>
 
