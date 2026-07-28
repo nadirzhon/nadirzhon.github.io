@@ -24,7 +24,7 @@ export const site = {
    *   2. Ключ придёт письмом — вставьте его сюда
    * Больше ничего менять не нужно: форма сама переключится на фоновую отправку.
    */
-  formAccessKey: '',
+  formAccessKey: '53dc5b82-fa67-40b1-a143-509c185829c6',
   formEndpoint: 'https://api.web3forms.com/submit',
 } as const;
 
