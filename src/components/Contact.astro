@@ -73,7 +73,7 @@ const budgets =
       </div>
 
       <!-- Ловушка для ботов -->
-      <input type="text" name="company_website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+      <input type="checkbox" name="botcheck" tabindex="-1" class="hidden" aria-hidden="true" />
 
       <button type="submit" class="btn !border-brass !bg-brass !text-ink justify-center hover:!bg-brass-200">
         {tr('formSend', locale)}
@@ -118,7 +118,7 @@ const budgets =
     if (!form.reportValidity()) return;
 
     const data = new FormData(form);
-    if (data.get('company_website')) return; // бот
+    if (data.get('botcheck')) return; // ловушка сработала — это бот
 
     const ru = document.documentElement.lang === 'ru';
     const endpoint = form.dataset.endpoint;
@@ -132,13 +132,19 @@ const budgets =
       status.style.color = ok ? 'var(--color-moss-200)' : '#e0885f';
     };
 
-    // Настоящая отправка — если в site.ts задан endpoint.
-    if (endpoint && key) {
+    // Ключ задан — отправляем в фоне, посетителю ничего делать не нужно.
+    if (key && endpoint) {
       btn.disabled = true;
       btn.textContent = ru ? 'Отправляю…' : 'Sending…';
       try {
+        const name = String(data.get('name') ?? '').trim();
+        const contact = String(data.get('contact') ?? '').trim();
+
         data.append('access_key', key);
-        data.append('subject', ru ? 'Заявка с сайта' : 'New enquiry');
+        data.append('subject', ru ? `Заявка с сайта — ${name}` : `New enquiry — ${name}`);
+        data.append('from_name', name || (ru ? 'Заявка с сайта' : 'Website enquiry'));
+        // Если оставили почту — ответить можно будет прямо из письма
+        if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(contact)) data.append('replyto', contact);
         const res = await fetch(endpoint, { method: 'POST', body: data });
         if (!res.ok) throw new Error(String(res.status));
         form.reset();
