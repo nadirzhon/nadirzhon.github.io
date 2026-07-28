@@ -144,6 +144,18 @@
   }
 }
 
+/* Инерционный скролл */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 /* Длинные тексты: кейсы и записи блога */
 .prose {
   max-width: 42rem;

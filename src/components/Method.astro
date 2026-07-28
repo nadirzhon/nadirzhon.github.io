@@ -18,10 +18,10 @@ const { locale } = Astro.props;
       </div>
     </div>
 
-    <ol class="mt-14 grid gap-px bg-slate-1/25 sm:grid-cols-2 lg:grid-cols-3">
+    <ol data-stagger class="mt-14 grid gap-px bg-slate-1/25 sm:grid-cols-2 lg:grid-cols-3">
       {
         method.map((m) => (
-          <li class="reveal group relative bg-steel-50 p-7 transition-colors hover:bg-steel-100 md:p-8">
+          <li class="group relative bg-steel-50 p-7 transition-colors hover:bg-steel-100 md:p-8">
             <span class="font-mono text-[2.6rem] leading-none font-bold text-steel-200 transition-colors group-hover:text-brass">
               {m.n}
             </span>

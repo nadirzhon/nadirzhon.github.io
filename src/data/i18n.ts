@@ -14,16 +14,15 @@ export const t = {
 
   // --- Герой ---
   heroPlate: { ru: 'Инженерная студия · с 2019', en: 'Engineering studio · since 2019' } as Dict,
-  heroLine1: { ru: 'Ваша команда работает', en: 'Your team works' } as Dict,
-  heroLine2: { ru: '40 часов в неделю.', en: '40 hours a week.' } as Dict,
-  heroLine3: { ru: 'Система —', en: 'The system —' } as Dict,
-  heroLine4: { ru: '168', en: '168' } as Dict,
+  heroLine1: { ru: 'Рутина съедает', en: 'Routine is eating' } as Dict,
+  heroLine2: { ru: 'вашу прибыль.', en: 'your profit.' } as Dict,
+  heroLine3: { ru: 'Тихо и каждый день.', en: 'Quietly, every day.' } as Dict,
   heroSub: {
-    ru: 'Проектирую и собираю программные системы, которые делают рутинную работу сами: AI-агенты, торговые контуры, сайты, сервисы и мобильные приложения. Один инженер отвечает за результат от первого разговора до продакшена.',
-    en: 'I design and build software that does the repetitive work on its own: AI agents, trading infrastructure, websites, services and mobile apps. One engineer owns the result from the first call to production.',
+    ru: 'Кто-то в вашей команде прямо сейчас делает работу, которую должна делать машина. Я строю системы, которые забирают её себе: AI-агенты, боты, сайты, приложения, интеграции, торговые контуры. От первого разговора до продакшена отвечает один инженер.',
+    en: 'Someone on your team is doing work a machine should be doing right now. I build the systems that take it over: AI agents, bots, websites, apps, integrations, trading infrastructure. From the first call to production, one engineer owns it.',
   } as Dict,
-  heroCta: { ru: 'Обсудить задачу', en: 'Start a project' } as Dict,
-  heroCta2: { ru: 'Посмотреть работы', en: 'See the work' } as Dict,
+  heroCta: { ru: 'Посчитать мои потери', en: 'Calculate my losses' } as Dict,
+  heroCta2: { ru: 'Что я делаю', en: 'What I build' } as Dict,
 
   // --- Шкала часов ---
   clockHuman: { ru: 'Человек', en: 'People' } as Dict,
@@ -31,6 +30,34 @@ export const t = {
   clockCaption: {
     ru: 'Часы в неделе. Разница — это то, что вы сейчас не делаете, потому что некому.',
     en: 'Hours in a week. The gap is everything you don’t do because nobody is left to do it.',
+  } as Dict,
+
+  // --- Боль ---
+  painPlate: { ru: 'Диагноз', en: 'Diagnosis' } as Dict,
+  painTitle: { ru: 'Узнаёте?', en: 'Sound familiar?' } as Dict,
+  painLead: {
+    ru: 'Ни один из этих пунктов не выглядит катастрофой по отдельности. Вместе они забирают у бизнеса больше, чем любая неудачная рекламная кампания — просто медленно и без счёта, который можно предъявить.',
+    en: 'None of these looks like a catastrophe on its own. Together they take more out of a business than any failed ad campaign — just slowly, and with no invoice you can point at.',
+  } as Dict,
+  painFooter: {
+    ru: 'Если отметили хотя бы три — вы уже платите за автоматизацию. Только пока зарплатой, а не разработкой.',
+    en: 'If three or more landed, you are already paying for automation. Just in salaries rather than in software.',
+  } as Dict,
+
+  // --- Почему я ---
+  proofPlate: { ru: 'Основание', en: 'Why me' } as Dict,
+  proofTitle: { ru: 'Почему это сработает', en: 'Why this works' } as Dict,
+  proofLead: {
+    ru: 'Не потому что я так говорю. Потому что риск снят там, где обычно горит у заказчика.',
+    en: 'Not because I say so. Because the risk is removed exactly where clients usually get burned.',
+  } as Dict,
+
+  // --- Ещё умею ---
+  extraPlate: { ru: 'Сверх того', en: 'Also' } as Dict,
+  extraTitle: { ru: 'Что ещё заказывают', en: 'What else gets ordered' } as Dict,
+  extraLead: {
+    ru: 'Задачи поменьше, которые не требуют отдельного проекта, но закрывают дыру за неделю-другую. Считаются по той же фиксированной смете.',
+    en: 'Smaller jobs that do not need a full project but close a gap in a week or two. Same fixed-quote logic.',
   } as Dict,
 
   // --- Услуги ---
@@ -333,4 +360,92 @@ export const faq = [
       en: 'No, and nobody honest does. I answer for the system doing what the contract says, on time and without losing data. What you do with it afterwards belongs to your business and your market.',
     },
   },
+];
+
+// --- Симптомы: то, что клиент узнаёт в себе ---
+export const painPoints = [
+  {
+    ru: 'Сотрудник каждый день переносит данные из почты в таблицу, а из таблицы в CRM',
+    en: 'Someone moves data from email to a spreadsheet, and from the spreadsheet to the CRM, every day',
+  },
+  {
+    ru: 'На одни и те же вопросы клиентов вы отвечаете десятки раз в неделю',
+    en: 'You answer the same customer questions dozens of times a week',
+  },
+  {
+    ru: 'Отчёт, который нужен руководителю к понедельнику, кто-то собирает руками полдня',
+    en: 'The report your boss needs by Monday takes half a day to assemble by hand',
+  },
+  {
+    ru: 'Заявки теряются между мессенджером, почтой и записками, и никто не знает сколько',
+    en: 'Leads vanish between messenger, email and sticky notes, and nobody knows how many',
+  },
+  {
+    ru: 'Сайт есть, но клиенты приходят откуда угодно, только не с него',
+    en: 'You have a website, and customers come from anywhere except it',
+  },
+  {
+    ru: 'Данные живут в трёх системах, которые не разговаривают друг с другом',
+    en: 'Your data lives in three systems that never talk to each other',
+  },
+  {
+    ru: 'Есть идея продукта, но нет никого, кто доведёт её до работающей версии',
+    en: 'You have a product idea and nobody to take it to a working version',
+  },
+  {
+    ru: 'Что-то уже написано подрядчиком, работает через раз, и трогать страшно',
+    en: 'A contractor built something, it half-works, and nobody dares to touch it',
+  },
+];
+
+// --- Снятие рисков: причины поверить до первого платежа ---
+export const proofPoints = [
+  {
+    n: '01',
+    title: { ru: 'Цена не поплывёт', en: 'The price will not drift' },
+    text: {
+      ru: 'Смета фиксируется до старта. Если я ошибся в оценке — это мой убыток, а не ваш счёт на доплату. Поэтому оценку я делаю дольше, чем принято.',
+      en: 'The quote is fixed before work starts. If I misjudged the effort, that is my loss, not your change order. Which is why my estimates take longer than usual.',
+    },
+  },
+  {
+    n: '02',
+    title: { ru: 'Вы не попадаете в зависимость', en: 'You do not get locked in' },
+    text: {
+      ru: 'Репозиторий в вашем аккаунте, серверы на вашу компанию, ключи ваши с первого дня. Уйти от меня можно в любой момент, забрав всё сделанное.',
+      en: 'The repository is in your account, servers registered to your company, keys yours from day one. You can walk away at any point and take everything with you.',
+    },
+  },
+  {
+    n: '03',
+    title: { ru: 'Результат видно через две недели', en: 'You see results in two weeks' },
+    text: {
+      ru: 'Первым делом собирается самая узкая работающая версия. Вы правите курс, глядя на живую систему, а не на макет и не на отчёт о процентах готовности.',
+      en: 'The narrowest working version comes first. You steer by looking at a live system, not a mockup and not a percentage-complete report.',
+    },
+  },
+  {
+    n: '04',
+    title: { ru: 'Я говорю «не берусь»', en: 'I say no' },
+    text: {
+      ru: 'Если задача решается настройкой того, что у вас уже куплено, я скажу это на первом созвоне и не возьму денег. Мне дешевле потерять проект, чем репутацию.',
+      en: 'If the problem is solved by configuring what you already pay for, I say so on the first call and take nothing. Losing a project is cheaper for me than losing a reputation.',
+    },
+  },
+];
+
+// --- Задачи поменьше, без отдельных страниц ---
+export const extraServices = [
+  { ru: 'Telegram-боты и мини-приложения', en: 'Telegram bots and mini apps' },
+  { ru: 'База знаний с поиском по вашим документам', en: 'Knowledge base with search across your documents' },
+  { ru: 'Распознавание счетов, договоров, накладных', en: 'Invoice, contract and waybill recognition' },
+  { ru: 'Голосовой робот для приёма звонков', en: 'A voice bot that answers calls' },
+  { ru: 'Дашборды и отчётность вместо ручных таблиц', en: 'Dashboards and reporting instead of manual spreadsheets' },
+  { ru: 'Прогноз спроса и остатков по вашей истории', en: 'Demand and stock forecasting from your history' },
+  { ru: 'Мониторинг цен и предложений конкурентов', en: 'Competitor price and offer monitoring' },
+  { ru: 'Интернет-магазин и подключение к маркетплейсам', en: 'Online store with marketplace integrations' },
+  { ru: 'Интеграция с 1С, CRM, складом, банком', en: 'Integration with ERP, CRM, warehouse, banking' },
+  { ru: 'Обработка фото и видео в потоке', en: 'Bulk photo and video processing' },
+  { ru: 'MVP продукта за три недели', en: 'A product MVP in three weeks' },
+  { ru: 'Аудит и спасение проекта после подрядчика', en: 'Audit and rescue after another contractor' },
 ];

@@ -55,8 +55,44 @@ export const services: Service[] = [
     stack: ['Claude API', 'Python', 'LangGraph', 'Postgres', 'Redis', 'Docker'],
   },
   {
-    slug: { ru: 'torgovye-sistemy', en: 'trading-systems' },
+    slug: { ru: 'chat-boty', en: 'chatbots' },
     code: 'S-02',
+    title: { ru: 'Чат-боты и ассистенты', en: 'Chatbots & assistants' },
+    tagline: {
+      ru: 'Отвечает клиенту в три часа ночи так же, как вы днём',
+      en: 'Answers at 3 a.m. the way you would at noon',
+    },
+    intro: {
+      ru: 'Бот, который знает ваши товары, цены, сроки и правила — и отвечает на них словами, а не кнопками из меню. Принимает заявку, записывает на приём, считает стоимость, отправляет документы, а сложное передаёт человеку вместе с историей разговора. Живёт там, где ваши клиенты: на сайте, в Telegram, в WhatsApp, в почте.',
+      en: 'A bot that knows your products, prices, lead times and rules — and answers in sentences, not menu buttons. It takes orders, books appointments, quotes prices, sends documents, and hands the hard cases to a human along with the conversation history. It lives where your customers already are: your site, Telegram, WhatsApp, email.',
+    },
+    deliverables: {
+      ru: [
+        'Бот, обученный на ваших материалах: прайсы, регламенты, переписка, сайт',
+        'Приём заявок и запись с попаданием напрямую в CRM или Telegram',
+        'Передача человеку в один клик, когда вопрос выходит за рамки',
+        'Панель с историей диалогов: видно, о чём спрашивают и где бот не справился',
+        'Ограничители: бот не выдумывает цены и не обещает того, чего вы не делаете',
+      ],
+      en: [
+        'A bot trained on your material: price lists, policies, past correspondence, site content',
+        'Order taking and booking that lands straight in your CRM or Telegram',
+        'One-click handover to a human when the question goes out of scope',
+        'A dashboard of conversations: what people ask and where the bot failed',
+        'Guard rails: it never invents prices or promises things you do not offer',
+      ],
+    },
+    forWhom: {
+      ru: 'Услугам и рознице, где поток одинаковых вопросов съедает рабочий день, а ответ ночью решает, купят у вас или у соседа.',
+      en: 'Service and retail businesses where repeat questions eat the working day, and a night-time reply decides whether the sale is yours.',
+    },
+    timeline: { ru: '2–4 недели до запуска', en: '2–4 weeks to launch' },
+    priceFrom: 180000,
+    stack: ['Claude API', 'Python', 'RAG', 'Telegram Bot API', 'Postgres', 'Redis'],
+  },
+  {
+    slug: { ru: 'torgovye-sistemy', en: 'trading-systems' },
+    code: 'S-06',
     title: { ru: 'Торговые и финтех-системы', en: 'Trading & fintech systems' },
     tagline: {
       ru: 'Инфраструктура, которая держит рынок круглосуточно',
@@ -129,8 +165,8 @@ export const services: Service[] = [
   },
   {
     slug: { ru: 'po-i-backend', en: 'software' },
-    code: 'S-04',
-    title: { ru: 'ПО и бэкенд', en: 'Software & backend' },
+    code: 'S-05',
+    title: { ru: 'ПО, бэкенд и интеграции', en: 'Software, backend & integrations' },
     tagline: { ru: 'Системы, которые держат нагрузку и не теряют данные', en: 'Systems that hold load and lose nothing' },
     intro: {
       ru: 'Серверная часть, интеграции и обработка данных. API для мобильного приложения, обмен с 1С и складом, очереди и фоновые задачи, миграция со старой системы, ускорение того, что уже работает, но еле дышит. Отдельная тема — вытащить проект из состояния «работает, но никто не знает как».',
@@ -162,7 +198,7 @@ export const services: Service[] = [
   },
   {
     slug: { ru: 'mobilnye-prilozheniya', en: 'mobile' },
-    code: 'S-05',
+    code: 'S-04',
     title: { ru: 'Мобильные приложения', en: 'Mobile apps' },
     tagline: { ru: 'iOS и Android из одной кодовой базы', en: 'iOS and Android from one codebase' },
     intro: {
@@ -194,6 +230,8 @@ export const services: Service[] = [
     stack: ['React Native', 'Expo', 'Swift', 'Kotlin', 'FastAPI', 'Postgres'],
   },
 ];
+
+export const orderedServices = [...services].sort((a, b) => a.code.localeCompare(b.code));
 
 export function getService(slug: string, locale: Locale) {
   return services.find((s) => s.slug[locale] === slug);

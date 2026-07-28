@@ -1,8 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
+import Pain from '../components/Pain.astro';
 import Services from '../components/Services.astro';
 import Calculator from '../components/Calculator.astro';
+import Proof from '../components/Proof.astro';
 import Method from '../components/Method.astro';
 import CaseList from '../components/CaseList.astro';
 import Pricing from '../components/Pricing.astro';
@@ -13,12 +15,15 @@ import Contact from '../components/Contact.astro';
 <Base
   locale="ru"
   altPath="/en/"
+  darkHero
   title="Разработка систем, которые работают без вас"
-  description="Инженерная студия полного цикла: AI-автоматизация бизнеса, торговые и финтех-системы, сайты и веб-сервисы, бэкенд, мобильные приложения для iOS и Android. Фиксированная смета, код и доступы ваши с первого дня."
+  description="AI-автоматизация, чат-боты, сайты и веб-сервисы, мобильные приложения, бэкенд и интеграции, торговые системы. Фиксированная смета, код и доступы ваши с первого дня."
 >
   <Hero locale="ru" />
+  <Pain locale="ru" />
   <Services locale="ru" />
   <Calculator locale="ru" />
+  <Proof locale="ru" />
   <Method locale="ru" />
   <CaseList locale="ru" limit={4} />
   <Pricing locale="ru" />

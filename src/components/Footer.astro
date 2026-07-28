@@ -1,7 +1,7 @@
 ---
 import { site, type Locale } from '../data/site';
 import { tr } from '../data/i18n';
-import { services } from '../data/services';
+import { orderedServices } from '../data/services';
 
 interface Props {
   locale: Locale;
@@ -32,7 +32,7 @@ const base = locale === 'ru' ? '/uslugi' : '/en/services';
       <p class="plate !text-brass">{tr('navServices', locale)}</p>
       <ul class="mt-4 space-y-2.5">
         {
-          services.map((s) => (
+          orderedServices.map((s) => (
             <li>
               <a
                 href={`${base}/${s.slug[locale]}/`}

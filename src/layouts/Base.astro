@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Motion from '../components/Motion.astro';
 import { site, type Locale } from '../data/site';
 
 interface Props {
@@ -11,9 +12,11 @@ interface Props {
   /** Путь этой же страницы на другом языке */
   altPath: string;
   ogType?: string;
+  /** Страница начинается тёмным героем */
+  darkHero?: boolean;
 }
 
-const { title, description, locale, altPath, ogType = 'website' } = Astro.props;
+const { title, description, locale, altPath, ogType = 'website', darkHero = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const full = `${title} — ${site.brand}`;
 ---
@@ -89,9 +92,10 @@ const full = `${title} — ${site.brand}`;
       {locale === 'ru' ? 'К содержанию' : 'Skip to content'}
     </a>
 
-    <Header locale={locale} altPath={altPath} />
+    <Header locale={locale} altPath={altPath} darkHero={darkHero} />
     <main id="main"><slot /></main>
     <Footer locale={locale} />
+    <Motion />
 
     <script>
       // Появление секций при скролле — один наблюдатель на страницу.
