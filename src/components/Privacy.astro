@@ -1,0 +1,191 @@
+---
+import { site, url, type Locale } from '../data/site';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const ru = locale === 'ru';
+const operator = site.person.name || site.brand;
+const updated = ru ? '29 июля 2026 года' : '29 July 2026';
+---
+
+<article class="shell py-14 md:py-20">
+  <p class="plate">{ru ? 'Правовая информация' : 'Legal'}</p>
+  <h1 class="mt-5 max-w-3xl text-big">
+    {ru ? 'Политика обработки персональных данных' : 'Personal data processing policy'}
+  </h1>
+  <p class="mt-4 font-mono text-[0.75rem] tracking-widest text-slate-1 uppercase">
+    {ru ? `Действует с ${updated}` : `In force from ${updated}`}
+  </p>
+
+  {
+    ru ? (
+      <div class="prose mt-12">
+        <p>
+          Документ объясняет, какие данные собирает сайт {site.domain}, зачем они нужны, сколько хранятся и
+          как их удалить. Он составлен по требованиям Федерального закона № 152-ФЗ «О персональных данных».
+        </p>
+
+        <h2>1. Кто обрабатывает данные</h2>
+        <p>
+          Оператором персональных данных выступает {operator} (далее — оператор).
+          Связаться по любым вопросам об обработке данных можно через форму на сайте.
+        </p>
+        {!site.person.name && (
+          <p class="border-l-2 border-brass bg-steel-100/60 px-5 py-4 text-[0.95rem] text-slate-1">
+            ЗАПОЛНИТЕ: укажите здесь себя как оператора — фамилию, имя, отчество, а если работаете как
+            ИП или самозанятый, то статус и ИНН. Без этого документ юридически неполон. Данные берутся
+            из <code>site.ts → person.name</code>.
+          </p>
+        )}
+
+        <h2>2. Какие данные собираются</h2>
+        <p>Только те, что вы сами вводите в форму заявки:</p>
+        <ul>
+          <li>имя или обращение, которое вы указали;</li>
+          <li>адрес электронной почты либо имя пользователя в мессенджере;</li>
+          <li>выбранный диапазон бюджета;</li>
+          <li>текст описания задачи.</li>
+        </ul>
+        <p>
+          Сайт не использует системы аналитики, не ставит рекламных счётчиков и не собирает данные
+          скрытно. Технические файлы cookie для отслеживания посетителей не применяются.
+        </p>
+
+        <h2>3. Зачем они нужны</h2>
+        <p>
+          Единственная цель — ответить на вашу заявку и обсудить задачу. Данные не используются для
+          рассылок, не передаются третьим лицам для рекламы и не продаются.
+        </p>
+
+        <h2>4. На каком основании</h2>
+        <p>
+          Основанием служит ваше согласие, которое вы даёте, отмечая соответствующее поле перед
+          отправкой формы. Согласие добровольное: без него форму отправить нельзя, но вы всегда
+          можете написать напрямую любым удобным способом.
+        </p>
+
+        <h2>5. Кому данные передаются</h2>
+        <p>
+          Заявка доставляется через сервис Web3Forms, который выступает обработчиком и лишь передаёт
+          сообщение на почту оператора. Сайт размещён на GitHub Pages. Оба сервиса обрабатывают данные
+          на своих серверах в соответствии с собственными политиками конфиденциальности.
+        </p>
+        <p>Иным лицам данные не передаются, кроме случаев, прямо предусмотренных законом.</p>
+
+        <h2>6. Сколько хранятся</h2>
+        <p>
+          Переписка по заявке хранится, пока идёт обсуждение и работа по проекту, и далее не более
+          трёх лет — срок исковой давности по гражданским спорам. По вашему требованию данные
+          удаляются раньше.
+        </p>
+
+        <h2>7. Ваши права</h2>
+        <p>Вы вправе в любой момент:</p>
+        <ul>
+          <li>узнать, какие ваши данные хранятся у оператора;</li>
+          <li>потребовать исправить неточные данные;</li>
+          <li>отозвать согласие и потребовать удалить данные;</li>
+          <li>обжаловать действия оператора в Роскомнадзоре или в суде.</li>
+        </ul>
+        <p>
+          Запрос направляется через форму на сайте. Ответ и удаление — в течение тридцати дней с
+          момента обращения.
+        </p>
+
+        <h2>8. Как данные защищаются</h2>
+        <p>
+          Сайт работает по защищённому протоколу HTTPS. Доступ к почте оператора закрыт паролем и
+          двухфакторной аутентификацией. Данные не публикуются и не хранятся в открытых источниках.
+        </p>
+
+        <h2>9. Изменения политики</h2>
+        <p>
+          Оператор может обновлять документ. Действующая редакция всегда доступна по этому адресу,
+          дата вступления в силу указана вверху страницы.
+        </p>
+      </div>
+    ) : (
+      <div class="prose mt-12">
+        <p>
+          This document explains what data the site {site.domain} collects, why, how long it is kept and
+          how to have it removed.
+        </p>
+
+        <h2>1. Who processes the data</h2>
+        <p>
+          The data controller is {operator}. For any question about data processing, use the form on
+          this site.
+        </p>
+
+        <h2>2. What is collected</h2>
+        <p>Only what you type into the enquiry form yourself:</p>
+        <ul>
+          <li>the name you give;</li>
+          <li>an email address or messenger handle;</li>
+          <li>the budget range you select;</li>
+          <li>the description of your task.</li>
+        </ul>
+        <p>
+          The site runs no analytics, sets no advertising trackers and collects nothing covertly.
+          No tracking cookies are used.
+        </p>
+
+        <h2>3. Why</h2>
+        <p>
+          The only purpose is to reply to your enquiry and discuss the work. The data is never used for
+          mailings, passed to third parties for advertising, or sold.
+        </p>
+
+        <h2>4. Legal basis</h2>
+        <p>
+          Your consent, given by ticking the box before submitting the form. It is voluntary: without it
+          the form cannot be sent, but you may always contact me by other means.
+        </p>
+
+        <h2>5. Who else sees it</h2>
+        <p>
+          Enquiries are delivered through Web3Forms, which acts as a processor and only relays the message
+          to the controller’s mailbox. The site is hosted on GitHub Pages. Both handle data on their own
+          servers under their own privacy policies. Nobody else receives your data except where the law
+          requires it.
+        </p>
+
+        <h2>6. How long it is kept</h2>
+        <p>
+          Correspondence is kept while the discussion and project are active, and no longer than three
+          years afterwards. On your request it is deleted sooner.
+        </p>
+
+        <h2>7. Your rights</h2>
+        <p>At any time you may:</p>
+        <ul>
+          <li>ask what data about you is held;</li>
+          <li>have inaccurate data corrected;</li>
+          <li>withdraw consent and have your data erased;</li>
+          <li>lodge a complaint with a supervisory authority.</li>
+        </ul>
+        <p>Send the request through the form. Response and erasure within thirty days.</p>
+
+        <h2>8. Security</h2>
+        <p>
+          The site is served over HTTPS. The controller’s mailbox is protected by a password and
+          two-factor authentication. Data is never published or stored in open sources.
+        </p>
+
+        <h2>9. Changes</h2>
+        <p>
+          This document may be updated. The current version always lives at this address, with the
+          effective date shown at the top.
+        </p>
+      </div>
+    )
+  }
+
+  <div class="mt-14 border-t border-slate-1/25 pt-8">
+    <a href={url(ru ? '/' : '/en/')} class="btn btn-ghost">
+      {ru ? 'На главную' : 'Home'}
+    </a>
+  </div>
+</article>

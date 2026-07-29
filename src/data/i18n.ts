@@ -10,6 +10,7 @@ export const t = {
   navMethod: { ru: 'Как работаю', en: 'Method' } as Dict,
   navPrices: { ru: 'Цены', en: 'Pricing' } as Dict,
   navBlog: { ru: 'Блог', en: 'Journal' } as Dict,
+  navAbout: { ru: 'Кто я', en: 'About' } as Dict,
   navContact: { ru: 'Обсудить задачу', en: 'Start a project' } as Dict,
 
   // --- Герой ---
