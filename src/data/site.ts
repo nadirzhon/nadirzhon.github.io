@@ -25,8 +25,7 @@ export const site = {
     nameEn: '',
     role: 'Инженер-разработчик',
     roleEn: 'Software engineer',
-    /** ЗАПОЛНИТЕ: положите фото в public/ и укажите путь, например '/me.jpg' */
-    photo: '',
+    photo: '/me.jpg',
   },
   /** Курс для показа цен в EUR на английской версии */
   eurRate: 100,
