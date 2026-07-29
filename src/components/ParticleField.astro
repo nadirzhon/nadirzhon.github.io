@@ -187,13 +187,18 @@
       // --- Цикл ---
       let raf = 0;
       let running = true;
-      const clock = new THREE.Clock();
+      let last = performance.now();
 
-      const loop = () => {
+      const loop = (now: number = performance.now()) => {
         raf = requestAnimationFrame(loop);
-        if (!running) return;
+        if (!running) {
+          last = now;
+          return;
+        }
 
-        const dt = Math.min(clock.getDelta(), 0.05);
+        // Ограничиваем шаг: после сворачивания вкладки он был бы огромным
+        const dt = Math.min((now - last) / 1000, 0.05);
+        last = now;
         uniforms.uTime.value += dt;
         uniforms.uIntro.value += (1 - uniforms.uIntro.value) * dt * 1.1;
         uniforms.uMorph.value += (morphTarget - uniforms.uMorph.value) * dt * 3.2;
