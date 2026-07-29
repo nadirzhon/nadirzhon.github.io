@@ -1,0 +1,184 @@
+---
+import { site, url, type Locale } from '../data/site';
+import { tr } from '../data/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const ru = locale === 'ru';
+const p = site.person;
+const name = ru ? p.name : p.nameEn || p.name;
+const role = ru ? p.role : p.roleEn;
+const contact = url(ru ? '/#kontakt' : '/en/#contact');
+
+// Факты о работе — проверяемые, без биографии
+const facts = ru
+  ? [
+      { k: 'Работаю один', v: 'На дизайн и мобильную часть привлекаю проверенных людей' },
+      { k: 'Веду 2–3 проекта', v: 'Одновременно, чтобы не растягивать сроки' },
+      { k: 'Отвечаю лично', v: 'Между вами и мной нет менеджера, который передаёт слова' },
+      { k: 'Работаю на два рынка', v: 'Россия и СНГ, Европа. Договор в рублях или евро' },
+    ]
+  : [
+      { k: 'I work alone', v: 'For design and mobile I bring in people I have worked with for years' },
+      { k: '2–3 projects at a time', v: 'So nothing stretches past its deadline' },
+      { k: 'You talk to me', v: 'No manager relaying messages in between' },
+      { k: 'Two markets', v: 'Europe, Russia and the CIS. Contract in euros or roubles' },
+    ];
+
+const notDoing = ru
+  ? [
+      'Не берусь за задачу, если она решается настройкой того, что вы уже купили',
+      'Не продаю торговые сигналы и не управляю чужими деньгами',
+      'Не обещаю рост выручки — отвечаю за то, что система работает как записано в договоре',
+      'Не оставляю проект на своих серверах: доступы ваши с первого дня',
+    ]
+  : [
+      'I decline work that is solved by configuring something you already pay for',
+      'I do not sell trading signals or manage other people’s money',
+      'I do not promise revenue growth — I answer for the system doing what the contract says',
+      'I never keep a project on my own servers: access is yours from day one',
+    ];
+---
+
+<article>
+  <!-- Кто -->
+  <section class="border-b border-slate-1/20 py-14 md:py-20">
+    <div class="shell">
+      <p class="plate">{ru ? 'Кто я' : 'Who I am'}</p>
+
+      <div class="mt-8 grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <!-- Фото -->
+        <div class="reveal">
+          {
+            p.photo ? (
+              <img
+                src={url(p.photo)}
+                alt={name || (ru ? 'Фотография' : 'Portrait')}
+                width="640"
+                height="800"
+                class="w-full border border-slate-1/30 object-cover"
+                loading="eager"
+              />
+            ) : (
+              <div class="flex aspect-[4/5] flex-col items-center justify-center border border-dashed border-slate-1/40 bg-steel-100/50 p-8 text-center">
+                <span class="font-mono text-[0.7rem] tracking-widest text-slate-1 uppercase">
+                  {ru ? 'место под фото' : 'photo goes here'}
+                </span>
+                <span class="mt-3 max-w-[16rem] text-[0.82rem] leading-snug text-slate-1">
+                  {ru
+                    ? 'Положите файл в public/ и укажите путь в site.ts → person.photo. Рабочее фото убеждает сильнее студийного портрета.'
+                    : 'Drop a file into public/ and set the path in site.ts → person.photo. A working photo convinces more than a studio portrait.'}
+                </span>
+              </div>
+            )
+          }
+        </div>
+
+        <div>
+          <h1 class="text-big">
+            {name || (ru ? 'Инженер, который собирает системы' : 'The engineer who builds the systems')}
+          </h1>
+          {name && <p class="mt-3 font-mono text-[0.8rem] tracking-widest text-brass uppercase">{role}</p>}
+
+          <div class="mt-7 space-y-5 text-[1.02rem] leading-relaxed text-slate-2">
+            <p>
+              {ru
+                ? 'Я проектирую и собираю программные системы, которые делают повторяющуюся работу вместо людей. AI-агенты и боты, сайты и веб-сервисы, серверная часть и интеграции, мобильные приложения, торговая инфраструктура. От первого разговора до продакшена за результат отвечает один человек — это я.'
+                : 'I design and build software that does repetitive work instead of people. AI agents and bots, websites and web apps, backend and integrations, mobile apps, trading infrastructure. From the first call to production, one person owns the result — me.'}
+            </p>
+            <p>
+              {ru
+                ? 'Работаю без офиса, менеджеров и отдела продаж. Это значит, что в смете нет их зарплат, а разговор идёт сразу с тем, кто будет писать код. Обратная сторона честная: я беру два-три проекта одновременно, и иногда очередь занята на месяц вперёд.'
+                : 'No office, no managers, no sales department. Which means none of their salaries sit in your quote, and you talk directly to the person who will write the code. The honest downside: I take two or three projects at a time, and the queue is sometimes a month deep.'}
+            </p>
+
+            <!-- ЗАПОЛНИТЕ: два-три абзаца личной истории.
+                 Что писать: как пришли в разработку, что делали до этого, почему занялись
+                 именно автоматизацией, какой случай на это повлиял. Конкретный эпизод
+                 убеждает сильнее любого списка навыков — люди покупают человека, а не резюме.
+                 Удалите этот блок, когда впишете свой текст. -->
+            <p class="border-l-2 border-brass bg-steel-100/60 px-5 py-4 text-[0.95rem] text-slate-1">
+              {ru
+                ? 'Здесь место для вашей истории: как пришли в разработку, чем занимались раньше, почему взялись именно за автоматизацию. Два-три абзаца с конкретным эпизодом убеждают сильнее списка навыков — покупают человека, а не резюме. Текст правится в src/components/About.astro.'
+                : 'This is where your story goes: how you came into software, what you did before, why automation specifically. Two or three paragraphs with a concrete episode convince more than a list of skills — people buy a person, not a CV. Edit in src/components/About.astro.'}
+            </p>
+          </div>
+
+          <a href={contact} class="btn btn-primary mt-9">
+            {tr('navContact', locale)} <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Как устроена работа -->
+  <section class="border-b border-slate-1/20 py-16 md:py-20">
+    <div class="shell grid gap-8 md:grid-cols-[auto_1fr] md:gap-14">
+      <p class="plate md:pt-3">{ru ? 'Как устроено' : 'How it works'}</p>
+      <dl data-stagger class="grid max-w-4xl gap-px bg-slate-1/25 sm:grid-cols-2">
+        {
+          facts.map((f) => (
+            <div class="bg-steel-50 p-6">
+              <dt class="font-display text-[1.05rem] leading-tight font-bold">{f.k}</dt>
+              <dd class="mt-2.5 text-[0.92rem] leading-relaxed text-slate-2">{f.v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- Собственная система как доказательство -->
+  <section class="on-dark border-b border-steel-300/15 bg-ink py-16 text-steel-100 md:py-20">
+    <div class="shell grid gap-8 md:grid-cols-[auto_1fr] md:gap-14">
+      <p class="plate !text-brass md:pt-3">{ru ? 'Чем подтверждается' : 'The proof'}</p>
+      <div class="max-w-3xl">
+        <h2 class="text-[1.6rem] text-steel-50 md:text-[2rem]">
+          {ru ? 'Своя торговая система в продакшене' : 'My own trading system in production'}
+        </h2>
+        <div class="mt-6 space-y-5 text-[1rem] leading-relaxed text-steel-300">
+          <p>
+            {ru
+              ? 'Несколько лет я строю и держу в работе собственную торговую систему: одиннадцать сервисов, круглосуточный сбор рыночных данных, исполнение заявок, учёт позиций, риск-контур с аварийной остановкой. Горячие расчёты вынесены в модуль на Rust, всё остальное — Python, PostgreSQL, Redis, Docker.'
+              : 'For several years I have been building and running my own trading system: eleven services, round-the-clock market data collection, order execution, position accounting, a risk layer with a kill switch. Hot-path computation lives in a Rust module, the rest is Python, PostgreSQL, Redis, Docker.'}
+          </p>
+          <p>
+            {ru
+              ? 'Это не витрина, а стенд. Каждое решение, которое я предлагаю клиентам, сначала оплачено моими собственными ошибками: очередями, которые копили задержку в десятки секунд, закрытием позиций, которое молча не срабатывало, уборщиком данных, который удалял живое. Поэтому, берясь за чужую систему, я приношу список конкретных мест, где такие проекты ломаются, а не общие соображения.'
+              : 'It is not a showcase, it is a bench. Every decision I offer clients was first paid for with my own mistakes: queues that accumulated tens of seconds of lag, position closing that silently never fired, a cleanup routine that deleted live data. So when I take on someone else’s system, I bring a concrete list of where these projects break rather than general reasoning.'}
+          </p>
+        </div>
+        <a href={url(ru ? '/keysy/hean/' : '/en/work/hean/')} class="btn btn-ghost mt-8">
+          {ru ? 'Разбор системы' : 'Read the write-up'} <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Границы -->
+  <section class="py-16 md:py-20">
+    <div class="shell grid gap-8 md:grid-cols-[auto_1fr] md:gap-14">
+      <p class="plate md:pt-3">{ru ? 'Чего не делаю' : 'What I decline'}</p>
+      <div>
+        <p class="max-w-2xl text-[1.02rem] leading-relaxed text-slate-2">
+          {ru
+            ? 'Список коротких «нет» экономит время обеим сторонам. Если ваша задача попадает в него, лучше узнать об этом сейчас, а не после трёх встреч.'
+            : 'A short list of noes saves time on both sides. If your task falls into it, better to know now than after three meetings.'}
+        </p>
+        <ul data-stagger class="mt-8 max-w-3xl divide-y divide-slate-1/20 border-y border-slate-1/20">
+          {
+            notDoing.map((n) => (
+              <li class="flex gap-5 py-4">
+                <span class="mt-1.5 font-mono text-[0.8rem] text-brass">—</span>
+                <span class="text-[0.98rem] leading-relaxed text-slate-2">{n}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+</article>

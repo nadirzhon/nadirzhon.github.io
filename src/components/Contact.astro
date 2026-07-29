@@ -1,5 +1,5 @@
 ---
-import { site, type Locale } from '../data/site';
+import { site, url, type Locale } from '../data/site';
 import { tr } from '../data/i18n';
 
 interface Props {
@@ -83,6 +83,26 @@ const budgets =
       <!-- Ловушка для ботов -->
       <input type="checkbox" name="botcheck" tabindex="-1" class="hidden" aria-hidden="true" />
 
+      <label class="group flex cursor-pointer items-start gap-3">
+        <input type="checkbox" id="f-consent" name="consent" required class="peer sr-only" />
+        <span
+          aria-hidden="true"
+          class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center border border-steel-300/50 transition-colors group-hover:border-steel-50 peer-checked:border-brass peer-checked:bg-brass"
+        >
+          <span class="tick text-[0.7rem] leading-none font-bold text-ink">✓</span>
+        </span>
+        <span class="text-[0.8rem] leading-relaxed text-steel-300">
+          {locale === 'ru' ? 'Согласен на обработку' : 'I agree to the processing of my'}{' '}
+          <a
+            href={url(locale === 'ru' ? '/politika/' : '/en/privacy/')}
+            class="underline decoration-brass underline-offset-2 transition-colors hover:text-brass"
+          >
+            {locale === 'ru' ? 'персональных данных' : 'personal data'}
+          </a>{' '}
+          {locale === 'ru' ? 'для ответа на заявку' : 'in order to receive a reply'}
+        </span>
+      </label>
+
       <button type="submit" class="btn !border-brass !bg-brass !text-ink justify-center hover:!bg-brass-200">
         {tr('formSend', locale)}
       </button>
@@ -115,6 +135,13 @@ const budgets =
   .field:user-invalid {
     border-color: #b4522f;
   }
+  .tick {
+    transform: scale(0);
+    transition: transform 0.2s var(--ease-station);
+  }
+  input:checked ~ span .tick {
+    transform: scale(1);
+  }
 </style>
 
 <script>
@@ -127,6 +154,7 @@ const budgets =
 
     const data = new FormData(form);
     if (data.get('botcheck')) return; // ловушка сработала — это бот
+    data.delete('consent'); // факт согласия проверен браузером, в письме он не нужен
 
     const ru = document.documentElement.lang === 'ru';
     const endpoint = form.dataset.endpoint;
