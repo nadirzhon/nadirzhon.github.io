@@ -24,7 +24,6 @@ const outputs = [
   { id: 'out-cost', label: tr('calcResultYear', locale), accent: false },
   { id: 'out-saved', label: tr('calcResultSaved', locale), accent: true },
   { id: 'out-hours', label: tr('calcResultHours', locale), accent: false },
-  { id: 'out-payback', label: tr('calcResultPayback', locale), accent: false },
 ];
 const ctaHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
 ---
@@ -101,7 +100,7 @@ const ctaHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
                   id={o.id}
                   class:list={[
                     'font-display text-[1.5rem] font-bold tabular-nums md:text-[1.85rem]',
-                    o.accent ? 'text-brass' : 'text-steel-50',
+                    o.accent ? 'grad-text' : 'text-steel-50',
                   ]}
                 >
                   —
@@ -196,13 +195,10 @@ const ctaHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
       const saved = annual * auto;
       const hoursBack = people * hours * WEEKS * auto;
       const monthly = saved / 12;
-      const payback = monthly > 0 ? Math.max(1, Math.ceil(floor / monthly)) : 0;
 
       el('out-cost').textContent = money(annual);
       el('out-saved').textContent = money(saved);
       el('out-hours').textContent = Math.round(hoursBack).toLocaleString(loc);
-      el('out-payback').textContent =
-        payback > 36 ? (loc === 'ru-RU' ? '> 3 лет' : '> 3 yrs') : `${payback} ${loc === 'ru-RU' ? 'мес.' : 'mo'}`;
       (el('out-bar') as HTMLElement).style.width = `${auto * 100}%`;
     }
 

@@ -11,8 +11,6 @@ const { service: s, locale } = Astro.props;
 const base = locale === 'ru' ? '/uslugi' : '/en/services';
 const home = url(locale === 'ru' ? '/' : '/en/');
 const contact = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
-const fmt = (n: number) =>
-  locale === 'ru' ? `${n.toLocaleString('ru-RU')} ₽` : `€${Math.round(n / 100).toLocaleString('en-US')}`;
 const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
 ---
 
@@ -36,11 +34,11 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
           <a href={contact} class="btn btn-primary mt-9">{tr('navContact', locale)} <span aria-hidden="true">→</span></a>
         </div>
 
-        <aside class="self-start border border-slate-1/30 bg-ink-700/60">
+        <aside class="panel self-start rounded-2xl overflow-hidden">
           <dl class="divide-y divide-slate-1/20">
             <div class="px-6 py-5">
-              <dt class="plate">{tr('serviceFrom', locale)}</dt>
-              <dd class="mt-2 font-display text-[1.7rem] font-bold">{fmt(s.priceFrom)}</dd>
+              <dt class="plate">{tr('serviceStart', locale)}</dt>
+              <dd class="mt-2 text-[0.95rem] text-steel-300">{tr('serviceStartHint', locale)}</dd>
             </div>
             <div class="px-6 py-5">
               <dt class="plate">{tr('serviceTerm', locale)}</dt>
@@ -66,7 +64,7 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
     </div>
   </section>
 
-  <!-- Смета: база плюс допы -->
+  <!-- Конструктор объёма: база плюс блоки. Денег здесь нет намеренно -->
   <section class="border-b border-slate-1/20 py-16 md:py-24">
     <div class="shell grid gap-8 md:grid-cols-[auto_1fr] md:gap-14">
       <p class="plate md:pt-3">{tr('serviceAddons', locale)}</p>
@@ -74,37 +72,37 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
       <div>
         <p class="max-w-2xl text-[1rem] leading-relaxed text-steel-300">{tr('serviceAddonsLead', locale)}</p>
 
-        <div id="quote" class="mt-9 grid gap-8 lg:grid-cols-[1fr_20rem] lg:gap-12" data-base={s.priceFrom} data-locale={locale}>
+        <div id="quote" class="mt-9 grid gap-8 lg:grid-cols-[1fr_20rem] lg:gap-12" data-locale={locale}>
           <div>
             <!-- База: всегда включена, снять нельзя -->
-            <div class="flex items-start gap-4 border-y border-slate-1/25 bg-ink-700/60 px-4 py-4">
-              <span aria-hidden="true" class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center bg-brass text-[0.7rem] leading-none font-bold text-steel-50">
+            <div class="flex items-start gap-4 rounded-xl border border-cyan/25 bg-cyan/5 px-4 py-4">
+              <span aria-hidden="true" class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md bg-gradient-to-br from-cyan to-violet text-[0.7rem] leading-none font-bold text-void">
                 ✓
               </span>
               <span class="flex-1">
                 <span class="block text-[0.98rem] leading-snug font-semibold">{tr('serviceBase', locale)}</span>
                 <span class="mt-1 block text-[0.92rem] leading-snug text-steel-300">{s.baseScope[locale]}</span>
               </span>
-              <span class="font-mono text-[0.85rem] whitespace-nowrap">{fmt(s.priceFrom)}</span>
+              
             </div>
 
-            <!-- Допы -->
+            <!-- Блоки по необходимости -->
             <ul class="border-b border-slate-1/25">
               {
                 s.addons.map((a) => (
                   <li class="border-t border-slate-1/25">
                     <label class="group flex cursor-pointer items-start gap-4 px-4 py-4">
-                      <input type="checkbox" class="peer sr-only" data-price={a.price} />
+                      <input type="checkbox" class="peer sr-only" data-addon={a.title[locale]} />
                       <span
                         aria-hidden="true"
-                        class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center border border-slate-1/50 transition-colors group-hover:border-ink peer-checked:border-brass peer-checked:bg-brass"
+                        class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center border border-slate-1/50 transition-colors group-hover:border-ink peer-checked:border-transparent peer-checked:bg-cyan"
                       >
-                        <span class="tick text-[0.7rem] leading-none font-bold text-steel-50">✓</span>
+                        <span class="tick text-[0.7rem] leading-none font-bold text-void">✓</span>
                       </span>
                       <span class="flex-1 text-[0.96rem] leading-snug text-steel-300 transition-colors peer-checked:text-steel-50">
                         {a.title[locale]}
                       </span>
-                      <span class="font-mono text-[0.85rem] whitespace-nowrap text-slate-1">+{fmt(a.price)}</span>
+                      
                     </label>
                   </li>
                 ))
@@ -113,16 +111,16 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
           </div>
 
           <!-- Итог -->
-          <aside class="self-start border border-ink bg-ink p-6 text-steel-100 lg:sticky lg:top-24">
+          <aside class="panel self-start rounded-2xl p-6 text-steel-100 lg:sticky lg:top-24">
             <p class="plate !text-cyan">{tr('serviceTotal', locale)}</p>
             <p id="quote-total" class="mt-3 font-display text-[2rem] leading-none font-bold text-steel-50">
-              {fmt(s.priceFrom)}
+              1
             </p>
             <p id="quote-parts" class="mt-3 font-mono text-[0.72rem] tracking-wider text-steel-300">
               {locale === 'ru' ? 'база + 0 допов' : 'base + 0 add-ons'}
             </p>
             <p class="mt-5 text-[0.85rem] leading-relaxed text-steel-300">{tr('serviceTotalHint', locale)}</p>
-            <a href={contact} class="btn mt-6 w-full justify-center !border-brass !bg-brass !text-steel-50 hover:!bg-brass-200">
+            <a href={contact} class="btn btn-primary mag mt-6 w-full justify-center">
               {tr('navContact', locale)}
             </a>
           </aside>
@@ -192,35 +190,35 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
 </style>
 
 <script>
-  // Живая смета: база плюс отмеченные допы
+  // Живой объём работ: база плюс отмеченные блоки
   const quote = document.getElementById('quote');
   const total = document.getElementById('quote-total');
   const parts = document.getElementById('quote-parts');
 
   if (quote && total && parts) {
-    const base = Number(quote.dataset.base);
     const ru = quote.dataset.locale === 'ru';
     const boxes = Array.from(quote.querySelectorAll<HTMLInputElement>('input[type=checkbox]'));
 
-    const money = (n: number) =>
-      ru ? `${n.toLocaleString('ru-RU')} ₽` : `€${Math.round(n / 100).toLocaleString('en-US')}`;
-
     const word = (n: number) => {
-      if (!ru) return n === 1 ? 'add-on' : 'add-ons';
+      if (!ru) return n === 1 ? 'block' : 'blocks';
       const t = n % 10;
       const h = n % 100;
-      if (t === 1 && h !== 11) return 'доп';
-      if (t >= 2 && t <= 4 && (h < 10 || h > 20)) return 'допа';
-      return 'допов';
+      if (t === 1 && h !== 11) return 'блок';
+      if (t >= 2 && t <= 4 && (h < 10 || h > 20)) return 'блока';
+      return 'блоков';
     };
 
+    // Считаем объём, а не деньги: сумма называется после разбора задачи
     const update = () => {
       const picked = boxes.filter((b) => b.checked);
-      const sum = picked.reduce((acc, b) => acc + Number(b.dataset.price), base);
-      total.textContent = money(sum);
+      const n = picked.length + 1; // база входит всегда
+      total.textContent = String(n);
       parts.textContent = ru
-        ? `база + ${picked.length} ${word(picked.length)}`
-        : `base + ${picked.length} ${word(picked.length)}`;
+        ? `${word(n)} в работе: база + ${picked.length}`
+        : `${word(n)} in scope: base + ${picked.length}`;
+      // Выбранное уезжает в форму заявки — человеку не нужно перепечатывать
+      const names = picked.map((b) => b.dataset.addon).filter(Boolean);
+      try { sessionStorage.setItem('autonoma.scope', JSON.stringify(names)); } catch {}
     };
 
     boxes.forEach((b) => b.addEventListener('change', update));

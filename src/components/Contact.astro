@@ -153,6 +153,25 @@ const budgets =
   const form = document.getElementById('brief-form') as HTMLFormElement | null;
   const status = document.getElementById('form-status');
 
+  // Если человек пришёл со страницы услуги и отметил там нужные блоки,
+  // подставляем их в текст заявки — пересказывать руками не нужно.
+  try {
+    const raw = sessionStorage.getItem('autonoma.scope');
+    const task = form?.querySelector<HTMLTextAreaElement>('[name="task"]');
+    if (raw && task && !task.value.trim()) {
+      const picked = JSON.parse(raw) as string[];
+      if (Array.isArray(picked) && picked.length) {
+        const ru = document.documentElement.lang === 'ru';
+        task.value =
+          (ru ? 'Из конструктора на странице услуги:\n' : 'From the scope builder on the service page:\n') +
+          picked.map((t) => '— ' + t).join('\n') +
+          '\n\n';
+        task.focus();
+        task.setSelectionRange(task.value.length, task.value.length);
+      }
+    }
+  } catch {}
+
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!form.reportValidity()) return;
