@@ -8,7 +8,7 @@ export const t = {
   navServices: { ru: 'Услуги', en: 'Services' } as Dict,
   navCases: { ru: 'Кейсы', en: 'Work' } as Dict,
   navMethod: { ru: 'Как работаю', en: 'Method' } as Dict,
-  navPrices: { ru: 'Цены', en: 'Pricing' } as Dict,
+  navPrices: { ru: 'Как считаю', en: 'How I price' } as Dict,
   navBlog: { ru: 'Блог', en: 'Journal' } as Dict,
   navAbout: { ru: 'Кто я', en: 'About' } as Dict,
   navContact: { ru: 'Обсудить задачу', en: 'Start a project' } as Dict,
@@ -70,20 +70,33 @@ export const t = {
   } as Dict,
   serviceMore: { ru: 'Подробно', en: 'Details' } as Dict,
   serviceFrom: { ru: 'от', en: 'from' } as Dict,
+  serviceStart: { ru: 'С чего начинаем', en: 'How we start' } as Dict,
+  serviceStartHint: {
+    ru: 'С разбора задачи. После него называю срок и сумму — и фиксирую их в договоре.',
+    en: 'By taking your task apart. After that I name the timeline and the number, and fix both in the contract.',
+  } as Dict,
   serviceTerm: { ru: 'Срок', en: 'Timeline' } as Dict,
   serviceGet: { ru: 'Что вы получаете', en: 'What you get' } as Dict,
   serviceWho: { ru: 'Кому подходит', en: 'Who it’s for' } as Dict,
   serviceStack: { ru: 'Стек', en: 'Stack' } as Dict,
-  serviceBase: { ru: 'Входит в базовую цену', en: 'Included in the base price' } as Dict,
-  serviceAddons: { ru: 'Допы по необходимости', en: 'Add-ons if you need them' } as Dict,
+  serviceBase: { ru: 'Входит в базовый объём', en: 'Included in the base scope' } as Dict,
+  serviceAddons: { ru: 'Блоки по необходимости', en: 'Blocks if you need them' } as Dict,
   serviceAddonsLead: {
-    ru: 'Каждый доп считается отдельно и берётся только если он вам нужен. Ничего не включается «по умолчанию», чтобы раздуть смету.',
-    en: 'Each add-on is priced separately and taken only if you need it. Nothing is bundled in by default to inflate the quote.',
+    ru: 'Каждый блок берётся только если он вам нужен. Ничего не включается «по умолчанию», чтобы раздуть объём работ.',
+    en: 'Each block is taken only if you need it. Nothing is bundled in by default to inflate the scope.',
   } as Dict,
-  serviceTotal: { ru: 'Ваша смета', en: 'Your quote' } as Dict,
+  serviceScopeNote: {
+    ru: 'Отметьте то, что вам нужно. Это не смета, а объём работ — с ним я и посчитаю стоимость, когда мы поговорим.',
+    en: 'Tick what you need. This is scope, not a quote — I price it once we have talked.',
+  } as Dict,
+  serviceTotal: { ru: 'Объём работ', en: 'Scope' } as Dict,
   serviceTotalHint: {
-    ru: 'Отметьте нужное — увидите порядок суммы до разговора.',
-    en: 'Tick what you need and see the ballpark before we talk.',
+    ru: 'Отмеченное уйдёт вместе с заявкой — не придётся пересказывать. Сумму назову после разбора задачи и зафиксирую в договоре.',
+    en: 'What you tick travels with your request — no need to retype it. I name the number after we take the task apart, and fix it in the contract.',
+  } as Dict,
+  serviceAddonsLeadNoPrice: {
+    ru: 'Каждый блок берётся только если он вам нужен. Ничего не включается «по умолчанию», чтобы раздуть объём.',
+    en: 'Each block is taken only if you need it. Nothing is bundled in by default to inflate the scope.',
   } as Dict,
   serviceHonest: { ru: 'Честно о границах', en: 'Where I draw the line' } as Dict,
 
@@ -104,8 +117,8 @@ export const t = {
   calcResultPayback: { ru: 'Проект окупается за', en: 'Project pays back in' } as Dict,
   calcMonths: { ru: 'мес.', en: 'mo' } as Dict,
   calcFormula: {
-    ru: 'Формула открыта: люди × часы × ставка × 47 рабочих недель. Окупаемость считается от нижней границы проекта в 90 000 ₽ и не учитывает налоги и то, что часть освободившегося времени уйдёт на другие задачи, а не в прибыль.',
-    en: 'The formula is open: people × hours × rate × 47 working weeks. Payback is measured against the €900 project floor and ignores taxes and the fact that some freed time goes to other work rather than profit.',
+    ru: 'Формула открыта: люди × часы × ставка × 47 рабочих недель. Налоги и то, что часть освободившегося времени уйдёт на другие задачи, а не в прибыль, здесь не учтены — цифра показывает порядок, а не точную сумму.',
+    en: 'The formula is open: people × hours × rate × 47 working weeks. Taxes, and the fact that some freed time goes to other work rather than profit, are not included — the number shows the order of magnitude, not an exact sum.',
   } as Dict,
   calcCta: { ru: 'Проверить расчёт на моём процессе', en: 'Check this against my process' } as Dict,
 
@@ -128,12 +141,12 @@ export const t = {
 
   // --- Цены ---
   pricePlate: { ru: 'Деньги', en: 'Money' } as Dict,
-  priceTitle: { ru: 'Форматы работы', en: 'Ways to work' } as Dict,
+  priceTitle: { ru: 'Как считается стоимость', en: 'How the price is built' } as Dict,
   priceLead: {
-    ru: 'Цены настоящие, а не «рассчитывается индивидуально». Работает так: есть базовый пакет с понятной границей и есть допы, которые вы берёте только если они вам нужны. Итог фиксируется в договоре до старта и дальше не растёт.',
-    en: 'Real numbers, not “contact us for pricing”. It works like this: a base package with a clear boundary, plus add-ons you take only if you need them. The total is fixed in the contract before work starts and does not grow afterwards.',
+    ru: 'Прайса нет намеренно. Одинаковая на вид задача у двух компаний стоит по-разному: разный объём данных, разные системы, разное состояние того, что уже написано. Сначала разбираем вашу задачу, потом называю сумму — и фиксирую её в договоре до старта. Дальше она не растёт.',
+    en: 'There is no price list, on purpose. The same-looking task costs differently at two companies: different data volumes, different systems, different state of what is already written. First we take your task apart, then I name the number — and fix it in the contract before we start. It does not grow afterwards.',
   } as Dict,
-  priceCta: { ru: 'Выбрать формат', en: 'Choose this' } as Dict,
+  priceCta: { ru: 'Обсудить задачу', en: 'Start a project' } as Dict,
 
   // --- FAQ ---
   faqPlate: { ru: 'Вопросы', en: 'Questions' } as Dict,

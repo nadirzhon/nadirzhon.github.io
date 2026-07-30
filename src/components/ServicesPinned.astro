@@ -3,7 +3,8 @@
  * Услуги как витрина продукта, а не строчка в списке.
  *
  * Каждая услуга — отдельный кадр во всю высоту экрана: что именно человек
- * получает на руки, за какой срок, за какие деньги и на чём это собрано.
+ * получает на руки, за какой срок и на чём это собрано. Цену не показываем:
+ * она собирается под задачу после разведки, а не выбирается из прайса.
  * Кадры едут вбок, пока страница листается вниз, — прокрутка одна, поэтому
  * никто не «теряется» и не пропускает половину направлений.
  *
@@ -21,9 +22,6 @@ interface Props {
 const { locale } = Astro.props;
 const base = locale === 'ru' ? '/uslugi' : '/en/services';
 
-const fmt = (n: number) =>
-  locale === 'ru' ? `${n.toLocaleString('ru-RU')} ₽` : `€${Math.round(n / 100).toLocaleString('en-US')}`;
-
 const items = orderedServices;
 const hint =
   locale === 'ru'
@@ -35,7 +33,7 @@ const gotLabel = (n: number) =>
 
 <section
   id={locale === 'ru' ? 'uslugi' : 'services'}
-  class="svc-pin on-dark relative bg-ink text-steel-100"
+  class="svc-pin on-dark relative bg-ink/55 text-steel-100"
   data-count={items.length}
 >
   <div class="svc-stage relative flex h-[100svh] flex-col overflow-hidden">
@@ -47,14 +45,14 @@ const gotLabel = (n: number) =>
     ></canvas>
     <div
       aria-hidden="true"
-      class="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(100deg,#121611_38%,rgba(18,22,17,0.55)_62%,transparent_86%)] lg:block"
+      class="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(100deg,#05070c_36%,rgba(5,7,12,0.58)_62%,transparent_88%)] lg:block"
     >
     </div>
 
     <!-- Шапка блока -->
     <header class="shell relative z-10 flex shrink-0 items-end justify-between gap-8 pt-24 pb-6 md:pt-28">
       <div>
-        <p class="plate !text-brass">{tr('servicesPlate', locale)}</p>
+        <p class="plate !text-cyan">{tr('servicesPlate', locale)}</p>
         <h2 class="mt-3 text-big">{tr('servicesTitle', locale)}</h2>
       </div>
       <p class="hidden max-w-xs text-right font-mono text-[0.68rem] leading-relaxed tracking-wider text-steel-300/70 uppercase md:block">
@@ -71,7 +69,7 @@ const gotLabel = (n: number) =>
               <div class="shell w-full">
                 <div class="max-w-[38rem] lg:max-w-[32rem] xl:max-w-[38rem]">
                   <div class="flex items-baseline gap-4">
-                    <span class="font-mono text-[0.72rem] tracking-widest text-brass">{s.code}</span>
+                    <span class="font-mono text-[0.72rem] tracking-widest text-cyan">{s.code}</span>
                     <span class="h-px flex-1 bg-steel-300/20" />
                     <span class="font-mono text-[0.72rem] tracking-widest text-steel-300/60">
                       {String(i + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
@@ -85,14 +83,14 @@ const gotLabel = (n: number) =>
 
                   <p class="plate mt-9 flex items-center gap-3 !text-steel-300/70">
                     {tr('serviceGet', locale)}
-                    <span class="h-px w-6 bg-brass" />
-                    <span class="text-brass">{gotLabel(s.deliverables[locale].length)}</span>
+                    <span class="h-px w-6 bg-gradient-to-r from-cyan to-violet" />
+                    <span class="grad-text">{gotLabel(s.deliverables[locale].length)}</span>
                   </p>
 
                   <ul class="mt-4 grid gap-2.5">
                     {s.deliverables[locale].map((d) => (
                       <li class="flex gap-3 text-[0.93rem] leading-snug text-steel-100/90 md:text-[0.97rem]">
-                        <span aria-hidden="true" class="mt-2 h-1 w-3 shrink-0 bg-brass/70" />
+                        <span aria-hidden="true" class="mt-2 h-1 w-3 shrink-0 rounded-full bg-gradient-to-r from-cyan to-violet" />
                         <span>{d}</span>
                       </li>
                     ))}
@@ -102,10 +100,6 @@ const gotLabel = (n: number) =>
                     <div>
                       <dt class="plate !text-steel-300/60">{tr('serviceTerm', locale)}</dt>
                       <dd class="mt-1.5 font-mono text-[0.84rem] text-steel-100">{s.timeline[locale]}</dd>
-                    </div>
-                    <div>
-                      <dt class="plate !text-steel-300/60">{tr('serviceFrom', locale)}</dt>
-                      <dd class="mt-1.5 font-mono text-[0.84rem] text-brass">{fmt(s.priceFrom)}</dd>
                     </div>
                     <div class="min-w-[12rem]">
                       <dt class="plate !text-steel-300/60">{tr('serviceStack', locale)}</dt>
@@ -117,7 +111,7 @@ const gotLabel = (n: number) =>
 
                   <a
                     href={url(`${base}/${s.slug[locale]}/`)}
-                    class="btn btn-ghost mt-8 !border-steel-300/30 hover:!border-brass hover:!text-brass"
+                    class="btn btn-ghost mag mt-8"
                   >
                     {tr('serviceMore', locale)}
                     <span aria-hidden="true">→</span>
@@ -134,7 +128,7 @@ const gotLabel = (n: number) =>
     <div class="shell relative z-10 shrink-0 pt-4 pb-10">
       <div class="flex items-center gap-5">
         <div class="h-px flex-1 bg-steel-300/15">
-          <div id="svc-bar" class="h-px w-0 bg-brass transition-[width] duration-200 ease-out"></div>
+          <div id="svc-bar" class="h-px w-0 bg-gradient-to-r from-cyan to-violet transition-[width] duration-200 ease-out"></div>
         </div>
         <ul class="flex gap-2" aria-hidden="true">
           {items.map(() => <li class="svc-dot h-1.5 w-1.5 rounded-full bg-steel-300/25 transition-colors duration-300" />)}
@@ -374,7 +368,7 @@ const gotLabel = (n: number) =>
   /* ─── Пиннинг ленты ──────────────────────────────────────────────────── */
   const setActive = (i: number) => {
     dots.forEach((d, k) => {
-      d.classList.toggle('bg-brass', k === i);
+      d.classList.toggle('bg-cyan', k === i);
       d.classList.toggle('bg-steel-300/25', k !== i);
     });
     setShape?.(i);

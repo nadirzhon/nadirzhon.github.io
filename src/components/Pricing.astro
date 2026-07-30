@@ -39,13 +39,6 @@ const cta = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
 
             <h3 class:list={['mt-5 text-[1.5rem]', p.accent && 'text-steel-50']}>{p.name[locale]}</h3>
 
-            <p class:list={['mt-4 font-display text-[1.9rem] font-bold', p.accent ? 'grad-text' : 'text-steel-50']}>
-              {p.price[locale]}
-            </p>
-            <p class:list={['font-mono text-[0.7rem] tracking-widest uppercase', p.accent ? 'text-steel-300' : 'text-slate-1']}>
-              {p.unit[locale]}
-            </p>
-
             <p class:list={['mt-5 text-[0.92rem] leading-relaxed', p.accent ? 'text-steel-200' : 'text-steel-300']}>
               {p.for[locale]}
             </p>
@@ -64,6 +57,7 @@ const cta = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
               class:list={['btn mag mt-8 justify-center', p.accent ? 'btn-primary' : 'btn-ghost']}
             >
               {tr('priceCta', locale)}
+              <span aria-hidden="true">→</span>
             </a>
           </div>
         ))
