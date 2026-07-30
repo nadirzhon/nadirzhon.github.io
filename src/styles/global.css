@@ -1,48 +1,72 @@
 @import 'tailwindcss';
 
-/* ------------------------------------------------------------------
-   Дизайн-система «инженерная станция»:
-   сталь (корпус прибора) — латунь (сигнал) — мох (норма) — графит (ночь).
------------------------------------------------------------------- */
+/* ==========================================================================
+   AUTONOMA — дизайн-система «машинный зал».
+
+   Сайт тёмный целиком: студия продаёт системы, которые работают ночью,
+   пока владелец спит. Свет на странице появляется только там, где что-то
+   происходит — сигнал в проводе, результат, деньги.
+
+   Три сигнальных цвета, у каждого своя работа:
+     бирюза   — данные и рабочий процесс
+     фиолет   — интеллект, решения модели
+     янтарь   — результат и деньги
+   Ничего больше: остальное — сталь и графит.
+   ========================================================================== */
+
 @theme {
-  --color-steel-50: #f2f4ef;
-  --color-steel-100: #e5e8e0;
-  --color-steel-200: #d2d6cb;
-  --color-steel-300: #b6bcae;
-  --color-slate-1: #6e7468;
-  --color-slate-2: #454a41;
-  --color-ink: #121611;
-  --color-ink-800: #1b201a;
-  --color-ink-700: #262c24;
-  --color-brass: #c89b3c;
-  --color-brass-200: #e8c887;
-  --color-brass-900: #6b4f14;
-  --color-moss: #2f5c42;
-  --color-moss-200: #7fb094;
+  /* — корпус — */
+  --color-void: #05070c;
+  --color-ink: #090d16;
+  --color-ink-800: #0f1420;
+  --color-ink-700: #18202f;
+  --color-ink-600: #232c3f;
+
+  /* — текст — */
+  --color-steel-50: #eef2fa;
+  --color-steel-100: #dde4f0;
+  --color-steel-200: #c2cbdd;
+  --color-steel-300: #98a3ba;
+  --color-slate-1: #6b768f;
+  --color-slate-2: #8b95ad;
+
+  /* — сигнал — */
+  --color-cyan: #25e8c8;
+  --color-cyan-200: #7ff5de;
+  --color-cyan-900: #0b5f52;
+  --color-violet: #6e5bff;
+  --color-violet-200: #a99cff;
+  --color-brass: #ffb13d;
+  --color-brass-200: #ffd08a;
+  --color-brass-900: #7d5410;
+  --color-moss: #12a08a;
+  --color-moss-200: #4fe0c4;
 
   --font-display: 'Unbounded', system-ui, sans-serif;
-  --font-sans: 'Manrope', system-ui, sans-serif;
+  --font-sans: 'Onest', 'Manrope', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  --text-mega: clamp(1.95rem, 4.35vw, 4rem);
-  --text-big: clamp(1.55rem, 3.3vw, 2.85rem);
+  --text-mega: clamp(2.05rem, 4.6vw, 4.4rem);
+  --text-big: clamp(1.6rem, 3.5vw, 3rem);
 
   --ease-station: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-back: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 @layer base {
   * {
-    border-color: color-mix(in oklab, var(--color-slate-1) 24%, transparent);
+    border-color: color-mix(in oklab, var(--color-steel-300) 16%, transparent);
   }
 
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    background: var(--color-void);
   }
 
   body {
-    background: var(--color-steel-50);
-    color: var(--color-ink);
+    background: var(--color-void);
+    color: var(--color-steel-100);
     font-family: var(--font-sans);
     font-weight: 400;
     line-height: 1.6;
@@ -57,19 +81,99 @@
     font-weight: 700;
     letter-spacing: -0.035em;
     line-height: 0.98;
+    color: var(--color-steel-50);
     text-wrap: balance;
     overflow-wrap: break-word;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-brass);
+    outline: 2px solid var(--color-cyan);
     outline-offset: 3px;
-    border-radius: 2px;
+    border-radius: 3px;
   }
 
   ::selection {
-    background: var(--color-brass);
-    color: var(--color-ink);
+    background: var(--color-cyan);
+    color: var(--color-void);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-void);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-700);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-600);
+  }
+}
+
+/* ==========================================================================
+   Фон страницы: не заливка, а слои.
+   Сетка чертежа + два дышащих пятна сигнального цвета + зерно.
+   Всё на фиксированном слое, поэтому не мешает прокрутке.
+   ========================================================================== */
+.bg-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-field__grid {
+  position: absolute;
+  inset: -2px;
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-steel-300) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-steel-300) 7%, transparent) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(120% 90% at 50% 0%, #000 0%, transparent 72%);
+}
+
+.bg-field__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.5;
+}
+.bg-field__glow--a {
+  width: 46vw;
+  height: 46vw;
+  left: -12vw;
+  top: -10vw;
+  background: radial-gradient(circle, color-mix(in oklab, var(--color-violet) 55%, transparent), transparent 68%);
+  animation: field-drift-a 30s ease-in-out infinite alternate;
+}
+.bg-field__glow--b {
+  width: 38vw;
+  height: 38vw;
+  right: -8vw;
+  top: 28vh;
+  background: radial-gradient(circle, color-mix(in oklab, var(--color-cyan) 42%, transparent), transparent 68%);
+  animation: field-drift-b 38s ease-in-out infinite alternate;
+}
+
+.bg-field__noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes field-drift-a {
+  to {
+    transform: translate(14vw, 12vh) scale(1.18);
+  }
+}
+@keyframes field-drift-b {
+  to {
+    transform: translate(-12vw, -10vh) scale(1.14);
   }
 }
 
@@ -88,52 +192,120 @@
   .rule-ticks {
     background-image: repeating-linear-gradient(
       to right,
-      color-mix(in oklab, var(--color-slate-1) 40%, transparent) 0 1px,
+      color-mix(in oklab, var(--color-steel-300) 26%, transparent) 0 1px,
       transparent 1px 9px
     );
     height: 7px;
   }
 
+  /* Текст, залитый сигнальным градиентом */
+  .grad-text {
+    background: linear-gradient(96deg, var(--color-cyan) 0%, var(--color-violet) 46%, var(--color-brass) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Панель: стекло поверх графита с волосяной рамкой */
+  .panel {
+    position: relative;
+    background: color-mix(in oklab, var(--color-ink-800) 80%, transparent);
+    backdrop-filter: blur(14px);
+    border: 1px solid color-mix(in oklab, var(--color-steel-300) 12%, transparent);
+    transition:
+      border-color 0.45s var(--ease-station),
+      background 0.45s var(--ease-station),
+      transform 0.45s var(--ease-station),
+      box-shadow 0.45s var(--ease-station);
+  }
+  .panel:hover {
+    background: color-mix(in oklab, var(--color-ink-700) 82%, transparent);
+    border-color: color-mix(in oklab, var(--color-steel-300) 24%, transparent);
+    transform: translateY(-4px);
+    box-shadow: 0 30px 70px -46px color-mix(in oklab, var(--color-violet) 90%, transparent);
+  }
+
+  /* Рамка, светящаяся сигнальным градиентом — для выделенных карточек */
+.panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s var(--ease-station);
+    background: radial-gradient(
+      260px circle at var(--gx, 50%) var(--gy, 50%),
+      color-mix(in oklab, var(--color-cyan) 16%, transparent),
+      transparent 68%
+    );
+  }
+  .panel:hover::after {
+    opacity: 1;
+  }
+
+  .panel-lit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    background: linear-gradient(120deg, var(--color-cyan), var(--color-violet) 52%, var(--color-brass));
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
   .btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
-    padding: 0.95rem 1.6rem;
+    padding: 0.95rem 1.7rem;
     font-family: var(--font-mono);
     font-size: 0.8125rem;
     font-weight: 500;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    border: 1px solid var(--color-ink);
-    transition: all 0.25s var(--ease-station);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    overflow: hidden;
+    isolation: isolate;
+    transition: all 0.3s var(--ease-station);
   }
 
   .btn-primary {
-    background: var(--color-ink);
-    color: var(--color-steel-50);
+    background: linear-gradient(96deg, var(--color-cyan) 0%, var(--color-violet) 55%, var(--color-brass) 100%);
+    background-size: 210% 100%;
+    background-position: 0 0;
+    color: var(--color-void);
+    font-weight: 600;
+    box-shadow: 0 10px 34px -14px color-mix(in oklab, var(--color-violet) 95%, transparent);
   }
   .btn-primary:hover {
-    background: var(--color-brass);
-    border-color: var(--color-brass);
-    color: var(--color-ink);
+    background-position: 100% 0;
+    box-shadow: 0 16px 44px -12px color-mix(in oklab, var(--color-cyan) 90%, transparent);
   }
 
   .btn-ghost {
-    background: transparent;
-    color: var(--color-ink);
+    background: color-mix(in oklab, var(--color-steel-50) 4%, transparent);
+    color: var(--color-steel-50);
+    border-color: color-mix(in oklab, var(--color-steel-300) 22%, transparent);
+    backdrop-filter: blur(8px);
   }
   .btn-ghost:hover {
-    background: var(--color-ink);
-    color: var(--color-steel-50);
+    border-color: var(--color-cyan);
+    color: var(--color-cyan);
   }
 
-  .on-dark .btn-ghost {
-    border-color: var(--color-steel-300);
+  .on-dark .btn-ghost,
+  .btn-ghost {
     color: var(--color-steel-50);
   }
   .on-dark .btn-ghost:hover {
-    background: var(--color-steel-50);
-    color: var(--color-ink);
+    background: color-mix(in oklab, var(--color-cyan) 12%, transparent);
+    color: var(--color-cyan);
   }
 
   .shell {
@@ -141,6 +313,26 @@
     max-width: 84rem;
     margin-inline: auto;
     padding-inline: clamp(1.1rem, 4vw, 3.5rem);
+  }
+
+  /* Ссылка, под которой проезжает сигнальная черта */
+  .link-sweep {
+    position: relative;
+  }
+  .link-sweep::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-cyan), var(--color-violet));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.42s var(--ease-station);
+  }
+  .link-sweep:hover::after {
+    transform: scaleX(1);
   }
 }
 
@@ -161,7 +353,7 @@ html.lenis body {
   max-width: 42rem;
   font-size: 1.05rem;
   line-height: 1.75;
-  color: var(--color-slate-2);
+  color: var(--color-steel-300);
 }
 .prose > * + * {
   margin-top: 1.35em;
@@ -169,25 +361,25 @@ html.lenis body {
 .prose h2 {
   margin-top: 2.6em;
   font-size: 1.55rem;
-  color: var(--color-ink);
+  color: var(--color-steel-50);
 }
 .prose h3 {
   margin-top: 2em;
   font-size: 1.2rem;
-  color: var(--color-ink);
+  color: var(--color-steel-50);
 }
 .prose strong {
   font-weight: 700;
-  color: var(--color-ink);
+  color: var(--color-steel-50);
 }
 .prose a {
-  color: var(--color-ink);
+  color: var(--color-cyan);
   text-decoration: underline;
-  text-decoration-color: var(--color-brass);
+  text-decoration-color: color-mix(in oklab, var(--color-cyan) 45%, transparent);
   text-underline-offset: 3px;
 }
 .prose a:hover {
-  color: var(--color-brass);
+  color: var(--color-cyan-200);
 }
 .prose ul,
 .prose ol {
@@ -204,9 +396,9 @@ html.lenis body {
   position: absolute;
   left: -1.1em;
   top: 0.72em;
-  width: 5px;
-  height: 5px;
-  background: var(--color-brass);
+  width: 6px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-cyan), var(--color-violet));
 }
 .prose ol {
   list-style: decimal;
@@ -215,16 +407,18 @@ html.lenis body {
   margin-top: 0.5em;
 }
 .prose blockquote {
-  border-left: 2px solid var(--color-brass);
+  border-left: 2px solid var(--color-cyan);
   padding: 0.2em 0 0.2em 1.4em;
   font-size: 1.02rem;
-  color: var(--color-ink);
+  color: var(--color-steel-100);
 }
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.88em;
-  background: var(--color-steel-100);
+  background: var(--color-ink-700);
+  color: var(--color-cyan-200);
   padding: 0.15em 0.4em;
+  border-radius: 4px;
 }
 .prose pre {
   background: var(--color-ink);
@@ -232,13 +426,16 @@ html.lenis body {
   padding: 1.2rem;
   overflow-x: auto;
   font-size: 0.85rem;
+  border-radius: 10px;
+  border: 1px solid color-mix(in oklab, var(--color-steel-300) 12%, transparent);
 }
 .prose pre code {
   background: none;
   padding: 0;
+  color: inherit;
 }
 .prose hr {
-  border-color: color-mix(in oklab, var(--color-slate-1) 30%, transparent);
+  border-color: color-mix(in oklab, var(--color-steel-300) 16%, transparent);
   margin-block: 2.5em;
 }
 
@@ -267,5 +464,8 @@ html.lenis body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  .bg-field__glow {
+    animation: none;
   }
 }

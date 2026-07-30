@@ -31,13 +31,13 @@ const ctaHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
 
 <section
   id={locale === 'ru' ? 'raschet' : 'calculator'}
-  class="on-dark relative scroll-mt-20 overflow-hidden bg-ink py-20 text-steel-100 md:py-28"
+  class="on-dark relative scroll-mt-20 overflow-hidden bg-ink/55 py-20 text-steel-100 md:py-28"
 >
   <div class="rule-ticks absolute top-0 right-0 left-0 opacity-25"></div>
 
   <div class="shell">
     <div class="reveal grid gap-6 md:grid-cols-[auto_1fr] md:gap-14">
-      <p class="plate !text-brass md:pt-3">{tr('calcPlate', locale)}</p>
+      <p class="plate !text-cyan md:pt-3">{tr('calcPlate', locale)}</p>
       <div>
         <h2 class="text-big text-steel-50">{tr('calcTitle', locale)}</h2>
         <p class="mt-5 max-w-2xl text-[1.02rem] leading-relaxed text-steel-300">{tr('calcLead', locale)}</p>
@@ -83,7 +83,7 @@ const ctaHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
       </div>
 
       <!-- Табло -->
-      <div class="border border-steel-300/25 bg-ink-800">
+      <div class="panel rounded-2xl">
         <div class="flex items-center justify-between border-b border-steel-300/20 px-5 py-3">
           <span class="plate !text-steel-300">{locale === 'ru' ? 'Показания' : 'Readout'}</span>
           <span class="flex items-center gap-1.5 font-mono text-[0.65rem] tracking-wider text-moss-200">
@@ -113,7 +113,7 @@ const ctaHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
 
         <div class="px-5 pt-1 pb-5">
           <div class="h-2 w-full overflow-hidden bg-steel-300/15">
-            <div id="out-bar" class="h-full bg-brass transition-[width] duration-500 ease-out" style="width:60%"></div>
+            <div id="out-bar" class="h-full rounded-full bg-gradient-to-r from-cyan to-violet transition-[width] duration-500 ease-out" style="width:60%"></div>
           </div>
           <p class="mt-4 text-[0.76rem] leading-relaxed text-steel-300/70">{tr('calcFormula', locale)}</p>
         </div>

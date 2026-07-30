@@ -22,16 +22,20 @@ const afterSend =
         'Your details go nowhere else and into no mailing list',
       ];
 
+// Резервный адрес на случай, если сервис форм не ответит. В разметке лежит
+// кодированным, чтобы сборщики адресов его не выцепили: расшифровка только в браузере.
+const mailFallback = Buffer.from(site.email, 'utf-8').toString('base64');
+
 const budgets =
   locale === 'ru'
     ? ['до 100 000 ₽', '100 000 — 300 000 ₽', '300 000 — 700 000 ₽', 'больше 700 000 ₽', 'пока не знаю']
     : ['under €1,000', '€1,000 — €3,000', '€3,000 — €7,000', 'over €7,000', 'not sure yet'];
 ---
 
-<section id={locale === 'ru' ? 'kontakt' : 'contact'} class="on-dark scroll-mt-20 bg-ink py-20 text-steel-100 md:py-28">
+<section id={locale === 'ru' ? 'kontakt' : 'contact'} class="on-dark scroll-mt-20 bg-ink/55 py-20 text-steel-100 md:py-28">
   <div class="shell grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
     <div>
-      <p class="plate !text-brass">{tr('contactPlate', locale)}</p>
+      <p class="plate !text-cyan">{tr('contactPlate', locale)}</p>
       <h2 class="mt-6 text-big text-steel-50">{tr('contactTitle', locale)}</h2>
       <p class="mt-6 max-w-md text-[1.02rem] leading-relaxed text-steel-300">{tr('contactLead', locale)}</p>
 
@@ -39,7 +43,7 @@ const budgets =
         {
           afterSend.map((line) => (
             <li class="flex items-start gap-3 text-[0.95rem] leading-snug text-steel-300">
-              <span class="mt-2 h-1 w-1 shrink-0 bg-brass" aria-hidden="true" />
+              <span class="mt-2 h-1 w-3 shrink-0 rounded-full bg-gradient-to-r from-cyan to-violet" aria-hidden="true" />
               {line}
             </li>
           ))
@@ -49,10 +53,11 @@ const budgets =
 
     <form
       id="brief-form"
-      class="grid gap-5 border border-steel-300/25 bg-ink-800 p-6 md:p-9"
+      class="grid gap-5 border border-steel-300/25 panel rounded-2xl p-6 md:p-9"
       data-endpoint={site.formEndpoint}
       data-key={site.formAccessKey}
       data-mail={site.formAccessKey ? undefined : site.email}
+      data-mailb64={mailFallback}
       data-relay={site.telegramRelay || undefined}
       novalidate
     >
@@ -89,7 +94,7 @@ const budgets =
           aria-hidden="true"
           class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center border border-steel-300/50 transition-colors group-hover:border-steel-50 peer-checked:border-brass peer-checked:bg-brass"
         >
-          <span class="tick text-[0.7rem] leading-none font-bold text-ink">✓</span>
+          <span class="tick text-[0.7rem] leading-none font-bold text-steel-50">✓</span>
         </span>
         <span class="text-[0.8rem] leading-relaxed text-steel-300">
           {locale === 'ru' ? 'Согласен на обработку' : 'I agree to the processing of my'}{' '}
@@ -103,7 +108,7 @@ const budgets =
         </span>
       </label>
 
-      <button type="submit" class="btn !border-brass !bg-brass !text-ink justify-center hover:!bg-brass-200">
+      <button type="submit" class="btn !border-brass !bg-brass !text-steel-50 justify-center hover:!bg-brass-200">
         {tr('formSend', locale)}
       </button>
 
@@ -168,6 +173,35 @@ const budgets =
       status.style.color = ok ? 'var(--color-moss-200)' : '#e0885f';
     };
 
+    // Готовое письмо со всем, что человек уже набрал, — ничего не пропадает
+    const draftMail = () => {
+      const b64 = form.dataset.mailb64;
+      const addr = form.dataset.mail || (b64 ? atob(b64) : '');
+      const body = [
+        `${ru ? 'Имя' : 'Name'}: ${data.get('name')}`,
+        `${ru ? 'Связь' : 'Contact'}: ${data.get('contact')}`,
+        `${ru ? 'Бюджет' : 'Budget'}: ${data.get('budget')}`,
+        '',
+        String(data.get('task') ?? ''),
+      ].join('\n');
+      return `mailto:${addr}?subject=${encodeURIComponent(ru ? 'Заявка с сайта' : 'New enquiry')}&body=${encodeURIComponent(body)}`;
+    };
+
+    // Отправка не прошла — предлагаем выход, а не сообщаем о тупике
+    const showFallback = () => {
+      if (!status) return;
+      status.textContent = ru
+        ? 'Сервис отправки не ответил. Заявка не потеряна — откройте письмо, всё уже заполнено: '
+        : 'The form service did not respond. Nothing is lost — open the email, it is already filled in: ';
+      status.classList.remove('hidden');
+      status.style.color = '#e0885f';
+      const a = document.createElement('a');
+      a.href = draftMail();
+      a.textContent = ru ? 'открыть письмо' : 'open the email';
+      a.className = 'underline underline-offset-4 hover:text-brass';
+      status.appendChild(a);
+    };
+
     // Заявка уходит в Telegram параллельно с почтой. Ошибка одного канала
     // не должна ронять отправку — поэтому результат не ждём и не проверяем здесь.
     const relay = form.dataset.relay;
@@ -203,7 +237,7 @@ const budgets =
         form.reset();
         show(ru ? 'Отправлено. Отвечу в течение рабочего дня.' : 'Sent. I’ll reply within one business day.', true);
       } catch {
-        show(ru ? 'Не удалось отправить. Напишите напрямую — контакты слева.' : 'Sending failed. Write to me directly.', false);
+        showFallback();
       } finally {
         btn.disabled = false;
         btn.textContent = ru ? 'Отправить' : 'Send';
@@ -214,17 +248,7 @@ const budgets =
     toTelegram();
 
     // Запасной путь без сервера: открываем почтовый клиент с готовым письмом.
-    const body = [
-      `${ru ? 'Имя' : 'Name'}: ${data.get('name')}`,
-      `${ru ? 'Связь' : 'Contact'}: ${data.get('contact')}`,
-      `${ru ? 'Бюджет' : 'Budget'}: ${data.get('budget')}`,
-      '',
-      String(data.get('task') ?? ''),
-    ].join('\n');
-
-    window.location.href = `mailto:${form.dataset.mail}?subject=${encodeURIComponent(
-      ru ? 'Заявка с сайта' : 'New enquiry',
-    )}&body=${encodeURIComponent(body)}`;
+    window.location.href = draftMail();
 
     show(ru ? 'Открыл почтовый клиент — осталось нажать «Отправить».' : 'Opened your mail client — just hit send.', true);
   });

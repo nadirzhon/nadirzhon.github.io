@@ -24,13 +24,13 @@ const contactHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
 
 <header
   id="site-header"
-  class:list={['sticky top-0 z-40 backdrop-blur-md', darkHero && 'over-hero']}
+  class:list={['sticky top-0 z-50 backdrop-blur-xl', darkHero && 'over-hero']}
   data-dark-hero={darkHero ? '' : undefined}
 >
   <div class="shell flex h-16 items-center justify-between gap-4 md:h-[4.5rem]">
     <a href={home} class="group flex items-center gap-2.5" aria-label={site.brand}>
       <span
-        class="grid h-8 w-8 place-items-center border border-ink font-mono text-[0.7rem] font-bold tracking-tight transition-colors group-hover:bg-brass"
+        class="grid h-8 w-8 place-items-center rounded-md border border-steel-300/30 font-mono text-[0.7rem] font-bold tracking-tight transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-br group-hover:from-cyan group-hover:to-violet group-hover:text-void"
       >
         {site.brandMark}
       </span>
@@ -42,7 +42,7 @@ const contactHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
         nav.map((i) => (
           <a
             href={i.href}
-            class="relative py-1 text-[0.9rem] font-medium text-slate-2 transition-colors hover:text-ink after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-brass after:transition-all hover:after:w-full"
+            class="relative py-1 text-[0.9rem] font-medium text-steel-300 transition-colors hover:text-steel-50 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-brass after:transition-all hover:after:w-full"
           >
             {i.label}
           </a>
@@ -75,7 +75,7 @@ const contactHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
     </div>
   </div>
 
-  <div id="mobile-nav" class="hidden border-t border-slate-1/20 bg-steel-50 lg:hidden">
+  <div id="mobile-nav" class="hidden border-t border-slate-1/20 bg-ink-800 lg:hidden">
     <nav class="shell flex flex-col py-2">
       {
         nav.map((i) => (
@@ -99,8 +99,8 @@ const contactHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
   }
 
   #site-header {
-    background: color-mix(in oklab, var(--color-steel-50) 88%, transparent);
-    border-bottom: 1px solid color-mix(in oklab, var(--color-slate-1) 22%, transparent);
+    background: color-mix(in oklab, var(--color-void) 72%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-steel-300) 12%, transparent);
     transition:
       background-color 0.45s var(--ease-station),
       border-color 0.45s var(--ease-station),
@@ -123,9 +123,7 @@ const contactHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
     border-color: color-mix(in oklab, var(--color-steel-50) 55%, transparent);
   }
   #site-header.over-hero .btn-primary {
-    background: var(--color-brass);
-    border-color: var(--color-brass);
-    color: var(--color-ink) !important;
+    color: var(--color-void) !important;
   }
   #site-header.over-hero [aria-label='Меню'] span,
   #site-header.over-hero [aria-label='Menu'] span {

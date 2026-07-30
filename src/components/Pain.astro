@@ -21,7 +21,7 @@ const week = days.map((d, di) =>
       <p class="plate md:pt-3">{tr('painPlate', locale)}</p>
       <div>
         <h2 class="text-big">{tr('painTitle', locale)}</h2>
-        <p class="mt-5 max-w-2xl text-[1.02rem] leading-relaxed text-slate-2">{tr('painLead', locale)}</p>
+        <p class="mt-5 max-w-2xl text-[1.02rem] leading-relaxed text-steel-300">{tr('painLead', locale)}</p>
       </div>
     </div>
 
@@ -35,11 +35,11 @@ const week = days.map((d, di) =>
                 <input type="checkbox" class="peer sr-only" />
                 <span
                   aria-hidden="true"
-                  class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center border border-slate-1/50 transition-all duration-200 group-hover:border-ink peer-checked:border-brass peer-checked:bg-brass"
+                  class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md border border-slate-1/50 transition-all duration-200 group-hover:border-cyan peer-checked:border-transparent peer-checked:bg-cyan"
                 >
-                  <span class="tick text-[0.7rem] leading-none font-bold text-ink">✓</span>
+                  <span class="tick text-[0.7rem] leading-none font-bold text-void">✓</span>
                 </span>
-                <span class="text-[0.98rem] leading-snug text-slate-2 transition-colors peer-checked:text-ink">
+                <span class="text-[0.98rem] leading-snug text-steel-300 transition-colors peer-checked:text-steel-50">
                   {p[locale]}
                 </span>
               </label>
@@ -50,29 +50,29 @@ const week = days.map((d, di) =>
 
       <!-- Итог отметок + шкала недели -->
       <div class="reveal flex flex-col gap-8">
-        <div id="pain-score" class="border border-slate-1/30 bg-steel-100/60 p-6">
+        <div id="pain-score" class="panel rounded-2xl p-6">
           <div class="flex items-baseline justify-between gap-4">
             <span class="plate">{locale === 'ru' ? 'Отмечено' : 'Checked'}</span>
             <span class="font-display text-[2.2rem] leading-none font-bold">
-              <span id="pain-count" class="text-brass">0</span><span class="text-slate-1"
+              <span id="pain-count" class="grad-text">0</span><span class="text-slate-1"
                 >/{painPoints.length}</span
               >
             </span>
           </div>
-          <div class="mt-4 h-1.5 w-full bg-slate-1/20">
-            <div id="pain-bar" class="h-full w-0 bg-brass transition-[width] duration-500 ease-out"></div>
+          <div class="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-slate-1/20">
+            <div id="pain-bar" class="h-full w-0 rounded-full bg-gradient-to-r from-cyan to-violet transition-[width] duration-500 ease-out"></div>
           </div>
-          <p id="pain-verdict" class="mt-5 text-[0.95rem] leading-relaxed text-slate-2">
+          <p id="pain-verdict" class="mt-5 text-[0.95rem] leading-relaxed text-steel-300">
             {tr('painFooter', locale)}
           </p>
         </div>
 
-        <figure class="border border-slate-1/30 bg-steel-100/60 p-4 sm:p-5">
+        <figure class="panel rounded-2xl p-4 sm:p-5">
           <figcaption class="mb-4 flex flex-wrap items-center justify-between gap-3">
             <span class="plate">168 {locale === 'ru' ? 'часов в неделе' : 'hours a week'}</span>
             <span class="flex items-center gap-4 font-mono text-[0.65rem] tracking-wider">
-              <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 bg-ink"></span>{tr('clockHuman', locale)} 40</span>
-              <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 bg-brass"></span>{tr('clockSystem', locale)} 168</span>
+              <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-steel-300/40"></span>{tr('clockHuman', locale)} 40</span>
+              <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-cyan"></span>{tr('clockSystem', locale)} 168</span>
             </span>
           </figcaption>
 
@@ -84,7 +84,7 @@ const week = days.map((d, di) =>
                   <div class="grid flex-1 grid-cols-24 gap-[3px]">
                     {row.map((cell, hi) => (
                       <span
-                        class:list={['hour-cell aspect-square', cell.human ? 'bg-ink' : 'bg-brass/45']}
+                        class:list={['hour-cell aspect-square', cell.human ? 'bg-steel-300/25' : 'bg-cyan/55']}
                         style={`--d:${(di * 24 + hi) * 4}ms`}
                       />
                     ))}

@@ -1,0 +1,430 @@
+---
+/**
+ * Услуги как витрина продукта, а не строчка в списке.
+ *
+ * Каждая услуга — отдельный кадр во всю высоту экрана: что именно человек
+ * получает на руки, за какой срок, за какие деньги и на чём это собрано.
+ * Кадры едут вбок, пока страница листается вниз, — прокрутка одна, поэтому
+ * никто не «теряется» и не пропускает половину направлений.
+ *
+ * Справа у каждой услуги свой каркасный объект: он не декоративный, а
+ * подобран по смыслу — замкнутый контур для автоматизации, гранёная сфера
+ * для диалога, тор для рыночного цикла.
+ */
+import { url, type Locale } from '../data/site';
+import { tr } from '../data/i18n';
+import { orderedServices } from '../data/services';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const base = locale === 'ru' ? '/uslugi' : '/en/services';
+
+const fmt = (n: number) =>
+  locale === 'ru' ? `${n.toLocaleString('ru-RU')} ₽` : `€${Math.round(n / 100).toLocaleString('en-US')}`;
+
+const items = orderedServices;
+const hint =
+  locale === 'ru'
+    ? 'Листайте вниз — направления идут одно за другим'
+    : 'Keep scrolling — disciplines come one after another';
+const gotLabel = (n: number) =>
+  locale === 'ru' ? `${n} ${n === 1 ? 'позиция' : n < 5 ? 'позиции' : 'позиций'} на руки` : `${n} deliverables`;
+---
+
+<section
+  id={locale === 'ru' ? 'uslugi' : 'services'}
+  class="svc-pin on-dark relative bg-ink text-steel-100"
+  data-count={items.length}
+>
+  <div class="svc-stage relative flex h-[100svh] flex-col overflow-hidden">
+    <!-- Каркасный объект текущей услуги -->
+    <canvas
+      id="svc-canvas"
+      aria-hidden="true"
+      class="pointer-events-none absolute top-0 right-0 hidden h-full w-[46%] opacity-0 transition-opacity duration-1000 lg:block"
+    ></canvas>
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(100deg,#121611_38%,rgba(18,22,17,0.55)_62%,transparent_86%)] lg:block"
+    >
+    </div>
+
+    <!-- Шапка блока -->
+    <header class="shell relative z-10 flex shrink-0 items-end justify-between gap-8 pt-24 pb-6 md:pt-28">
+      <div>
+        <p class="plate !text-brass">{tr('servicesPlate', locale)}</p>
+        <h2 class="mt-3 text-big">{tr('servicesTitle', locale)}</h2>
+      </div>
+      <p class="hidden max-w-xs text-right font-mono text-[0.68rem] leading-relaxed tracking-wider text-steel-300/70 uppercase md:block">
+        {hint}
+      </p>
+    </header>
+
+    <!-- Лента кадров -->
+    <div class="svc-viewport relative z-10 flex-1 overflow-hidden">
+      <div class="svc-track flex h-full">
+        {
+          items.map((s, i) => (
+            <article class="svc-panel flex h-full w-screen shrink-0 flex-col justify-center">
+              <div class="shell w-full">
+                <div class="max-w-[38rem] lg:max-w-[32rem] xl:max-w-[38rem]">
+                  <div class="flex items-baseline gap-4">
+                    <span class="font-mono text-[0.72rem] tracking-widest text-brass">{s.code}</span>
+                    <span class="h-px flex-1 bg-steel-300/20" />
+                    <span class="font-mono text-[0.72rem] tracking-widest text-steel-300/60">
+                      {String(i + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
+                    </span>
+                  </div>
+
+                  <h3 class="mt-5 font-display text-[1.7rem] leading-[1.05] font-bold tracking-tight md:text-[2.4rem]">
+                    {s.title[locale]}
+                  </h3>
+                  <p class="mt-3 text-[1rem] text-steel-300 md:text-[1.08rem]">{s.tagline[locale]}</p>
+
+                  <p class="plate mt-9 flex items-center gap-3 !text-steel-300/70">
+                    {tr('serviceGet', locale)}
+                    <span class="h-px w-6 bg-brass" />
+                    <span class="text-brass">{gotLabel(s.deliverables[locale].length)}</span>
+                  </p>
+
+                  <ul class="mt-4 grid gap-2.5">
+                    {s.deliverables[locale].map((d) => (
+                      <li class="flex gap-3 text-[0.93rem] leading-snug text-steel-100/90 md:text-[0.97rem]">
+                        <span aria-hidden="true" class="mt-2 h-1 w-3 shrink-0 bg-brass/70" />
+                        <span>{d}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <dl class="mt-9 flex flex-wrap gap-x-10 gap-y-4 border-t border-steel-300/15 pt-5">
+                    <div>
+                      <dt class="plate !text-steel-300/60">{tr('serviceTerm', locale)}</dt>
+                      <dd class="mt-1.5 font-mono text-[0.84rem] text-steel-100">{s.timeline[locale]}</dd>
+                    </div>
+                    <div>
+                      <dt class="plate !text-steel-300/60">{tr('serviceFrom', locale)}</dt>
+                      <dd class="mt-1.5 font-mono text-[0.84rem] text-brass">{fmt(s.priceFrom)}</dd>
+                    </div>
+                    <div class="min-w-[12rem]">
+                      <dt class="plate !text-steel-300/60">{tr('serviceStack', locale)}</dt>
+                      <dd class="mt-1.5 font-mono text-[0.78rem] leading-relaxed text-steel-300">
+                        {s.stack.join(' · ')}
+                      </dd>
+                    </div>
+                  </dl>
+
+                  <a
+                    href={url(`${base}/${s.slug[locale]}/`)}
+                    class="btn btn-ghost mt-8 !border-steel-300/30 hover:!border-brass hover:!text-brass"
+                  >
+                    {tr('serviceMore', locale)}
+                    <span aria-hidden="true">→</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Индикатор: где мы в ленте -->
+    <div class="shell relative z-10 shrink-0 pt-4 pb-10">
+      <div class="flex items-center gap-5">
+        <div class="h-px flex-1 bg-steel-300/15">
+          <div id="svc-bar" class="h-px w-0 bg-brass transition-[width] duration-200 ease-out"></div>
+        </div>
+        <ul class="flex gap-2" aria-hidden="true">
+          {items.map(() => <li class="svc-dot h-1.5 w-1.5 rounded-full bg-steel-300/25 transition-colors duration-300" />)}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Без пиннинга (телефон, планшет, prefers-reduced-motion) кадры
+     превращаются в обычные карточки — контент остаётся весь. */
+  @media (max-width: 1023px) {
+    .svc-pin .svc-stage {
+      height: auto;
+      overflow: visible;
+    }
+    .svc-pin .svc-viewport {
+      overflow: visible;
+    }
+    .svc-pin .svc-track {
+      display: grid;
+      gap: 1px;
+      background: color-mix(in oklab, var(--color-steel-300) 14%, transparent);
+      height: auto;
+    }
+    .svc-pin .svc-panel {
+      width: 100%;
+      height: auto;
+      background: var(--color-ink);
+      padding-block: 3.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .svc-pin .svc-stage {
+      height: auto;
+      overflow: visible;
+    }
+    .svc-pin .svc-viewport {
+      overflow: visible;
+    }
+    .svc-pin .svc-track {
+      display: grid;
+      height: auto;
+    }
+    .svc-pin .svc-panel {
+      width: 100%;
+      height: auto;
+      padding-block: 3rem;
+    }
+    #svc-canvas {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const section = document.querySelector<HTMLElement>('.svc-pin');
+  const stage = section?.querySelector<HTMLElement>('.svc-stage');
+  const track = section?.querySelector<HTMLElement>('.svc-track');
+  const bar = document.getElementById('svc-bar');
+  const dots = Array.from(document.querySelectorAll<HTMLElement>('.svc-dot'));
+  const canvas = document.getElementById('svc-canvas') as HTMLCanvasElement | null;
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wide = matchMedia('(min-width: 1024px)');
+
+  /* ─── Каркасные объекты услуг ────────────────────────────────────────── */
+  let setShape: ((i: number) => void) | null = null;
+
+  const bootShapes = async () => {
+    if (!canvas || reduce) return;
+    const THREE = await import('three');
+
+    // Точки распределяем по рёбрам каркаса — объект читается как чертёж,
+    // а не как облако.
+    const COUNT = 2600;
+    const sampleEdges = (geo: any): Float32Array => {
+      const edges = new THREE.EdgesGeometry(geo, 1);
+      const src = edges.getAttribute('position').array as Float32Array;
+      const segments = src.length / 6;
+      const out = new Float32Array(COUNT * 3);
+      for (let i = 0; i < COUNT; i++) {
+        const s = (Math.random() * segments) | 0;
+        const t = Math.random();
+        const o = s * 6;
+        out[i * 3] = src[o] + (src[o + 3] - src[o]) * t;
+        out[i * 3 + 1] = src[o + 1] + (src[o + 4] - src[o + 1]) * t;
+        out[i * 3 + 2] = src[o + 2] + (src[o + 5] - src[o + 2]) * t;
+      }
+      edges.dispose();
+      geo.dispose();
+      return out;
+    };
+
+    // Форма подобрана под смысл услуги, а не «какая красивее»
+    const shapes = [
+      sampleEdges(new THREE.TorusKnotGeometry(1.15, 0.36, 96, 12)),   // S-01 замкнутый контур
+      sampleEdges(new THREE.IcosahedronGeometry(1.65, 1)),            // S-02 гранёный диалог
+      sampleEdges(new THREE.BoxGeometry(2.1, 1.5, 1.5, 3, 2, 2)),     // S-03 сетка страниц
+      sampleEdges(new THREE.CapsuleGeometry(0.78, 1.5, 6, 18)),       // S-04 корпус телефона
+      sampleEdges(new THREE.DodecahedronGeometry(1.6, 0)),            // S-05 ядро системы
+      sampleEdges(new THREE.TorusGeometry(1.25, 0.42, 14, 40)),       // S-06 рыночный цикл
+    ];
+
+    const cur = new Float32Array(shapes[0]);
+    const from = new Float32Array(shapes[0]);
+    let to = shapes[0];
+    let mix = 1;
+
+    const seed = new Float32Array(COUNT);
+    for (let i = 0; i < COUNT; i++) seed[i] = Math.random();
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(cur, 3));
+    geo.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1));
+
+    const uniforms = {
+      uTime: { value: 0 },
+      uDpr: { value: Math.min(devicePixelRatio, 2) },
+      uBrass: { value: new THREE.Color(0xc89b3c) },
+      uSteel: { value: new THREE.Color(0xf2f4ef) },
+      uMoss: { value: new THREE.Color(0x7fb094) },
+    };
+
+    const mat = new THREE.ShaderMaterial({
+      uniforms,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      vertexShader: `
+        uniform float uTime, uDpr;
+        attribute float aSeed;
+        varying float vSeed, vDepth;
+        void main() {
+          vec3 pos = position;
+          pos += vec3(sin(uTime * 0.7 + aSeed * 6.28)) * 0.012;
+          vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+          gl_Position = projectionMatrix * mv;
+          gl_PointSize = (1.5 + aSeed * 1.7) * uDpr * (150.0 / -mv.z);
+          vSeed = aSeed;
+          vDepth = -mv.z;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 uBrass, uSteel, uMoss;
+        varying float vSeed, vDepth;
+        void main() {
+          float r = length(gl_PointCoord - 0.5);
+          if (r > 0.5) discard;
+          float a = smoothstep(0.5, 0.05, r);
+          // Ближние точки латунные, дальние уходят в мох — появляется глубина
+          float d = clamp((vDepth - 3.0) / 5.0, 0.0, 1.0);
+          vec3 col = mix(uSteel, uBrass, vSeed);
+          col = mix(col, uMoss, d * 0.75);
+          gl_FragColor = vec4(col, a * (1.0 - d * 0.55) * 0.9);
+        }
+      `,
+    });
+
+    const points = new THREE.Points(geo, mat);
+    const group = new THREE.Group();
+    group.add(points);
+    const scene = new THREE.Scene();
+    scene.add(group);
+
+    const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 100);
+    camera.position.z = 5.6;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
+    renderer.setClearColor(0x000000, 0);
+
+    const resize = () => {
+      const w = canvas.clientWidth || 1;
+      const h = canvas.clientHeight || 1;
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      uniforms.uDpr.value = Math.min(devicePixelRatio, 2);
+    };
+    resize();
+    addEventListener('resize', resize, { passive: true });
+
+    let active = 0;
+    setShape = (i: number) => {
+      if (i === active) return;
+      active = i;
+      from.set(cur);
+      to = shapes[i];
+      mix = 0;
+    };
+
+    let mx = 0, my = 0, tx = 0, ty = 0;
+    addEventListener(
+      'pointermove',
+      (e) => {
+        const r = canvas.getBoundingClientRect();
+        if (r.width === 0) return;
+        tx = ((e.clientX - r.left) / r.width - 0.5) * 1.2;
+        ty = ((e.clientY - r.top) / r.height - 0.5) * 1.2;
+      },
+      { passive: true }
+    );
+
+    const clock = new THREE.Clock();
+    let onScreen = true;
+    new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; }, { threshold: 0 }).observe(canvas);
+
+    const posAttr = geo.getAttribute('position');
+    const tick = () => {
+      requestAnimationFrame(tick);
+      if (!onScreen) return;
+      const dt = Math.min(clock.getDelta(), 0.05);
+      uniforms.uTime.value = clock.getElapsedTime();
+
+      if (mix < 1) {
+        mix = Math.min(1, mix + dt * 1.7);
+        const e = 1 - Math.pow(1 - mix, 3);
+        for (let i = 0; i < cur.length; i++) cur[i] = from[i] + (to[i] - from[i]) * e;
+        posAttr.needsUpdate = true;
+      }
+
+      mx += (tx - mx) * 0.06;
+      my += (ty - my) * 0.06;
+      group.rotation.y += dt * 0.24 + (mx * 0.9 - group.rotation.y) * 0.0;
+      group.rotation.x += (my * 0.5 - group.rotation.x) * 0.05;
+      group.rotation.z = mx * 0.12;
+
+      renderer.render(scene, camera);
+    };
+    canvas.style.opacity = '1';
+    tick();
+  };
+
+  /* ─── Пиннинг ленты ──────────────────────────────────────────────────── */
+  const setActive = (i: number) => {
+    dots.forEach((d, k) => {
+      d.classList.toggle('bg-brass', k === i);
+      d.classList.toggle('bg-steel-300/25', k !== i);
+    });
+    setShape?.(i);
+  };
+
+  const bootPin = async () => {
+    if (!section || !stage || !track || reduce || !wide.matches) return;
+    const [{ gsap }, { ScrollTrigger }] = await Promise.all([import('gsap'), import('gsap/ScrollTrigger')]);
+    gsap.registerPlugin(ScrollTrigger);
+
+    const panels = Array.from(track.children) as HTMLElement[];
+    const distance = () => track.scrollWidth - innerWidth;
+
+    gsap.to(track, {
+      x: () => -distance(),
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: () => '+=' + distance(),
+        pin: stage,
+        scrub: 0.7,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const p = self.progress;
+          if (bar) bar.style.width = (p * 100).toFixed(1) + '%';
+          setActive(Math.min(panels.length - 1, Math.round(p * (panels.length - 1))));
+        },
+      },
+    });
+  };
+
+  const start = () => {
+    bootShapes().catch(() => {
+      // Без WebGL остаётся текст — блок не разваливается
+    });
+    bootPin().catch(() => {});
+  };
+
+  if (section) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          start();
+        }
+      },
+      { rootMargin: '400px' }
+    );
+    io.observe(section);
+    setActive(0);
+  }
+</script>

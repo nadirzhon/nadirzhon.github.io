@@ -1,7 +1,7 @@
 ---
 import { url, type Locale } from '../data/site';
 import { tr } from '../data/i18n';
-import ParticleField from './ParticleField.astro';
+import SystemGraph from './SystemGraph.astro';
 
 interface Props {
   locale: Locale;
@@ -19,19 +19,19 @@ const marks = locale === 'ru'
   : ['Fixed price', 'Code yours from day one', 'First call free'];
 ---
 
-<section id="hero-dark" class="on-dark relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-ink text-steel-100">
-  <ParticleField />
+<section id="hero-dark" class="on-dark relative isolate flex min-h-[100svh] flex-col overflow-hidden text-steel-100">
+  <SystemGraph />
 
   <!-- Затемнение под текстом, чтобы частицы не мешали читать -->
   <div
     aria-hidden="true"
-    class="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(100deg,#121611_8%,rgba(18,22,17,0.86)_38%,rgba(18,22,17,0.15)_70%)]"
+    class="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(100deg,#05070c_6%,rgba(5,7,12,0.88)_36%,rgba(5,7,12,0.12)_72%)]"
   >
   </div>
 
   <div class="shell relative z-[2] flex flex-1 flex-col justify-center pt-28 pb-16 md:pt-32">
-    <p class="hero-fade plate !text-brass flex items-center gap-3" style="--d:0.1s">
-      <span class="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-brass"></span>
+    <p class="hero-fade plate !text-cyan flex items-center gap-3" style="--d:0.1s">
+      <span class="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-cyan"></span>
       {tr('heroPlate', locale)}
     </p>
 
@@ -40,7 +40,7 @@ const marks = locale === 'ru'
         lines.map((line, li) => (
           <span class="block overflow-hidden">
             <span class="hero-rise block" style={`--d:${0.18 + li * 0.11}s`}>
-              {li === 2 ? <span class="text-brass">{line}</span> : line}
+              {li === 2 ? <span class="grad-text">{line}</span> : line}
             </span>
           </span>
         ))
@@ -52,11 +52,11 @@ const marks = locale === 'ru'
     </p>
 
     <div class="hero-fade mt-10 flex flex-wrap items-center gap-3" style="--d:0.68s">
-      <a href={ctaPrimary} class="btn !border-brass !bg-brass !text-ink hover:!bg-brass-200">
+      <a href={ctaPrimary} class="btn btn-primary mag">
         {tr('heroCta', locale)}
         <span aria-hidden="true">→</span>
       </a>
-      <a href={ctaSecond} class="btn btn-ghost">{tr('heroCta2', locale)}</a>
+      <a href={ctaSecond} class="btn btn-ghost mag">{tr('heroCta2', locale)}</a>
     </div>
 
     <ul class="hero-fade mt-12 flex flex-wrap gap-x-8 gap-y-3" style="--d:0.82s">

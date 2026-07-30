@@ -52,6 +52,30 @@
         );
       });
 
+
+      // --- Магнитные кнопки: тянутся к курсору и отпускают с инерцией ---
+      if (!matchMedia('(pointer: coarse)').matches) {
+        document.querySelectorAll<HTMLElement>('.mag').forEach((el) => {
+          const qx = gsap.quickTo(el, 'x', { duration: 0.5, ease: 'power3.out' });
+          const qy = gsap.quickTo(el, 'y', { duration: 0.5, ease: 'power3.out' });
+          el.addEventListener('pointermove', (e) => {
+            const b = el.getBoundingClientRect();
+            qx((e.clientX - b.left - b.width / 2) * 0.28);
+            qy((e.clientY - b.top - b.height / 2) * 0.42);
+          });
+          el.addEventListener('pointerleave', () => { qx(0); qy(0); });
+        });
+
+        // --- Панели ловят блик под курсором ---
+        document.querySelectorAll<HTMLElement>('.panel, .glow-follow').forEach((el) => {
+          el.addEventListener('pointermove', (e) => {
+            const b = el.getBoundingClientRect();
+            el.style.setProperty('--gx', e.clientX - b.left + 'px');
+            el.style.setProperty('--gy', e.clientY - b.top + 'px');
+          });
+        });
+      }
+
       // --- Цифры досчитываются на глазах ---
       document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
         const raw = el.textContent ?? '';
