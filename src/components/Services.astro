@@ -1,81 +1,31 @@
 ---
-import { url, type Locale } from '../data/site';
+import { type Locale } from '../data/site';
 import { tr, extraServices } from '../data/i18n';
-import { orderedServices } from '../data/services';
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
-const base = locale === 'ru' ? '/uslugi' : '/en/services';
-const fmt = (n: number) =>
-  locale === 'ru' ? `${n.toLocaleString('ru-RU')} ₽` : `€${Math.round(n / 100).toLocaleString('en-US')}`;
 ---
 
-<section id={locale === 'ru' ? 'uslugi' : 'services'} class="scroll-mt-20 border-b border-slate-1/20 py-20 md:py-28">
+<section class="border-b border-slate-1/20 py-20 md:py-24">
   <div class="shell">
-    <div class="reveal grid gap-6 md:grid-cols-[auto_1fr] md:gap-14">
-      <p class="plate md:pt-3">{tr('servicesPlate', locale)}</p>
-      <div>
-        <h2 class="text-big">{tr('servicesTitle', locale)}</h2>
-        <p class="mt-5 max-w-2xl text-[1.02rem] leading-relaxed text-slate-2">{tr('servicesLead', locale)}</p>
-      </div>
-    </div>
-
-    <ul data-stagger class="mt-14 border-t border-slate-1/25">
-      {
-        orderedServices.map((s) => (
-          <li class="group border-b border-slate-1/25">
-            <a
-              href={url(`${base}/${s.slug[locale]}/`)}
-              class="relative grid items-baseline gap-x-6 gap-y-2 px-1 py-7 transition-[background-color,padding] duration-300 group-hover:bg-ink group-hover:px-5 sm:grid-cols-[3.5rem_1fr_auto] md:py-8"
-            >
-              <span class="font-mono text-[0.72rem] tracking-widest text-slate-1 transition-colors group-hover:text-brass">
-                {s.code}
-              </span>
-
-              <span>
-                <span class="block font-display text-[1.35rem] leading-tight font-bold tracking-tight transition-colors group-hover:text-steel-50 md:text-[1.7rem]">
-                  {s.title[locale]}
-                </span>
-                <span class="mt-1.5 block max-w-lg text-[0.92rem] text-slate-2 transition-colors group-hover:text-steel-300">
-                  {s.tagline[locale]}
-                </span>
-              </span>
-
-              <span class="flex items-center gap-5 justify-self-start sm:justify-self-end">
-                <span class="font-mono text-[0.78rem] whitespace-nowrap text-slate-1 transition-colors group-hover:text-steel-300">
-                  {tr('serviceFrom', locale)} {fmt(s.priceFrom)}
-                </span>
-                <span
-                  aria-hidden="true"
-                  class="inline-block text-lg transition-transform duration-300 group-hover:translate-x-1 group-hover:text-brass"
-                >
-                  →
-                </span>
-              </span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-
     <!-- Задачи поменьше -->
-    <div class="mt-20 grid gap-6 md:grid-cols-[auto_1fr] md:gap-14">
+    <div class="grid gap-6 md:grid-cols-[auto_1fr] md:gap-14">
       <p class="reveal plate md:pt-3">{tr('extraPlate', locale)}</p>
       <div>
         <h3 class="reveal text-[1.6rem] md:text-[2rem]">{tr('extraTitle', locale)}</h3>
-        <p class="reveal mt-4 max-w-2xl text-[1rem] leading-relaxed text-slate-2">{tr('extraLead', locale)}</p>
+        <p class="reveal mt-4 max-w-2xl text-[1rem] leading-relaxed text-steel-300">{tr('extraLead', locale)}</p>
 
-        <ul data-stagger class="mt-9 grid gap-px bg-slate-1/25 sm:grid-cols-2 lg:grid-cols-3">
+        <ul data-stagger class="mt-9 grid gap-3 md:gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {
             extraServices.map((e) => (
-              <li class="group flex items-start gap-3 bg-steel-50 p-5 transition-colors hover:bg-steel-100">
+              <li class="group flex items-start gap-3 panel rounded-2xl p-5 transition-colors hover:bg-ink-700">
                 <span
                   aria-hidden="true"
-                  class="mt-2 h-1 w-1 shrink-0 bg-brass transition-all duration-300 group-hover:w-4"
+                  class="mt-2 h-1 w-3 shrink-0 rounded-full bg-gradient-to-r from-cyan to-violet transition-all duration-300 group-hover:w-4"
                 />
-                <span class="text-[0.92rem] leading-snug text-slate-2">{e[locale]}</span>
+                <span class="text-[0.92rem] leading-snug text-steel-300">{e[locale]}</span>
               </li>
             ))
           }

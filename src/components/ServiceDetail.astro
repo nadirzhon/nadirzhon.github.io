@@ -21,7 +21,7 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
   <section class="border-b border-slate-1/20 py-14 md:py-20">
     <div class="shell">
       <nav class="flex items-center gap-2 font-mono text-[0.7rem] tracking-widest text-slate-1 uppercase">
-        <a href={home} class="transition-colors hover:text-ink">{tr('backHome', locale)}</a>
+        <a href={home} class="transition-colors hover:text-steel-50">{tr('backHome', locale)}</a>
         <span aria-hidden="true">/</span>
         <span>{s.code}</span>
       </nav>
@@ -32,11 +32,11 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
           <p class="mt-4 font-display text-[1.15rem] leading-snug font-medium text-brass md:text-[1.35rem]">
             {s.tagline[locale]}
           </p>
-          <p class="mt-7 max-w-2xl text-[1.02rem] leading-relaxed text-slate-2">{s.intro[locale]}</p>
+          <p class="mt-7 max-w-2xl text-[1.02rem] leading-relaxed text-steel-300">{s.intro[locale]}</p>
           <a href={contact} class="btn btn-primary mt-9">{tr('navContact', locale)} <span aria-hidden="true">→</span></a>
         </div>
 
-        <aside class="self-start border border-slate-1/30 bg-steel-100/60">
+        <aside class="self-start border border-slate-1/30 bg-ink-700/60">
           <dl class="divide-y divide-slate-1/20">
             <div class="px-6 py-5">
               <dt class="plate">{tr('serviceFrom', locale)}</dt>
@@ -44,11 +44,11 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
             </div>
             <div class="px-6 py-5">
               <dt class="plate">{tr('serviceTerm', locale)}</dt>
-              <dd class="mt-2 text-[0.95rem] text-slate-2">{s.timeline[locale]}</dd>
+              <dd class="mt-2 text-[0.95rem] text-steel-300">{s.timeline[locale]}</dd>
             </div>
             <div class="px-6 py-5">
               <dt class="plate">{tr('serviceWho', locale)}</dt>
-              <dd class="mt-2 text-[0.95rem] leading-relaxed text-slate-2">{s.forWhom[locale]}</dd>
+              <dd class="mt-2 text-[0.95rem] leading-relaxed text-steel-300">{s.forWhom[locale]}</dd>
             </div>
             <div class="px-6 py-5">
               <dt class="plate">{tr('serviceStack', locale)}</dt>
@@ -72,18 +72,18 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
       <p class="plate md:pt-3">{tr('serviceAddons', locale)}</p>
 
       <div>
-        <p class="max-w-2xl text-[1rem] leading-relaxed text-slate-2">{tr('serviceAddonsLead', locale)}</p>
+        <p class="max-w-2xl text-[1rem] leading-relaxed text-steel-300">{tr('serviceAddonsLead', locale)}</p>
 
         <div id="quote" class="mt-9 grid gap-8 lg:grid-cols-[1fr_20rem] lg:gap-12" data-base={s.priceFrom} data-locale={locale}>
           <div>
             <!-- База: всегда включена, снять нельзя -->
-            <div class="flex items-start gap-4 border-y border-slate-1/25 bg-steel-100/60 px-4 py-4">
-              <span aria-hidden="true" class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center bg-brass text-[0.7rem] leading-none font-bold text-ink">
+            <div class="flex items-start gap-4 border-y border-slate-1/25 bg-ink-700/60 px-4 py-4">
+              <span aria-hidden="true" class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center bg-brass text-[0.7rem] leading-none font-bold text-steel-50">
                 ✓
               </span>
               <span class="flex-1">
                 <span class="block text-[0.98rem] leading-snug font-semibold">{tr('serviceBase', locale)}</span>
-                <span class="mt-1 block text-[0.92rem] leading-snug text-slate-2">{s.baseScope[locale]}</span>
+                <span class="mt-1 block text-[0.92rem] leading-snug text-steel-300">{s.baseScope[locale]}</span>
               </span>
               <span class="font-mono text-[0.85rem] whitespace-nowrap">{fmt(s.priceFrom)}</span>
             </div>
@@ -99,9 +99,9 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
                         aria-hidden="true"
                         class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center border border-slate-1/50 transition-colors group-hover:border-ink peer-checked:border-brass peer-checked:bg-brass"
                       >
-                        <span class="tick text-[0.7rem] leading-none font-bold text-ink">✓</span>
+                        <span class="tick text-[0.7rem] leading-none font-bold text-steel-50">✓</span>
                       </span>
-                      <span class="flex-1 text-[0.96rem] leading-snug text-slate-2 transition-colors peer-checked:text-ink">
+                      <span class="flex-1 text-[0.96rem] leading-snug text-steel-300 transition-colors peer-checked:text-steel-50">
                         {a.title[locale]}
                       </span>
                       <span class="font-mono text-[0.85rem] whitespace-nowrap text-slate-1">+{fmt(a.price)}</span>
@@ -114,7 +114,7 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
 
           <!-- Итог -->
           <aside class="self-start border border-ink bg-ink p-6 text-steel-100 lg:sticky lg:top-24">
-            <p class="plate !text-brass">{tr('serviceTotal', locale)}</p>
+            <p class="plate !text-cyan">{tr('serviceTotal', locale)}</p>
             <p id="quote-total" class="mt-3 font-display text-[2rem] leading-none font-bold text-steel-50">
               {fmt(s.priceFrom)}
             </p>
@@ -122,7 +122,7 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
               {locale === 'ru' ? 'база + 0 допов' : 'base + 0 add-ons'}
             </p>
             <p class="mt-5 text-[0.85rem] leading-relaxed text-steel-300">{tr('serviceTotalHint', locale)}</p>
-            <a href={contact} class="btn mt-6 w-full justify-center !border-brass !bg-brass !text-ink hover:!bg-brass-200">
+            <a href={contact} class="btn mt-6 w-full justify-center !border-brass !bg-brass !text-steel-50 hover:!bg-brass-200">
               {tr('navContact', locale)}
             </a>
           </aside>
@@ -140,7 +140,7 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
           s.deliverables[locale].map((d, i) => (
             <li class="reveal flex gap-6 py-5">
               <span class="font-mono text-[0.75rem] text-brass">{String(i + 1).padStart(2, '0')}</span>
-              <span class="text-[1rem] leading-relaxed text-slate-2">{d}</span>
+              <span class="text-[1rem] leading-relaxed text-steel-300">{d}</span>
             </li>
           ))
         }
@@ -152,7 +152,7 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
     s.caveat && (
       <section class="on-dark bg-ink py-14 text-steel-100 md:py-16">
         <div class="shell grid gap-6 md:grid-cols-[auto_1fr] md:gap-14">
-          <p class="plate !text-brass md:pt-1">{tr('serviceHonest', locale)}</p>
+          <p class="plate !text-cyan md:pt-1">{tr('serviceHonest', locale)}</p>
           <p class="max-w-3xl text-[1.02rem] leading-relaxed text-steel-200">{s.caveat[locale]}</p>
         </div>
       </section>
@@ -163,11 +163,11 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
   <section class="border-t border-slate-1/20 py-16 md:py-20">
     <div class="shell">
       <p class="plate">{tr('servicesPlate', locale)}</p>
-      <ul class="mt-7 grid gap-px bg-slate-1/25 sm:grid-cols-2 lg:grid-cols-4">
+      <ul class="mt-7 grid gap-3 md:gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {
           others.map((o) => (
             <li>
-              <a href={url(`${base}/${o.slug[locale]}/`)} class="group block h-full bg-steel-50 p-6 transition-colors hover:bg-ink">
+              <a href={url(`${base}/${o.slug[locale]}/`)} class="group block h-full panel rounded-2xl p-6 transition-colors hover:bg-ink">
                 <span class="font-mono text-[0.7rem] tracking-widest text-slate-1 group-hover:text-brass">{o.code}</span>
                 <span class="mt-3 block font-display text-[1.05rem] leading-tight font-bold group-hover:text-steel-50">
                   {o.title[locale]}

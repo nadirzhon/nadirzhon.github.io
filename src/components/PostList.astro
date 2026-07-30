@@ -40,10 +40,10 @@ const dateFmt = new Intl.DateTimeFormat(locale === 'ru' ? 'ru-RU' : 'en-GB', {
             </div>
 
             <div>
-              <h2 class="text-[1.35rem] leading-tight transition-colors group-hover:text-brass md:text-[1.6rem]">
+              <h2 class="text-[1.35rem] leading-tight transition-opacity group-hover:opacity-80 md:text-[1.6rem]">
                 {p.data.title}
               </h2>
-              <p class="mt-3 max-w-2xl text-[0.95rem] leading-relaxed text-slate-2">{p.data.description}</p>
+              <p class="mt-3 max-w-2xl text-[0.95rem] leading-relaxed text-steel-300">{p.data.description}</p>
               <div class="mt-4 flex flex-wrap gap-1.5">
                 {p.data.tags.map((tag) => (
                   <span class="border border-slate-1/30 px-2 py-0.5 font-mono text-[0.65rem] text-slate-1">{tag}</span>

@@ -8,13 +8,13 @@ interface Props {
 const { locale } = Astro.props;
 ---
 
-<section class="on-dark relative overflow-hidden border-b border-steel-300/15 bg-ink py-20 text-steel-100 md:py-28">
+<section class="on-dark relative overflow-hidden border-b border-steel-300/15 bg-ink/55 py-20 text-steel-100 md:py-28">
   <!-- Латунное свечение, реагирующее на положение курсора -->
   <div id="proof-glow" class="pointer-events-none absolute -inset-40 opacity-0 transition-opacity duration-700" aria-hidden="true"></div>
 
   <div class="shell relative">
     <div class="reveal grid gap-6 md:grid-cols-[auto_1fr] md:gap-14">
-      <p class="plate !text-brass md:pt-3">{tr('proofPlate', locale)}</p>
+      <p class="plate !text-cyan md:pt-3">{tr('proofPlate', locale)}</p>
       <div>
         <h2 class="text-big text-steel-50">{tr('proofTitle', locale)}</h2>
         <p class="mt-5 max-w-2xl text-[1.02rem] leading-relaxed text-steel-300">{tr('proofLead', locale)}</p>
@@ -24,13 +24,13 @@ const { locale } = Astro.props;
     <div data-stagger class="mt-14 grid gap-px bg-steel-300/15 sm:grid-cols-2">
       {
         proofPoints.map((p) => (
-          <article class="group relative bg-ink p-8 transition-colors duration-500 hover:bg-ink-800 md:p-10">
+          <article class="group relative panel rounded-2xl p-8 transition-colors duration-500 hover:panel rounded-2xl md:p-10">
             <span class="font-mono text-[0.72rem] tracking-widest text-brass">{p.n}</span>
             <h3 class="mt-5 text-[1.25rem] text-steel-50 md:text-[1.4rem]">{p.title[locale]}</h3>
             <p class="mt-4 max-w-md text-[0.96rem] leading-relaxed text-steel-300">{p.text[locale]}</p>
             <span
               aria-hidden="true"
-              class="absolute bottom-0 left-0 h-px w-0 bg-brass transition-[width] duration-500 ease-out group-hover:w-full"
+              class="absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-cyan to-violet transition-[width] duration-500 ease-out group-hover:w-full"
             />
           </article>
         ))

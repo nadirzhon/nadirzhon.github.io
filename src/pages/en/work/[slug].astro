@@ -19,25 +19,25 @@ const d = item.data;
     <header class="border-b border-slate-1/20 py-14 md:py-20">
       <div class="shell">
         <nav class="flex items-center gap-2 font-mono text-[0.7rem] tracking-widest text-slate-1 uppercase">
-          <a href={url("/en/work/")} class="transition-colors hover:text-ink">{tr('casesAll', 'en')}</a>
+          <a href={url("/en/work/")} class="transition-colors hover:text-steel-50">{tr('casesAll', 'en')}</a>
           <span aria-hidden="true">/</span><span>{d.year}</span>
         </nav>
 
         <h1 class="mt-8 max-w-4xl text-big">{d.title}</h1>
-        <p class="mt-6 max-w-2xl text-[1.08rem] leading-relaxed text-slate-2">{d.summary}</p>
+        <p class="mt-6 max-w-2xl text-[1.08rem] leading-relaxed text-steel-300">{d.summary}</p>
 
         <dl class="mt-10 grid gap-px border border-slate-1/25 bg-slate-1/25 sm:grid-cols-3">
-          <div class="bg-steel-50 px-5 py-4">
+          <div class="bg-ink-800 px-5 py-4">
             <dt class="plate">{tr('caseYear', 'en')}</dt>
             <dd class="mt-1.5 font-mono text-[0.95rem]">{d.year}</dd>
           </div>
-          <div class="bg-steel-50 px-5 py-4">
+          <div class="bg-ink-800 px-5 py-4">
             <dt class="plate">{tr('caseRole', 'en')}</dt>
             <dd class="mt-1.5 text-[0.95rem]">{d.role}</dd>
           </div>
-          <div class="bg-steel-50 px-5 py-4">
+          <div class="bg-ink-800 px-5 py-4">
             <dt class="plate">{tr('serviceStack', 'en')}</dt>
-            <dd class="mt-1.5 text-[0.9rem] text-slate-2">{d.stack.join(' · ')}</dd>
+            <dd class="mt-1.5 text-[0.9rem] text-steel-300">{d.stack.join(' · ')}</dd>
           </div>
         </dl>
 

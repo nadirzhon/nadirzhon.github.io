@@ -48,7 +48,7 @@ const full = `${title} — ${site.brand}`;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Onest:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
     />
 
     <noscript>
@@ -95,7 +95,14 @@ const full = `${title} — ${site.brand}`;
     </a>
 
     <Header locale={locale} altPath={altPath} darkHero={darkHero} />
-    <main id="main"><slot /></main>
+    <div class="bg-field" aria-hidden="true">
+      <div class="bg-field__grid"></div>
+      <div class="bg-field__glow bg-field__glow--a"></div>
+      <div class="bg-field__glow bg-field__glow--b"></div>
+      <div class="bg-field__noise"></div>
+    </div>
+
+    <main id="main" class="relative z-[1]"><slot /></main>
     <Footer locale={locale} />
     <Motion />
 
