@@ -212,9 +212,9 @@ const gotLabel = (n: number) =>
   const section = document.querySelector<HTMLElement>('.svc-pin');
   const stage = section?.querySelector<HTMLElement>('.svc-stage');
   const track = section?.querySelector<HTMLElement>('.svc-track');
-  const bar = document.getElementById('svc-bar');
-  const dots = Array.from(document.querySelectorAll<HTMLElement>('.svc-dot'));
-  const canvas = document.getElementById('svc-canvas') as HTMLCanvasElement | null;
+  const bar = section?.querySelector<HTMLElement>('#svc-bar') ?? null;
+  const dots = Array.from(section?.querySelectorAll<HTMLElement>('.svc-dot') ?? []);
+  const canvas = (section?.querySelector('#svc-canvas') ?? null) as HTMLCanvasElement | null;
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const wide = matchMedia('(min-width: 1024px)');
