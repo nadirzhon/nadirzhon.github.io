@@ -1,4 +1,5 @@
 ---
+import Shots from '../../components/Shots.astro';
 import { url } from '../../data/site';
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
@@ -11,6 +12,26 @@ export async function getStaticPaths() {
 
 const { item } = Astro.props;
 const { Content } = await render(item);
+
+// Экраны рабочей системы. Пока они есть только у HEAN — привязываем по slug,
+// чтобы не тащить пути в тексты кейсов.
+const shotsBySlug: Record<string, { src: string; title: string; note: string }[]> = {
+  'hean-ru': [
+    { src: '/work/hean/live-dashboard.jpg', title: 'Живая панель',
+      note: 'Состояние счёта, кривая капитала, риск-статус и открытые позиции в реальном времени' },
+    { src: '/work/hean/tactical-center.jpg', title: 'Тактический центр',
+      note: 'Что система решает прямо сейчас и почему — сигналы, фильтры, причины отказов' },
+    { src: '/work/hean/risk-center.jpg', title: 'Риск-контур',
+      note: 'Лимиты, просадка, аварийная остановка. Защита депозита отдельным слоем' },
+    { src: '/work/hean/physics-lab.jpg', title: 'Физическая лаборатория',
+      note: 'Рыночная термодинамика: температура, энтропия, определение фазы рынка' },
+    { src: '/work/hean/neuro-map.jpg', title: 'Нейрокарта',
+      note: 'Связи между инструментами и переток влияния между ними' },
+    { src: '/work/hean/sota-modules.jpg', title: 'Модули интеллекта',
+      note: 'Пятнадцать стратегий и слой принятия решений: что включено и как себя ведёт' },
+  ],
+};
+const shots = shotsBySlug[item.id] ?? [];
 const d = item.data;
 ---
 
@@ -60,8 +81,18 @@ const d = item.data;
       <div class="prose"><Content /></div>
 
       <div class="mt-16 border-t border-slate-1/25 pt-10">
-        <a href={url("/#kontakt")} class="btn btn-primary">{tr('navContact', 'ru')} <span aria-hidden="true">→</span></a>
+        <a href={url("/#kontakt")} class="btn btn-primary mag">{tr('navContact', 'ru')} <span aria-hidden="true">→</span></a>
       </div>
     </div>
+
+    {
+      shots.length > 0 && (
+        <Shots
+          shots={shots}
+          plate="Экраны"
+          lead="Снимки рабочей системы, а не макеты. Нажмите на любой — откроется во весь экран."
+        />
+      )
+    }
   </article>
 </Base>

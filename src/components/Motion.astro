@@ -78,6 +78,9 @@
 
       // --- Цифры досчитываются на глазах ---
       document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
+        // Счётчик переписывает textContent, поэтому работает только с теми
+        // элементами, внутри которых нет вёрстки — иначе он снесёт разметку.
+        if (el.children.length > 0) return;
         const raw = el.textContent ?? '';
         const num = parseFloat(raw.replace(/[^\d.,]/g, '').replace(/\s/g, '').replace(',', '.'));
         if (!isFinite(num)) return;

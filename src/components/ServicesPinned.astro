@@ -34,7 +34,7 @@ const gotLabel = (n: number) =>
 <section
   id={locale === 'ru' ? 'uslugi' : 'services'}
   class="svc-pin on-dark relative bg-ink/55 text-steel-100"
-  data-count={items.length}
+
 >
   <div class="svc-stage relative flex h-[100svh] flex-col overflow-hidden">
     <!-- Каркасный объект текущей услуги -->
@@ -50,12 +50,12 @@ const gotLabel = (n: number) =>
     </div>
 
     <!-- Шапка блока -->
-    <header class="shell relative z-10 flex shrink-0 items-end justify-between gap-8 pt-24 pb-6 md:pt-28">
-      <div>
-        <p class="plate !text-cyan">{tr('servicesPlate', locale)}</p>
-        <h2 class="mt-3 text-big">{tr('servicesTitle', locale)}</h2>
-      </div>
-      <p class="hidden max-w-xs text-right font-mono text-[0.68rem] leading-relaxed tracking-wider text-steel-300/70 uppercase md:block">
+    <header class="shell relative z-10 flex shrink-0 flex-wrap items-baseline justify-between gap-x-6 gap-y-2 pt-24 pb-5">
+      <h2 class="flex items-baseline gap-4 text-[1.35rem] leading-none md:text-[1.7rem]">
+        <span class="plate !text-cyan">{tr('servicesPlate', locale)}</span>
+        {tr('servicesTitle', locale)}
+      </h2>
+      <p class="hidden font-mono text-[0.66rem] tracking-wider text-steel-300/60 uppercase md:block">
         {hint}
       </p>
     </header>
@@ -76,18 +76,18 @@ const gotLabel = (n: number) =>
                     </span>
                   </div>
 
-                  <h3 class="mt-5 font-display text-[1.7rem] leading-[1.05] font-bold tracking-tight md:text-[2.4rem]">
+                  <h3 class="mt-4 font-display text-[1.6rem] leading-[1.05] font-bold tracking-tight md:text-[2.2rem]">
                     {s.title[locale]}
                   </h3>
                   <p class="mt-3 text-[1rem] text-steel-300 md:text-[1.08rem]">{s.tagline[locale]}</p>
 
-                  <p class="plate mt-9 flex items-center gap-3 !text-steel-300/70">
+                  <p class="plate mt-7 flex items-center gap-3 !text-steel-300/70">
                     {tr('serviceGet', locale)}
                     <span class="h-px w-6 bg-gradient-to-r from-cyan to-violet" />
                     <span class="grad-text">{gotLabel(s.deliverables[locale].length)}</span>
                   </p>
 
-                  <ul class="mt-4 grid gap-2.5">
+                  <ul class="mt-3.5 grid gap-2">
                     {s.deliverables[locale].map((d) => (
                       <li class="flex gap-3 text-[0.93rem] leading-snug text-steel-100/90 md:text-[0.97rem]">
                         <span aria-hidden="true" class="mt-2 h-1 w-3 shrink-0 rounded-full bg-gradient-to-r from-cyan to-violet" />
@@ -96,7 +96,7 @@ const gotLabel = (n: number) =>
                     ))}
                   </ul>
 
-                  <dl class="mt-9 flex flex-wrap gap-x-10 gap-y-4 border-t border-steel-300/15 pt-5">
+                  <dl class="mt-7 flex flex-wrap gap-x-10 gap-y-3 border-t border-steel-300/15 pt-4">
                     <div>
                       <dt class="plate !text-steel-300/60">{tr('serviceTerm', locale)}</dt>
                       <dd class="mt-1.5 font-mono text-[0.84rem] text-steel-100">{s.timeline[locale]}</dd>
@@ -111,7 +111,7 @@ const gotLabel = (n: number) =>
 
                   <a
                     href={url(`${base}/${s.slug[locale]}/`)}
-                    class="btn btn-ghost mag mt-8"
+                    class="btn btn-ghost mag mt-6"
                   >
                     {tr('serviceMore', locale)}
                     <span aria-hidden="true">→</span>
@@ -125,7 +125,7 @@ const gotLabel = (n: number) =>
     </div>
 
     <!-- Индикатор: где мы в ленте -->
-    <div class="shell relative z-10 shrink-0 pt-4 pb-10">
+    <div class="shell relative z-10 shrink-0 pt-3 pb-7">
       <div class="flex items-center gap-5">
         <div class="h-px flex-1 bg-steel-300/15">
           <div id="svc-bar" class="h-px w-0 bg-gradient-to-r from-cyan to-violet transition-[width] duration-200 ease-out"></div>
@@ -139,6 +139,28 @@ const gotLabel = (n: number) =>
 </section>
 
 <style>
+  /* На низком экране (ноутбук 13", окно с панелями) кадр всё равно должен
+     помещаться целиком: поджимаем шрифты и отступы, а не режем содержимое. */
+  @media (min-width: 1024px) and (max-height: 900px) {
+    .svc-pin .svc-panel h3 {
+      font-size: 1.75rem;
+    }
+    .svc-pin .svc-panel li {
+      font-size: 0.88rem;
+    }
+    .svc-pin .svc-panel ul {
+      gap: 0.4rem;
+    }
+    .svc-pin .svc-panel dl {
+      margin-top: 1.1rem;
+      padding-top: 0.8rem;
+    }
+    .svc-pin .svc-panel .btn {
+      margin-top: 1rem;
+      padding-block: 0.7rem;
+    }
+  }
+
   /* Без пиннинга (телефон, планшет, prefers-reduced-motion) кадры
      превращаются в обычные карточки — контент остаётся весь. */
   @media (max-width: 1023px) {
