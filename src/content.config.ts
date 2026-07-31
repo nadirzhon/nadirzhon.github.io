@@ -15,6 +15,8 @@ const cases = defineCollection({
     /** Проверяемые результаты. Пишите только то, что можете подтвердить. */
     outcomes: z.array(z.object({ value: z.string(), label: z.string() })).max(4),
     stack: z.array(z.string()),
+    /** Обложка: снимок работающей системы. Без неё кейс — просто текст. */
+    cover: z.string().optional(),
     order: z.number().default(99),
     draft: z.boolean().default(false),
   }),

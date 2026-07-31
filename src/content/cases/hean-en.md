@@ -16,6 +16,7 @@ outcomes:
   - value: '24/7'
     label: 'operation without manual intervention'
 stack: ['Python', 'Rust', 'PostgreSQL', 'Redis', 'Docker', 'Prometheus']
+cover: '/work/hean/live-dashboard.jpg'
 order: 1
 ---
 

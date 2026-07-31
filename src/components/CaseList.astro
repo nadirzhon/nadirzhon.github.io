@@ -46,46 +46,69 @@ const base = locale === 'ru' ? '/keysy' : '/en/work';
       ) : (
         <div class:list={['mt-14 grid gap-3 md:gap-4', items.length > 1 && 'md:grid-cols-2']}>
           {items.map((c) => (
-            <article class="reveal group flex flex-col panel rounded-2xl p-7 transition-colors hover:bg-ink-700 md:p-9">
-              <div class="flex items-center gap-3 font-mono text-[0.68rem] tracking-widest text-slate-1 uppercase">
-                <span>{c.data.year}</span>
-                <span class="h-px w-5 bg-slate-1/50" />
-                <span>{c.data.industry}</span>
-              </div>
-
-              <h3 class="mt-4 text-[1.4rem] leading-tight md:text-[1.65rem]">
-                <a href={url(`${base}/${c.id.replace(/-(ru|en)$/, '')}/`)} class="after:absolute after:inset-0">
-                  {c.data.title}
+            <article class="reveal group panel relative flex flex-col overflow-hidden rounded-2xl">
+              {c.data.cover && (
+                <a
+                  href={url(`${base}/${c.id.replace(/-(ru|en)$/, '')}/`)}
+                  class="relative block overflow-hidden"
+                  tabindex="-1"
+                  aria-hidden="true"
+                >
+                  <img
+                    src={c.data.cover}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    class="block aspect-[16/9] w-full object-cover object-top transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+                  />
+                  <span
+                    aria-hidden="true"
+                    class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(9,13,22,0.96),rgba(9,13,22,0.35)_52%,transparent)]"
+                  />
                 </a>
-              </h3>
-
-              <p class="mt-3.5 text-[0.95rem] leading-relaxed text-steel-300">{c.data.summary}</p>
-
-              {c.data.outcomes.length > 0 && (
-                <dl class="mt-7 grid grid-cols-2 gap-x-5 gap-y-4 border-t border-slate-1/25 pt-6">
-                  {c.data.outcomes.map((o) => (
-                    <div>
-                      <dt data-count class="font-display text-[1.35rem] font-bold text-brass">{o.value}</dt>
-                      <dd class="mt-1 text-[0.78rem] leading-snug text-slate-1">{o.label}</dd>
-                    </div>
-                  ))}
-                </dl>
               )}
 
-              <div class="mt-7 flex flex-wrap gap-1.5">
-                {c.data.stack.slice(0, 6).map((s) => (
-                  <span class="border border-slate-1/30 px-2 py-1 font-mono text-[0.66rem] tracking-wide text-slate-1">
-                    {s}
-                  </span>
-                ))}
-              </div>
+              <div class="flex flex-1 flex-col p-7 md:p-9">
+                <div class="flex items-center gap-3 font-mono text-[0.68rem] tracking-widest text-slate-1 uppercase">
+                  <span>{c.data.year}</span>
+                  <span class="h-px w-5 bg-slate-1/50" />
+                  <span>{c.data.industry}</span>
+                </div>
 
-              <span class="mt-7 inline-flex items-center gap-2 font-mono text-[0.75rem] tracking-widest uppercase transition-opacity group-hover:opacity-80">
-                {tr('caseRead', locale)}
-                <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">
-                  →
+                <h3 class="mt-4 text-[1.4rem] leading-tight md:text-[1.65rem]">
+                  <a href={url(`${base}/${c.id.replace(/-(ru|en)$/, '')}/`)} class="after:absolute after:inset-0">
+                    {c.data.title}
+                  </a>
+                </h3>
+
+                <p class="mt-3.5 text-[0.95rem] leading-relaxed text-steel-300">{c.data.summary}</p>
+
+                {c.data.outcomes.length > 0 && (
+                  <dl class="mt-7 grid grid-cols-2 gap-x-5 gap-y-4 border-t border-slate-1/25 pt-6">
+                    {c.data.outcomes.map((o) => (
+                      <div>
+                        <dt data-count class="grad-text font-display text-[1.5rem] font-bold">{o.value}</dt>
+                        <dd class="mt-1 text-[0.78rem] leading-snug text-slate-1">{o.label}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+
+                <div class="mt-7 flex flex-wrap gap-1.5">
+                  {c.data.stack.slice(0, 6).map((s) => (
+                    <span class="rounded-full border border-slate-1/30 px-2.5 py-1 font-mono text-[0.66rem] tracking-wide text-slate-1">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+
+                <span class="mt-auto inline-flex items-center gap-2 pt-7 font-mono text-[0.75rem] tracking-widest text-cyan uppercase">
+                  {tr('caseRead', locale)}
+                  <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1.5">
+                    →
+                  </span>
                 </span>
-              </span>
+              </div>
             </article>
           ))}
         </div>

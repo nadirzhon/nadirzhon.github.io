@@ -1,6 +1,14 @@
 ---
-import type { Locale } from '../data/site';
+/**
+ * Порядок работы как проходимый путь, а не список карточек.
+ *
+ * Секция закрепляется на экране, и пока страница листается, шаги сменяют
+ * друг друга: номер, название, срок и текст. Справа — вертикальная шина
+ * с узлами: видно, где вы сейчас и сколько осталось. Это тот же приём,
+ * которым устроен сам проект — движение по шагам, а не по обещаниям.
+ */
 import { tr, method } from '../data/i18n';
+import type { Locale } from '../data/site';
 
 interface Props {
   locale: Locale;
@@ -8,29 +16,209 @@ interface Props {
 const { locale } = Astro.props;
 ---
 
-<section id={locale === 'ru' ? 'metod' : 'method'} class="scroll-mt-20 border-b border-slate-1/20 py-20 md:py-28">
-  <div class="shell">
-    <div class="reveal grid gap-6 md:grid-cols-[auto_1fr] md:gap-14">
-      <p class="plate md:pt-3">{tr('methodPlate', locale)}</p>
-      <div>
-        <h2 class="text-big">{tr('methodTitle', locale)}</h2>
-        <p class="mt-5 max-w-2xl text-[1.02rem] leading-relaxed text-steel-300">{tr('methodLead', locale)}</p>
+<section id={locale === 'ru' ? 'metod' : 'method'} class="mth scroll-mt-20 relative">
+  <div class="mth-stage relative flex h-[100svh] flex-col overflow-hidden">
+    <!-- Свечение, которое переезжает вместе с шагом -->
+    <div aria-hidden="true" class="mth-glow pointer-events-none absolute -top-1/3 left-1/2 h-[70vh] w-[70vh] -translate-x-1/2 rounded-full opacity-40 blur-[110px]"></div>
+
+    <header class="shell relative z-10 flex shrink-0 flex-wrap items-baseline justify-between gap-x-6 gap-y-2 pt-24 pb-5">
+      <h2 class="flex items-baseline gap-4 text-[1.35rem] leading-none md:text-[1.7rem]">
+        <span class="plate !text-cyan">{tr('methodPlate', locale)}</span>
+        {tr('methodTitle', locale)}
+      </h2>
+      <p class="hidden max-w-md text-right font-mono text-[0.66rem] leading-relaxed tracking-wider text-steel-300/60 uppercase md:block">
+        {locale === 'ru' ? 'Шаги сменяются по мере прокрутки' : 'Steps change as you scroll'}
+      </p>
+    </header>
+
+    <div class="shell relative z-10 grid flex-1 items-center gap-10 pb-16 lg:grid-cols-[1fr_auto]">
+      <!-- Шаги: видимый только текущий -->
+      <div class="mth-steps relative">
+        {
+          method.map((m, i) => (
+            <article class:list={['mth-step', i === 0 && 'is-on']} data-step={i}>
+              <p class="mth-num font-display leading-none font-bold">{m.n}</p>
+              <h3 class="mt-4 text-[1.7rem] leading-[1.06] md:text-[2.6rem]">{m.title[locale]}</h3>
+              <p class="mt-3 font-mono text-[0.74rem] tracking-widest text-cyan uppercase">{m.dur[locale]}</p>
+              <p class="mt-6 max-w-xl text-[1rem] leading-relaxed text-steel-300 md:text-[1.08rem]">
+                {m.text[locale]}
+              </p>
+            </article>
+          ))
+        }
       </div>
+
+      <!-- Шина с узлами -->
+      <ol class="mth-rail hidden lg:grid" aria-hidden="true">
+        {
+          method.map((m, i) => (
+            <li class:list={['mth-node', i === 0 && 'is-on']} data-node={i}>
+              <span class="mth-dot"></span>
+              <span class="mth-label font-mono text-[0.68rem] tracking-widest uppercase">
+                {m.n} <span class="mth-name">{m.title[locale]}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ol>
     </div>
 
-    <ol data-stagger class="mt-14 grid gap-3 md:gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        method.map((m) => (
-          <li class="group relative panel rounded-2xl p-7 md:p-8">
-            <span class="grad-text font-mono text-[2.6rem] leading-none font-bold transition-opacity group-hover:opacity-80">
-              {m.n}
-            </span>
-            <h3 class="mt-4 text-[1.15rem] leading-tight">{m.title[locale]}</h3>
-            <p class="mt-1.5 font-mono text-[0.7rem] tracking-wider text-cyan uppercase">{m.dur[locale]}</p>
-            <p class="mt-4 text-[0.92rem] leading-relaxed text-steel-300">{m.text[locale]}</p>
-          </li>
-        ))
-      }
-    </ol>
+    <div class="shell relative z-10 shrink-0 pb-8">
+      <div class="h-px w-full bg-steel-300/12">
+        <div id="mth-bar" class="h-px w-0 bg-gradient-to-r from-cyan to-violet"></div>
+      </div>
+    </div>
   </div>
 </section>
+
+<style>
+  .mth-steps {
+    display: grid;
+  }
+  .mth-step {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transform: translateY(28px);
+    pointer-events: none;
+    transition:
+      opacity 0.5s var(--ease-station),
+      transform 0.6s var(--ease-station);
+  }
+  .mth-step.is-on {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .mth-num {
+    font-size: clamp(3.4rem, 9vw, 7.5rem);
+    background: linear-gradient(96deg, var(--color-cyan), var(--color-violet) 55%, var(--color-brass));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .mth-rail {
+    gap: 1.6rem;
+    padding-left: 2.5rem;
+    border-left: 1px solid color-mix(in oklab, var(--color-steel-300) 14%, transparent);
+  }
+  .mth-node {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    color: var(--color-slate-1);
+    transition: color 0.4s var(--ease-station);
+  }
+  .mth-dot {
+    position: absolute;
+    left: -2.5rem;
+    width: 9px;
+    height: 9px;
+    margin-left: -4.5px;
+    border-radius: 50%;
+    background: var(--color-ink-600);
+    transition:
+      background 0.4s var(--ease-station),
+      box-shadow 0.4s var(--ease-station),
+      transform 0.4s var(--ease-back);
+  }
+  .mth-node.is-on {
+    color: var(--color-steel-50);
+  }
+  .mth-node.is-on .mth-dot {
+    background: linear-gradient(135deg, var(--color-cyan), var(--color-violet));
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-cyan) 16%, transparent);
+    transform: scale(1.35);
+  }
+  .mth-node.is-done .mth-dot {
+    background: color-mix(in oklab, var(--color-cyan) 55%, transparent);
+  }
+  .mth-name {
+    color: inherit;
+  }
+
+  .mth-glow {
+    background: radial-gradient(circle, color-mix(in oklab, var(--color-violet) 55%, transparent), transparent 68%);
+    transition: transform 0.7s var(--ease-station);
+  }
+
+  /* Без пиннинга шаги становятся обычным списком — ничего не теряется */
+  @media (max-width: 1023px), (prefers-reduced-motion: reduce) {
+    .mth .mth-stage {
+      height: auto;
+      overflow: visible;
+    }
+    .mth-steps {
+      display: grid;
+      gap: 3rem;
+    }
+    .mth-step {
+      grid-area: auto;
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+    .mth-glow {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const section = document.querySelector<HTMLElement>('.mth');
+  const stage = section?.querySelector<HTMLElement>('.mth-stage');
+  const steps = Array.from(document.querySelectorAll<HTMLElement>('.mth-step'));
+  const nodes = Array.from(document.querySelectorAll<HTMLElement>('.mth-node'));
+  const bar = document.getElementById('mth-bar');
+  const glow = section?.querySelector<HTMLElement>('.mth-glow');
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wide = matchMedia('(min-width: 1024px)');
+
+  const show = (i: number) => {
+    steps.forEach((el, k) => el.classList.toggle('is-on', k === i));
+    nodes.forEach((el, k) => {
+      el.classList.toggle('is-on', k === i);
+      el.classList.toggle('is-done', k < i);
+    });
+    if (glow) glow.style.transform = `translateX(-50%) translateY(${i * 6}vh)`;
+  };
+
+  const boot = async () => {
+    if (!section || !stage || reduce || !wide.matches || steps.length === 0) return;
+    const [{ gsap }, { ScrollTrigger }] = await Promise.all([import('gsap'), import('gsap/ScrollTrigger')]);
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Каждому шагу — свой экран прокрутки, чтобы читалось без спешки
+    const span = () => innerHeight * (steps.length - 1) * 0.9;
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top top',
+      end: () => '+=' + span(),
+      pin: stage,
+      scrub: true,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        const p = self.progress;
+        if (bar) bar.style.width = (p * 100).toFixed(1) + '%';
+        show(Math.min(steps.length - 1, Math.round(p * (steps.length - 1))));
+      },
+    });
+  };
+
+  if (section) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          boot().catch(() => {});
+        }
+      },
+      { rootMargin: '400px' }
+    );
+    io.observe(section);
+    show(0);
+  }
+</script>
