@@ -20,13 +20,36 @@ export const site = {
 
   /** Страница «Кто я». Пустые поля на странице не показываются. */
   person: {
-    /** ЗАПОЛНИТЕ: имя и фамилия — без них страница выглядит анонимной */
-    name: '',
-    nameEn: '',
+    name: 'Надир Абдурахманов',
+    nameEn: 'Nadir Abdurakhmanov',
     role: 'Инженер-разработчик',
     roleEn: 'Software engineer',
     photo: '/me.jpg',
   },
+  /** Профиль и репозитории на GitHub — главное доказательство объёма работ. */
+  github: 'https://github.com/nadirzhon',
+  /**
+   * Открытые репозитории, которые не стыдно показать клиенту.
+   * Приватные сюда не добавляем: ссылка, которая ведёт на 404, хуже её отсутствия.
+   */
+  repos: [
+    {
+      name: 'HEAN-META',
+      url: 'https://github.com/nadirzhon/HEAN-META',
+      note: { ru: 'Торговая система: 13 пакетов, Rust-ускорители, iOS и веб-панель', en: 'Trading system: 13 packages, Rust accelerators, iOS and web dashboard' },
+    },
+    {
+      name: 'svetopis',
+      url: 'https://github.com/nadirzhon/svetopis',
+      note: { ru: 'Сайт фотографа: WebGL-шейдер, инерционная прокрутка, бронирование', en: 'Photographer site: WebGL shader, inertial scroll, booking flow' },
+    },
+    {
+      name: 'nadirzhon.github.io',
+      url: 'https://github.com/nadirzhon/nadirzhon.github.io',
+      note: { ru: 'Этот сайт: Astro 5, Tailwind 4, three.js, GSAP', en: 'This site: Astro 5, Tailwind 4, three.js, GSAP' },
+    },
+  ],
+
   /** Курс для показа цен в EUR на английской версии */
   eurRate: 100,
   /**
