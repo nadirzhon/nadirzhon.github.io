@@ -168,9 +168,9 @@ const { locale } = Astro.props;
 <script>
   const section = document.querySelector<HTMLElement>('.mth');
   const stage = section?.querySelector<HTMLElement>('.mth-stage');
-  const steps = Array.from(document.querySelectorAll<HTMLElement>('.mth-step'));
-  const nodes = Array.from(document.querySelectorAll<HTMLElement>('.mth-node'));
-  const bar = document.getElementById('mth-bar');
+  const steps = Array.from(section?.querySelectorAll<HTMLElement>('.mth-step') ?? []);
+  const nodes = Array.from(section?.querySelectorAll<HTMLElement>('.mth-node') ?? []);
+  const bar = section?.querySelector<HTMLElement>('#mth-bar') ?? null;
   const glow = section?.querySelector<HTMLElement>('.mth-glow');
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;

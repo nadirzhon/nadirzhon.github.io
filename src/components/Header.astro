@@ -138,12 +138,22 @@ const contactHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
 </style>
 
 <script>
-  // Пока тёмный герой под шапкой — шапка прозрачная
+  // Пока тёмный герой под шапкой — шапка прозрачная.
+  // Раньше это считалось от innerHeight и держалось на допущении, что первый
+  // экран ровно в высоту окна. Теперь смотрим на сам герой: при любой его
+  // высоте — хоть полёт камеры, хоть короткий блок — поведение одинаковое.
   const header = document.getElementById('site-header');
   if (header && header.dataset.darkHero !== undefined) {
-    const sync = () => header.classList.toggle('over-hero', scrollY < innerHeight - 90);
-    addEventListener('scroll', sync, { passive: true });
-    sync();
+    const hero = document.getElementById('hero-dark');
+    if (hero) {
+      new IntersectionObserver(
+        ([e]) => header.classList.toggle('over-hero', e.isIntersecting),
+        // Герой считается «под шапкой», пока его низ не поднялся выше её края
+        { rootMargin: '-90px 0px 0px 0px', threshold: 0 },
+      ).observe(hero);
+    } else {
+      header.classList.remove('over-hero');
+    }
   }
 
   const btn = document.getElementById('menu-btn');
