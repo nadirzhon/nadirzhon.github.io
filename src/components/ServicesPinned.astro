@@ -41,7 +41,7 @@ const gotLabel = (n: number) =>
     <canvas
       id="svc-canvas"
       aria-hidden="true"
-      class="pointer-events-none absolute top-0 right-0 hidden h-full w-[46%] opacity-0 transition-opacity duration-1000 lg:block"
+      class="pointer-events-none absolute top-0 right-0 hidden h-full w-[46%] opacity-0 transition-opacity duration-1000 will-change-transform lg:block"
     ></canvas>
     <div
       aria-hidden="true"
@@ -79,7 +79,7 @@ const gotLabel = (n: number) =>
                   <h3 class="mt-4 font-display text-[1.6rem] leading-[1.05] font-bold tracking-tight md:text-[2.2rem]">
                     {s.title[locale]}
                   </h3>
-                  <p class="mt-3 text-[1rem] text-steel-300 md:text-[1.08rem]">{s.tagline[locale]}</p>
+                  <p class="svc-tagline mt-3 text-[1rem] text-steel-300 md:text-[1.08rem]">{s.tagline[locale]}</p>
 
                   <p class="plate mt-7 flex items-center gap-3 !text-steel-300/70">
                     {tr('serviceGet', locale)}
@@ -88,8 +88,11 @@ const gotLabel = (n: number) =>
                   </p>
 
                   <ul class="mt-3.5 grid gap-2">
-                    {s.deliverables[locale].map((d) => (
-                      <li class="flex gap-3 text-[0.93rem] leading-snug text-steel-100/90 md:text-[0.97rem]">
+                    {s.deliverables[locale].map((d, di) => (
+                      <li
+                        class="svc-line flex gap-3 text-[0.93rem] leading-snug text-steel-100/90 md:text-[0.97rem]"
+                        style={`--li:${di}`}
+                      >
                         <span aria-hidden="true" class="mt-2 h-1 w-3 shrink-0 rounded-full bg-gradient-to-r from-cyan to-violet" />
                         <span>{d}</span>
                       </li>
@@ -139,6 +142,46 @@ const gotLabel = (n: number) =>
 </section>
 
 <style>
+  /* Состав работ проявляется построчно. Пять пунктов, вспыхнувших разом,
+     глаз воспринимает как блок и пропускает; идущие волной — читает. */
+  .svc-panel .svc-line {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .svc-panel.is-live .svc-line {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.5s var(--ease-station),
+      transform 0.55s var(--ease-station);
+    transition-delay: calc(0.16s + var(--li) * 0.075s);
+  }
+
+  /* Заголовок и подзаголовок кадра идут первыми, до состава */
+  .svc-panel h3,
+  .svc-panel .svc-tagline {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  .svc-panel.is-live h3,
+  .svc-panel.is-live .svc-tagline {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.55s var(--ease-station),
+      transform 0.6s var(--ease-station);
+  }
+  .svc-panel.is-live .svc-tagline { transition-delay: 0.08s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .svc-panel .svc-line,
+    .svc-panel h3,
+    .svc-panel .svc-tagline {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   /* На низком экране (ноутбук 13", окно с панелями) кадр всё равно должен
      помещаться целиком: поджимаем шрифты и отступы, а не режем содержимое. */
   @media (min-width: 1024px) and (max-height: 900px) {
@@ -432,13 +475,21 @@ const gotLabel = (n: number) =>
   };
 
   /* ─── Пиннинг ленты ──────────────────────────────────────────────────── */
+  const allPanels = Array.from(section?.querySelectorAll<HTMLElement>('.svc-panel') ?? []);
+
   const setActive = (i: number) => {
     dots.forEach((d, k) => {
       d.classList.toggle('bg-cyan', k === i);
       d.classList.toggle('bg-steel-300/25', k !== i);
     });
+    // Кадр «оживает» только когда камера на нём: строки состава идут волной,
+    // а не вспыхивают заранее за пределами экрана
+    allPanels.forEach((el, k) => el.classList.toggle('is-live', k === i));
     setShape?.(i);
   };
+
+  const canvasEl = section?.querySelector<HTMLElement>('#svc-canvas') ?? null;
+  const headEl = section?.querySelector<HTMLElement>('header') ?? null;
 
   const bootPin = async () => {
     if (!section || !stage || !track || reduce || !wide.matches) return;
@@ -462,6 +513,15 @@ const gotLabel = (n: number) =>
           const p = self.progress;
           if (bar) bar.style.width = (p * 100).toFixed(1) + '%';
           setActive(Math.min(panels.length - 1, Math.round(p * (panels.length - 1))));
+
+          // Каркас отстаёт от ленты и слегка уходит вглубь к концу маршрута —
+          // получается ощущение, что кадры едут мимо объекта, а не вместе с ним
+          if (canvasEl) {
+            canvasEl.style.transform =
+              `translate3d(${(p * 64).toFixed(1)}px, 0, 0) scale(${(1 + p * 0.06).toFixed(3)})`;
+          }
+          // Шапка блока уезжает совсем чуть-чуть: она якорь, а не участник
+          if (headEl) headEl.style.transform = `translate3d(${(p * -26).toFixed(1)}px, 0, 0)`;
         },
       },
     });
@@ -485,6 +545,11 @@ const gotLabel = (n: number) =>
       { rootMargin: '400px' }
     );
     io.observe(section);
-    setActive(0);
+    if (reduce || !wide.matches) {
+      // Плоский список: все кадры видимы сразу, иначе текст просто не покажется
+      allPanels.forEach((el) => el.classList.add('is-live'));
+    } else {
+      setActive(0);
+    }
   }
 </script>
