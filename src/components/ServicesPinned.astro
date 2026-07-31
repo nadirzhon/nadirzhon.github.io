@@ -290,6 +290,7 @@ const gotLabel = (n: number) =>
     const uniforms = {
       uTime: { value: 0 },
       uDpr: { value: Math.min(devicePixelRatio, 2) },
+      uBurst: { value: 0 },
       uCyan: { value: new THREE.Color(0x25e8c8) },
       uSteel: { value: new THREE.Color(0xeef2fa) },
       uViolet: { value: new THREE.Color(0x6e5bff) },
@@ -301,30 +302,46 @@ const gotLabel = (n: number) =>
       depthWrite: false,
       blending: THREE.AdditiveBlending,
       vertexShader: `
-        uniform float uTime;
+        uniform float uTime, uBurst;
         attribute float aSeed;
-        varying float vSeed, vDepth;
+        varying float vSeed, vDepth, vBurst;
         void main() {
           // Каркас дышит: лёгкое смещение по своей фазе, чтобы объект
           // не выглядел мёртвой моделью из редактора
           vec3 pos = position;
           float ph = uTime * 0.6 + aSeed * 6.28;
           pos += normalize(pos + 0.0001) * sin(ph) * 0.018;
+
+          // Смена услуги — не перетекание, а пересборка: каркас разлетается
+          // наружу и собирается заново. Каждое ребро уходит по своему
+          // направлению, поэтому объект распадается на детали, а не раздувается.
+          if (uBurst > 0.001) {
+            vec3 dir = normalize(pos + vec3(
+              sin(aSeed * 51.7), cos(aSeed * 33.1), sin(aSeed * 71.3)
+            ) * 0.55 + 0.0001);
+            pos += dir * uBurst * (1.5 + aSeed * 3.2);
+          }
+
           vec4 mv = modelViewMatrix * vec4(pos, 1.0);
           gl_Position = projectionMatrix * mv;
           vSeed = aSeed;
           vDepth = -mv.z;
+          vBurst = uBurst;
         }
       `,
       fragmentShader: `
         uniform vec3 uCyan, uSteel, uViolet;
-        varying float vSeed, vDepth;
+        varying float vSeed, vDepth, vBurst;
         void main() {
           // Ближние рёбра стальные, дальние уходят в фиолет — появляется глубина
           float d = clamp((vDepth - 3.0) / 5.5, 0.0, 1.0);
           vec3 col = mix(uSteel, uCyan, vSeed);
           col = mix(col, uViolet, d * 0.8);
-          gl_FragColor = vec4(col, (1.0 - d * 0.55) * 0.9);
+          // На пике разлёта детали вспыхивают, но линии становятся тоньше по
+          // прозрачности — иначе разлетевшийся каркас превращается в кашу
+          col = mix(col, uSteel, vBurst * 0.5);
+          float a = (1.0 - d * 0.55) * 0.9 * (1.0 - vBurst * 0.45);
+          gl_FragColor = vec4(col, a);
         }
       `,
     });
@@ -387,17 +404,26 @@ const gotLabel = (n: number) =>
       uniforms.uTime.value = clock.getElapsedTime();
 
       if (mix < 1) {
-        mix = Math.min(1, mix + dt * 1.7);
+        mix = Math.min(1, mix + dt * 1.35);
         const e = 1 - Math.pow(1 - mix, 3);
         for (let i = 0; i < cur.length; i++) cur[i] = from[i] + (to[i] - from[i]) * e;
         posAttr.needsUpdate = true;
+        // Разлёт нарастает и спадает по синусу: ноль в начале и в конце,
+        // пик — ровно там, где старая форма уже не читается, а новая ещё нет
+        uniforms.uBurst.value = Math.sin(mix * Math.PI) * 0.95;
+      } else if (uniforms.uBurst.value !== 0) {
+        uniforms.uBurst.value = 0;
       }
 
-      mx += (tx - mx) * 0.06;
-      my += (ty - my) * 0.06;
-      group.rotation.y += dt * 0.24 + (mx * 0.9 - group.rotation.y) * 0.0;
-      group.rotation.x += (my * 0.5 - group.rotation.x) * 0.05;
-      group.rotation.z = mx * 0.12;
+      mx += (tx - mx) * 0.07;
+      my += (ty - my) * 0.07;
+      // Наклон за курсором заметный, но с демпфером: объект отзывается,
+      // а не дёргается вслед за каждым движением мыши
+      group.rotation.y += dt * 0.2 + (mx * 1.1 - group.rotation.y) * 0.012;
+      group.rotation.x += (my * 0.75 - group.rotation.x) * 0.06;
+      group.rotation.z += (mx * 0.18 - group.rotation.z) * 0.06;
+      // Небольшой отъезд камеры на пике разлёта — детали помещаются в кадр
+      group.scale.setScalar(1 - uniforms.uBurst.value * 0.2);
 
       renderer.render(scene, camera);
     };
