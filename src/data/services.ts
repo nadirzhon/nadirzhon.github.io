@@ -20,6 +20,11 @@ export type Service = {
   stack: string[];
   /** Честная оговорка, если она нужна */
   caveat?: { ru: string; en: string };
+  /**
+   * Доказательство: то, что клиент может открыть и проверить сам.
+   * Пустое поле лучше выдуманной цифры — если проверить нечего, строки нет.
+   */
+  proof?: { text: { ru: string; en: string }; href: string };
 };
 
 export const services: Service[] = [
@@ -68,6 +73,7 @@ export const services: Service[] = [
       { title: { ru: 'Обучение команды и регламент на бумаге', en: 'Team training and a written playbook' }, price: 20000 },
       { title: { ru: 'Присмотр и доработки после первого месяца', en: 'Support and tweaks beyond the first month' }, price: 25000 },
     ],
+        proof: { text: { ru: 'HEAN: слой интеллекта из 36 модулей, 1632 теста', en: 'HEAN: 36 intelligence modules, 1632 tests' }, href: 'https://github.com/nadirzhon/HEAN-META' },
     stack: ['Claude API', 'Python', 'LangGraph', 'Postgres', 'Redis', 'Docker'],
   },
   {
@@ -162,6 +168,7 @@ export const services: Service[] = [
       { title: { ru: 'Перенос стратегии в код с нуля', en: 'Coding a strategy from scratch' }, price: 150000 },
       { title: { ru: 'Присмотр за продакшеном, помесячно', en: 'Production watch, per month' }, price: 50000 },
     ],
+        proof: { text: { ru: 'HEAN в продакшене несколько лет — разбор кейса', en: 'HEAN in production for years — read the case' }, href: '/keysy/hean/' },
     stack: ['Python', 'Rust', 'ClickHouse', 'Postgres', 'Redis', 'Prometheus', 'Docker'],
     caveat: {
       ru: 'Я делаю инфраструктуру и исполнение вашей стратегии. Я не продаю сигналы, не управляю чужими деньгами и не обещаю доходность — прибыль зависит от стратегии и рынка, а не от кода.',
@@ -211,6 +218,7 @@ export const services: Service[] = [
       { title: { ru: 'Наполнение текстами и фотографиями', en: 'Copywriting and imagery' }, price: 25000 },
       { title: { ru: 'Поддержка и правки, помесячно', en: 'Support and edits, per month' }, price: 12000 },
     ],
+        proof: { text: { ru: 'Этот сайт и сайт фотографа — код открыт', en: 'This site and a photographer site — code is open' }, href: 'https://github.com/nadirzhon/svetopis' },
     stack: ['Astro', 'Next.js', 'TypeScript', 'Tailwind', 'Postgres', 'Vercel'],
   },
   {
@@ -255,6 +263,7 @@ export const services: Service[] = [
       { title: { ru: 'Нагрузочное тестирование с отчётом', en: 'Load testing with a report' }, price: 40000 },
       { title: { ru: 'Дежурство по инцидентам, помесячно', en: 'Incident duty, per month' }, price: 35000 },
     ],
+        proof: { text: { ru: 'HEAN: 13 пакетов, 11 контейнеров, ускорители на Rust', en: 'HEAN: 13 packages, 11 containers, Rust accelerators' }, href: 'https://github.com/nadirzhon/HEAN-META' },
     stack: ['Python', 'FastAPI', 'Rust', 'Postgres', 'Redis', 'Kafka', 'Docker'],
   },
   {

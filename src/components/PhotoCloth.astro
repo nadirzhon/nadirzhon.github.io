@@ -1,0 +1,237 @@
+---
+/**
+ * Фотография как ткань на ветру.
+ *
+ * Портрет — единственное место на сайте, где есть человек, и он не должен
+ * быть плоской карточкой. Снимок натянут на сетку, по которой идёт волна,
+ * а курсор отталкивает ткань от себя: подошли ближе — сильнее прогиб.
+ *
+ * Картинка остаётся обычным <img> в разметке. WebGL-слой встаёт сверху и
+ * подменяет её только если сцена реально поднялась: без ускорителя, при
+ * prefers-reduced-motion и на телефоне человек видит нормальное фото,
+ * а не пустое место.
+ */
+interface Props {
+  src: string;
+  alt: string;
+}
+const { src, alt } = Astro.props;
+---
+
+<div class="cloth" data-src={src}>
+  <img
+    class="cloth__img"
+    src={src}
+    alt={alt}
+    width="640"
+    height="800"
+    loading="eager"
+    decoding="async"
+  />
+  <canvas class="cloth__gl" aria-hidden="true"></canvas>
+</div>
+
+<style>
+  .cloth {
+    position: relative;
+    border: 1px solid color-mix(in oklab, var(--color-steel-300) 18%, transparent);
+    border-radius: 14px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .cloth__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: opacity 0.6s var(--ease-station);
+  }
+  /* Канвас перекрывает картинку только когда сцена действительно ожила */
+  .cloth__gl {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s var(--ease-station);
+  }
+  .cloth.is-live .cloth__gl { opacity: 1; }
+  .cloth.is-live .cloth__img { opacity: 0; }
+
+  /* Подсказка, что с фото можно поиграть — иначе эффект никто не найдёт */
+  .cloth::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      160px circle at var(--cx, 50%) var(--cy, 50%),
+      color-mix(in oklab, var(--color-cyan) 12%, transparent),
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-station);
+  }
+  .cloth:hover::after { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cloth.is-live .cloth__gl { display: none; }
+    .cloth.is-live .cloth__img { opacity: 1; }
+  }
+</style>
+
+<script>
+  const wrap = document.querySelector<HTMLElement>('.cloth');
+  const canvas = wrap?.querySelector<HTMLCanvasElement>('.cloth__gl');
+  const img = wrap?.querySelector<HTMLImageElement>('.cloth__img');
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const coarse = matchMedia('(pointer: coarse)').matches;
+
+  const boot = async () => {
+    if (!wrap || !canvas || !img || reduce) return;
+
+    const THREE = await import('three');
+
+    // Ждём картинку: без неё текстура будет пустой, и вместо портрета
+    // человек увидит серый прямоугольник
+    if (!img.complete) {
+      await new Promise((res, rej) => {
+        img.addEventListener('load', res, { once: true });
+        img.addEventListener('error', rej, { once: true });
+      });
+    }
+
+    const tex = new THREE.Texture(img);
+    tex.needsUpdate = true;
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.minFilter = THREE.LinearFilter;
+
+    // Сетка должна быть плотной: на редкой ткань ломается гранями,
+    // а не гнётся. 64×80 — предел, после которого разницы уже не видно.
+    const geo = new THREE.PlaneGeometry(2, 2.5, 64, 80);
+
+    const uniforms = {
+      uTex: { value: tex },
+      uTime: { value: 0 },
+      uMouse: { value: new THREE.Vector2(99, 99) },
+      uPush: { value: 0 },
+    };
+
+    const mat = new THREE.ShaderMaterial({
+      uniforms,
+      transparent: true,
+      vertexShader: `
+        uniform float uTime, uPush;
+        uniform vec2 uMouse;
+        varying vec2 vUv;
+        varying float vShade;
+
+        void main() {
+          vUv = uv;
+          vec3 pos = position;
+
+          // Ветер: две волны с разным периодом, чтобы движение не читалось
+          // как ровная синусоида. Амплитуда растёт к правому краю — левый
+          // край «прибит», как флаг к древку.
+          float grip = smoothstep(0.0, 0.85, uv.x);
+          float w1 = sin(pos.x * 2.6 + uTime * 1.5) * 0.055;
+          float w2 = sin(pos.y * 3.4 - uTime * 1.1) * 0.035;
+          pos.z += (w1 + w2) * grip;
+
+          // Курсор отталкивает ткань: чем ближе, тем глубже прогиб
+          float d = distance(uv, uMouse);
+          float push = smoothstep(0.42, 0.0, d) * uPush;
+          pos.z -= push * 0.42;
+          // Вокруг вмятины ткань слегка подбирается — иначе прогиб выглядит
+          // как продавленная резина, а не как натянутая материя
+          pos.xy += normalize(uv - uMouse + 0.0001) * push * 0.06;
+
+          // Затенение по наклону: без него рельеф не читается вообще
+          vShade = pos.z;
+
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D uTex;
+        varying vec2 vUv;
+        varying float vShade;
+        void main() {
+          vec4 c = texture2D(uTex, vUv);
+          // Складки светлее, впадины темнее — рельеф вместо плоской картинки
+          c.rgb *= 1.0 + vShade * 1.9;
+          gl_FragColor = c;
+        }
+      `,
+    });
+
+    const mesh = new THREE.Mesh(geo, mat);
+    const scene = new THREE.Scene();
+    scene.add(mesh);
+
+    // Ортографическая камера: портрет не должен искажаться перспективой
+    const camera = new THREE.OrthographicCamera(-1, 1, 1.25, -1.25, 0.1, 10);
+    camera.position.z = 3;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setClearColor(0x000000, 0);
+
+    const resize = () => {
+      const w = wrap.clientWidth || 1;
+      const h = wrap.clientHeight || 1;
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      renderer.setSize(w, h, false);
+    };
+    resize();
+    addEventListener('resize', resize, { passive: true });
+
+    // Указатель в координатах текстуры: так шейдеру не нужно знать про пиксели
+    const target = new THREE.Vector2(0.5, 0.5);
+    let pushTarget = 0;
+
+    if (!coarse) {
+      wrap.addEventListener('pointermove', (e) => {
+        const r = wrap.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = 1 - (e.clientY - r.top) / r.height;
+        target.set(x, y);
+        pushTarget = 1;
+        wrap.style.setProperty('--cx', (x * 100).toFixed(1) + '%');
+        wrap.style.setProperty('--cy', ((1 - y) * 100).toFixed(1) + '%');
+      });
+      wrap.addEventListener('pointerleave', () => { pushTarget = 0; });
+    }
+
+    let visible = true;
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 }).observe(wrap);
+
+    const clock = new THREE.Clock();
+    const tick = () => {
+      requestAnimationFrame(tick);
+      if (!visible) return;
+      uniforms.uTime.value = clock.getElapsedTime();
+      // Догоняем курсор с запаздыванием: ткань тяжёлая, она не телепортируется
+      uniforms.uMouse.value.lerp(target, 0.14);
+      uniforms.uPush.value += (pushTarget - uniforms.uPush.value) * 0.09;
+      renderer.render(scene, camera);
+    };
+    tick();
+
+    wrap.classList.add('is-live');
+  };
+
+  if (wrap) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          // Не поднялось — остаётся обычная картинка, ничего не ломается
+          boot().catch(() => {});
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    io.observe(wrap);
+  }
+</script>
