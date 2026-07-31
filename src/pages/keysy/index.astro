@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Repos from '../../components/Repos.astro';
 import CaseList from '../../components/CaseList.astro';
 import { tr } from '../../data/i18n';
 ---
@@ -21,4 +22,5 @@ import { tr } from '../../data/i18n';
     </div>
   </section>
   <CaseList locale="ru" showHeading={false} />
+  <Repos locale=\"ru\" />
 </Base>
