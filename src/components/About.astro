@@ -1,5 +1,6 @@
 ---
 import { site, url, type Locale } from '../data/site';
+import PhotoCloth from './PhotoCloth.astro';
 import { tr } from '../data/i18n';
 
 interface Props {
@@ -53,14 +54,7 @@ const notDoing = ru
         <div class="reveal">
           {
             p.photo ? (
-              <img
-                src={url(p.photo)}
-                alt={name || (ru ? 'Фотография' : 'Portrait')}
-                width="640"
-                height="800"
-                class="w-full border border-slate-1/30 object-cover"
-                loading="eager"
-              />
+              <PhotoCloth src={url(p.photo)} alt={name || (ru ? 'Фотография' : 'Portrait')} />
             ) : (
               <div class="flex aspect-[4/5] flex-col items-center justify-center border border-dashed border-slate-1/40 bg-ink-700/50 p-8 text-center">
                 <span class="font-mono text-[0.7rem] tracking-widest text-slate-1 uppercase">

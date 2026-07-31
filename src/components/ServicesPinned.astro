@@ -112,6 +112,19 @@ const gotLabel = (n: number) =>
                     </div>
                   </dl>
 
+                  {s.proof && (
+                    <a
+                      class="svc-proof mono"
+                      href={s.proof.href.startsWith('http') ? s.proof.href : url(s.proof.href)}
+                      target={s.proof.href.startsWith('http') ? '_blank' : undefined}
+                      rel={s.proof.href.startsWith('http') ? 'noopener' : undefined}
+                    >
+                      <span class="svc-proof__dot" aria-hidden="true" />
+                      {s.proof.text[locale]}
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
+
                   <a
                     href={url(`${base}/${s.slug[locale]}/`)}
                     class="btn btn-ghost mag mt-6"
@@ -142,6 +155,45 @@ const gotLabel = (n: number) =>
 </section>
 
 <style>
+  /* Строка доказательства: не обещание, а ссылка, которую можно открыть
+     и проверить. Поэтому она набрана как техническая пометка, а не как
+     рекламный слоган. */
+  .svc-proof {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.1rem;
+    padding: 0.55rem 0.95rem;
+    border: 1px solid color-mix(in oklab, var(--color-cyan) 26%, transparent);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--color-cyan) 7%, transparent);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: var(--color-steel-100);
+    transition:
+      border-color 0.35s var(--ease-station),
+      background 0.35s var(--ease-station),
+      transform 0.35s var(--ease-station);
+  }
+  .svc-proof:hover {
+    border-color: var(--color-cyan);
+    background: color-mix(in oklab, var(--color-cyan) 14%, transparent);
+    transform: translateY(-2px);
+  }
+  .svc-proof__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-cyan);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-cyan) 60%, transparent);
+    animation: svc-pulse 2.4s ease-out infinite;
+  }
+  @keyframes svc-pulse {
+    0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-cyan) 55%, transparent); }
+    70%  { box-shadow: 0 0 0 7px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+
   /* Состав работ проявляется построчно. Пять пунктов, вспыхнувших разом,
      глаз воспринимает как блок и пропускает; идущие волной — читает. */
   .svc-panel .svc-line {
