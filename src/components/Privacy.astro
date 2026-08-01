@@ -1,4 +1,15 @@
 ---
+/**
+ * Политика обработки персональных данных.
+ *
+ * Документ должен описывать то, что происходит на самом деле, иначе он вреден:
+ * расхождение между текстом и фактом — это и есть нарушение. Поэтому список
+ * обработчиков ведётся здесь честно и обновляется вместе с инфраструктурой.
+ *
+ * Почта оператора лежит в разметке кодированной и раскрывается в браузере:
+ * канал для запросов субъекта нужен по закону, но отдавать адрес сборщикам
+ * спама ради этого необязательно.
+ */
 import { site, url, type Locale } from '../data/site';
 
 interface Props {
@@ -7,185 +18,399 @@ interface Props {
 const { locale } = Astro.props;
 const ru = locale === 'ru';
 const operator = site.person.name || site.brand;
-const updated = ru ? '29 июля 2026 года' : '29 July 2026';
+const updated = ru ? '1 августа 2026 года' : '1 August 2026';
+const mailB64 = Buffer.from(site.email, 'utf-8').toString('base64');
+
+/** Кто участвует в доставке заявки. Список должен совпадать с тем, что развёрнуто. */
+const processors = ru
+  ? [
+      { n: 'Web3Forms', r: 'доставляет заявку на почту оператора', g: 'США' },
+      { n: 'Telegram', r: 'дублирует заявку в личные сообщения оператора', g: 'ОАЭ' },
+      { n: 'Cloudflare', r: 'DNS домена и ретранслятор заявок в Telegram', g: 'США' },
+      { n: 'GitHub Pages', r: 'хранит и отдаёт страницы сайта', g: 'США' },
+    ]
+  : [
+      { n: 'Web3Forms', r: 'delivers the enquiry to the controller’s mailbox', g: 'USA' },
+      { n: 'Telegram', r: 'mirrors the enquiry to the controller’s direct messages', g: 'UAE' },
+      { n: 'Cloudflare', r: 'domain DNS and the relay that forwards enquiries', g: 'USA' },
+      { n: 'GitHub Pages', r: 'stores and serves the site’s pages', g: 'USA' },
+    ];
+
+/** Меры защиты. Обещать здесь можно только то, что реально сделано. */
+const measures = ru
+  ? [
+      {
+        h: 'Данных собирается меньше, чем можно',
+        p: 'Форма не спрашивает ни телефон, ни компанию, ни должность — только имя, один контакт и описание задачи. Чего нет, то не утечёт.',
+      },
+      {
+        h: 'На сайте нет базы данных',
+        p: 'Сайт статический: страницы отдаются как файлы, серверного хранилища и админки не существует. Взламывать нечего — заявка нигде на сайте не задерживается.',
+      },
+      {
+        h: 'Счётчик заявок обезличен',
+        p: 'Для статистики сохраняются только направление, диапазон бюджета и время. Ни имени, ни контакта, ни текста задачи в журнале нет — по нему невозможно установить человека.',
+      },
+      {
+        h: 'Ключи хранятся отдельно от кода',
+        p: 'Код сайта открыт, но токены и ключи в нём отсутствуют: они лежат в зашифрованном хранилище секретов и в репозиторий не попадают. Каждый коммит проверяется на их наличие.',
+      },
+      {
+        h: 'Передача только по HTTPS',
+        p: 'Сайт и ретранслятор работают по TLS, обращение по незащищённому протоколу принудительно переадресуется на защищённый.',
+      },
+      {
+        h: 'Ретранслятор принимает только своих',
+        p: 'Заявки принимаются лишь с адресов этого сайта, служебный канал подписан секретным ключом. Запрос из чужого источника отклоняется без обработки.',
+      },
+      {
+        h: 'Доступ к почте и мессенджеру защищён',
+        p: 'Учётные записи, куда приходят заявки, закрыты уникальными паролями и двухфакторной аутентификацией.',
+      },
+      {
+        h: 'Ни аналитики, ни рекламных счётчиков',
+        p: 'Нет Метрики, нет Analytics, нет пикселей и рекламных сетей. Cookie для отслеживания не ставятся, профилирование не ведётся, за посетителями сайт не следит.',
+      },
+    ]
+  : [
+      {
+        h: 'Less data is collected than possible',
+        p: 'The form asks for no phone, no company, no job title — a name, one contact and the description of the task. What is not collected cannot leak.',
+      },
+      {
+        h: 'The site has no database',
+        p: 'It is static: pages are served as files, there is no server-side storage and no admin panel. Nothing lingers on the site to be stolen.',
+      },
+      {
+        h: 'The enquiry counter is anonymous',
+        p: 'Statistics keep only the direction, the budget range and the timestamp. No name, no contact, no task text — the log cannot identify a person.',
+      },
+      {
+        h: 'Keys live apart from the code',
+        p: 'The site’s code is public, but tokens and keys are not in it: they sit in encrypted secret storage. Every commit is checked for leaked credentials.',
+      },
+      {
+        h: 'Transport is HTTPS only',
+        p: 'The site and the relay run over TLS; plain HTTP is redirected to the secure version.',
+      },
+      {
+        h: 'The relay accepts only its own site',
+        p: 'Enquiries are accepted from this site’s addresses only, and the service channel is signed with a secret key. Requests from other origins are rejected unprocessed.',
+      },
+      {
+        h: 'Mailbox and messenger are protected',
+        p: 'The accounts that receive enquiries are secured with unique passwords and two-factor authentication.',
+      },
+      {
+        h: 'No analytics, no ad trackers',
+        p: 'No Analytics, no pixels, no ad networks. No tracking cookies, no profiling — the site does not follow its visitors.',
+      },
+    ];
 ---
 
 <article class="shell py-14 md:py-20">
   <p class="plate">{ru ? 'Правовая информация' : 'Legal'}</p>
   <h1 class="mt-5 max-w-3xl text-big">
-    {ru ? 'Политика обработки персональных данных' : 'Personal data processing policy'}
+    {ru ? 'Обработка персональных данных' : 'Personal data processing'}
   </h1>
-  <p class="mt-4 font-mono text-[0.75rem] tracking-widest text-slate-1 uppercase">
+  <p class="mt-5 max-w-2xl text-[1rem] leading-relaxed text-steel-300">
+    {
+      ru
+        ? 'Что сайт собирает, зачем, кому это уходит по дороге и как это защищено. Документ описывает то, что происходит на самом деле, и обновляется вместе с сайтом.'
+        : 'What this site collects, why, who sees it on the way, and how it is protected. This document describes what actually happens and is updated together with the site.'
+    }
+  </p>
+  <p class="mt-3 font-mono text-[0.72rem] tracking-widest text-slate-1 uppercase">
     {ru ? `Действует с ${updated}` : `In force from ${updated}`}
   </p>
 
-  {
-    ru ? (
-      <div class="prose mt-12">
-        <p>
-          Документ объясняет, какие данные собирает сайт {site.domain}, зачем они нужны, сколько хранятся и
-          как их удалить. Он составлен по требованиям Федерального закона № 152-ФЗ «О персональных данных».
-        </p>
-
-        <h2>1. Кто обрабатывает данные</h2>
-        <p>
-          Оператором персональных данных выступает {operator} (далее — оператор).
-          Связаться по любым вопросам об обработке данных можно через форму на сайте.
-        </p>
-        {!site.person.name && (
-          <p class="border-l-2 border-brass bg-ink-700/60 px-5 py-4 text-[0.95rem] text-slate-1">
-            ЗАПОЛНИТЕ: укажите здесь себя как оператора — фамилию, имя, отчество, а если работаете как
-            ИП или самозанятый, то статус и ИНН. Без этого документ юридически неполон. Данные берутся
-            из <code>site.ts → person.name</code>.
+  <div class="prose mt-12 max-w-3xl">
+    {
+      ru ? (
+        <Fragment>
+          <h2>1. Кто обрабатывает данные</h2>
+          <p>
+            Оператор — {operator}, автор и владелец сайта {site.domain}. Обработка ведётся по
+            Федеральному закону № 152-ФЗ «О персональных данных», а для посетителей из Европы —
+            с учётом GDPR и UK GDPR.
           </p>
-        )}
+          <p>
+            Написать оператору по любому вопросу об обработке данных можно через форму на сайте или
+            письмом: <a id="privacy-mail" data-mail={mailB64} href="#kontakt" class="link-sweep">адрес откроется в браузере</a>.
+          </p>
 
-        <h2>2. Какие данные собираются</h2>
-        <p>Только те, что вы сами вводите в форму заявки:</p>
-        <ul>
-          <li>имя или обращение, которое вы указали;</li>
-          <li>адрес электронной почты либо имя пользователя в мессенджере;</li>
-          <li>выбранный диапазон бюджета;</li>
-          <li>текст описания задачи.</li>
-        </ul>
-        <p>
-          Сайт не использует системы аналитики, не ставит рекламных счётчиков и не собирает данные
-          скрытно. Технические файлы cookie для отслеживания посетителей не применяются.
-        </p>
+          <h2>2. Какие данные собираются</h2>
+          <p>Только то, что вы сами вводите в форму заявки:</p>
+          <ul>
+            <li>имя или обращение, которое вы указали;</li>
+            <li>один контакт на выбор — почта либо имя пользователя в мессенджере;</li>
+            <li>выбранное направление работы и диапазон бюджета;</li>
+            <li>текст описания задачи.</li>
+          </ul>
+          <p>
+            Отдельно сохраняется техническая запись о самом факте заявки — направление, диапазон
+            бюджета и время. Она обезличена: ни имени, ни контакта, ни текста в ней нет, и установить
+            по ней человека невозможно. Нужна она ровно для одного — считать, сколько заявок приходит.
+          </p>
 
-        <h2>3. Зачем они нужны</h2>
-        <p>
-          Единственная цель — ответить на вашу заявку и обсудить задачу. Данные не используются для
-          рассылок, не передаются третьим лицам для рекламы и не продаются.
-        </p>
+          <h2>3. Зачем и на каком основании</h2>
+          <p>
+            Цель одна — ответить вам и обсудить задачу. Основание — ваше согласие, которое вы даёте
+            галочкой перед отправкой формы. Согласие добровольное и отзывается в любой момент.
+          </p>
+          <p>
+            Данные не используются для рассылок, не передаются третьим лицам для рекламы, не продаются
+            и не участвуют в автоматическом принятии решений.
+          </p>
 
-        <h2>4. На каком основании</h2>
-        <p>
-          Основанием служит ваше согласие, которое вы даёте, отмечая соответствующее поле перед
-          отправкой формы. Согласие добровольное: без него форму отправить нельзя, но вы всегда
-          можете написать напрямую любым удобным способом.
-        </p>
+          <h2>4. Кто участвует в доставке</h2>
+          <p>
+            Заявка проходит через сервисы, которые действуют как обработчики по поручению оператора и
+            не вправе использовать данные в своих целях:
+          </p>
+        </Fragment>
+      ) : (
+        <Fragment>
+          <h2>1. Who processes the data</h2>
+          <p>
+            The controller is {operator}, author and owner of {site.domain}. Processing follows the UK
+            GDPR and the EU GDPR, and Russian Federal Law No. 152-FZ where it applies.
+          </p>
+          <p>
+            To raise any question about your data, use the form on this site or write to the
+            controller: <a id="privacy-mail" data-mail={mailB64} href="#contact" class="link-sweep">the address appears in your browser</a>.
+          </p>
 
-        <h2>5. Кому данные передаются</h2>
-        <p>
-          Заявка доставляется через сервис Web3Forms, который выступает обработчиком и лишь передаёт
-          сообщение на почту оператора. Сайт размещён на GitHub Pages. Оба сервиса обрабатывают данные
-          на своих серверах в соответствии с собственными политиками конфиденциальности.
-        </p>
-        <p>Иным лицам данные не передаются, кроме случаев, прямо предусмотренных законом.</p>
+          <h2>2. What is collected</h2>
+          <p>Only what you type into the enquiry form yourself:</p>
+          <ul>
+            <li>the name you give;</li>
+            <li>one contact of your choice — email or a messenger handle;</li>
+            <li>the direction of work and the budget range you select;</li>
+            <li>the description of your task.</li>
+          </ul>
+          <p>
+            A separate technical record notes that an enquiry happened — direction, budget range and
+            timestamp. It is anonymous: no name, no contact, no text, and it cannot identify a person.
+            Its only purpose is counting enquiries.
+          </p>
 
-        <h2>6. Сколько хранятся</h2>
-        <p>
-          Переписка по заявке хранится, пока идёт обсуждение и работа по проекту, и далее не более
-          трёх лет — срок исковой давности по гражданским спорам. По вашему требованию данные
-          удаляются раньше.
-        </p>
+          <h2>3. Purpose and legal basis</h2>
+          <p>
+            There is one purpose: replying to you and discussing the work. The legal basis is your
+            consent, given by ticking the box before you submit. Consent is voluntary and can be
+            withdrawn at any time.
+          </p>
+          <p>
+            The data is never used for mailings, passed to third parties for advertising, sold, or fed
+            into automated decision-making.
+          </p>
 
-        <h2>7. Ваши права</h2>
-        <p>Вы вправе в любой момент:</p>
-        <ul>
-          <li>узнать, какие ваши данные хранятся у оператора;</li>
-          <li>потребовать исправить неточные данные;</li>
-          <li>отозвать согласие и потребовать удалить данные;</li>
-          <li>обжаловать действия оператора в Роскомнадзоре или в суде.</li>
-        </ul>
-        <p>
-          Запрос направляется через форму на сайте. Ответ и удаление — в течение тридцати дней с
-          момента обращения.
-        </p>
+          <h2>4. Who is involved in delivery</h2>
+          <p>
+            Enquiries pass through services acting as processors on the controller’s instructions; they
+            may not use the data for their own purposes:
+          </p>
+        </Fragment>
+      )
+    }
+  </div>
 
-        <h2>8. Как данные защищаются</h2>
-        <p>
-          Сайт работает по защищённому протоколу HTTPS. Доступ к почте оператора закрыт паролем и
-          двухфакторной аутентификацией. Данные не публикуются и не хранятся в открытых источниках.
-        </p>
+  <!-- Обработчики: список должен совпадать с тем, что реально развёрнуто -->
+  <div class="mt-6 max-w-3xl overflow-hidden rounded-2xl border border-steel-300/15">
+    <table class="w-full border-collapse text-left">
+      <thead>
+        <tr class="bg-ink-800/70">
+          <th class="plate px-5 py-3">{ru ? 'Сервис' : 'Service'}</th>
+          <th class="plate px-5 py-3">{ru ? 'Что делает' : 'Role'}</th>
+          <th class="plate px-5 py-3 whitespace-nowrap">{ru ? 'Где серверы' : 'Servers'}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          processors.map((p) => (
+            <tr class="border-t border-steel-300/10">
+              <td class="px-5 py-3 font-mono text-[0.8rem] text-steel-100">{p.n}</td>
+              <td class="px-5 py-3 text-[0.9rem] leading-snug text-steel-300">{p.r}</td>
+              <td class="px-5 py-3 text-[0.85rem] whitespace-nowrap text-slate-1">{p.g}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
 
-        <h2>9. Изменения политики</h2>
-        <p>
-          Оператор может обновлять документ. Действующая редакция всегда доступна по этому адресу,
-          дата вступления в силу указана вверху страницы.
-        </p>
-      </div>
-    ) : (
-      <div class="prose mt-12">
-        <p>
-          This document explains what data the site {site.domain} collects, why, how long it is kept and
-          how to have it removed.
-        </p>
+  <div class="prose mt-10 max-w-3xl">
+    {
+      ru ? (
+        <Fragment>
+          <p>
+            Иным лицам данные не передаются, кроме случаев, прямо предусмотренных законом. Подрядчиков
+            и субисполнителей, которым передавались бы ваши данные, у оператора нет.
+          </p>
 
-        <h2>1. Who processes the data</h2>
-        <p>
-          The data controller is {operator}. For any question about data processing, use the form on
-          this site.
-        </p>
+          <h2>5. Передача за пределы России</h2>
+          <p>
+            Из таблицы выше видно главное: серверы обработчиков расположены за границей, поэтому при
+            отправке формы происходит трансграничная передача данных. Отправляя форму, вы соглашаетесь
+            и на неё. Если это для вас неприемлемо — напишите оператору напрямую в мессенджер или на
+            почту, минуя форму: тогда данные не пройдут через эти сервисы.
+          </p>
 
-        <h2>2. What is collected</h2>
-        <p>Only what you type into the enquiry form yourself:</p>
-        <ul>
-          <li>the name you give;</li>
-          <li>an email address or messenger handle;</li>
-          <li>the budget range you select;</li>
-          <li>the description of your task.</li>
-        </ul>
-        <p>
-          The site runs no analytics, sets no advertising trackers and collects nothing covertly.
-          No tracking cookies are used.
-        </p>
+          <h2>6. Сколько данные хранятся</h2>
+          <ul>
+            <li>переписка по заявке — пока идёт обсуждение и работа, затем не более трёх лет (срок исковой давности);</li>
+            <li>обезличенная запись о факте заявки — не более тысячи последних записей, старые вытесняются автоматически;</li>
+            <li>по вашему требованию переписка удаляется раньше — в течение тридцати дней.</li>
+          </ul>
 
-        <h2>3. Why</h2>
-        <p>
-          The only purpose is to reply to your enquiry and discuss the work. The data is never used for
-          mailings, passed to third parties for advertising, or sold.
-        </p>
+          <h2>7. Как данные защищены</h2>
+          <p>
+            Сайт делает инженер, а не конструктор сайтов, поэтому меры описаны конкретно, а не общими
+            словами:
+          </p>
+        </Fragment>
+      ) : (
+        <Fragment>
+          <p>
+            Nobody else receives your data except where the law requires it. There are no subcontractors
+            with access to it.
+          </p>
 
-        <h2>4. Legal basis</h2>
-        <p>
-          Your consent, given by ticking the box before submitting the form. It is voluntary: without it
-          the form cannot be sent, but you may always contact me by other means.
-        </p>
+          <h2>5. International transfers</h2>
+          <p>
+            As the table shows, the processors’ servers sit outside the UK and the EEA, so submitting the
+            form involves an international transfer. By sending the form you agree to it. If that does
+            not suit you, write to the controller directly by email or messenger instead — then your
+            data never passes through these services.
+          </p>
 
-        <h2>5. Who else sees it</h2>
-        <p>
-          Enquiries are delivered through Web3Forms, which acts as a processor and only relays the message
-          to the controller’s mailbox. The site is hosted on GitHub Pages. Both handle data on their own
-          servers under their own privacy policies. Nobody else receives your data except where the law
-          requires it.
-        </p>
+          <h2>6. How long data is kept</h2>
+          <ul>
+            <li>correspondence — while the discussion and the project are live, then no more than three years;</li>
+            <li>the anonymous enquiry record — the last thousand entries, older ones drop out automatically;</li>
+            <li>on your request, correspondence is deleted sooner — within thirty days.</li>
+          </ul>
 
-        <h2>6. How long it is kept</h2>
-        <p>
-          Correspondence is kept while the discussion and project are active, and no longer than three
-          years afterwards. On your request it is deleted sooner.
-        </p>
+          <h2>7. How the data is protected</h2>
+          <p>
+            This site is built by an engineer rather than assembled in a site builder, so the measures are
+            named specifically rather than in general terms:
+          </p>
+        </Fragment>
+      )
+    }
+  </div>
 
-        <h2>7. Your rights</h2>
-        <p>At any time you may:</p>
-        <ul>
-          <li>ask what data about you is held;</li>
-          <li>have inaccurate data corrected;</li>
-          <li>withdraw consent and have your data erased;</li>
-          <li>lodge a complaint with a supervisory authority.</li>
-        </ul>
-        <p>Send the request through the form. Response and erasure within thirty days.</p>
+  <!-- Меры защиты: это одновременно и юридический раздел, и витрина подхода -->
+  <ul class="mt-6 grid max-w-3xl gap-3 sm:grid-cols-2">
+    {
+      measures.map((m) => (
+        <li class="panel rounded-2xl p-5">
+          <p class="flex items-start gap-2.5 text-[0.95rem] leading-snug text-steel-100">
+            <span
+              aria-hidden="true"
+              class="mt-1.5 h-1 w-3 shrink-0 rounded-full bg-gradient-to-r from-cyan to-violet"
+            />
+            {m.h}
+          </p>
+          <p class="mt-2.5 pl-[1.4rem] text-[0.88rem] leading-relaxed text-steel-300">{m.p}</p>
+        </li>
+      ))
+    }
+  </ul>
 
-        <h2>8. Security</h2>
-        <p>
-          The site is served over HTTPS. The controller’s mailbox is protected by a password and
-          two-factor authentication. Data is never published or stored in open sources.
-        </p>
+  <div class="prose mt-10 max-w-3xl">
+    {
+      ru ? (
+        <Fragment>
+          <p>
+            Абсолютной защиты не бывает, и обещать её было бы враньём. Перечисленное закрывает обычные
+            пути утечки для сайта такого размера: отсутствие хранилища, минимум данных, разделение
+            ключей и кода, шифрование канала.
+          </p>
 
-        <h2>9. Changes</h2>
-        <p>
-          This document may be updated. The current version always lives at this address, with the
-          effective date shown at the top.
-        </p>
-      </div>
-    )
-  }
+          <h2>8. Если случится утечка</h2>
+          <p>
+            При обнаружении инцидента с вашими данными оператор уведомляет Роскомнадзор в сроки,
+            установленные законом, и сообщает вам, если инцидент вас затронул: что произошло, какие
+            данные пострадали и что сделано. Молчания и «мы всё уладили сами» не будет.
+          </p>
 
-  <div class="mt-14 border-t border-slate-1/25 pt-8">
-    <a href={url(ru ? '/' : '/en/')} class="btn btn-ghost">
-      {ru ? 'На главную' : 'Home'}
+          <h2>9. Ваши права</h2>
+          <p>Вы вправе в любой момент:</p>
+          <ul>
+            <li>узнать, какие ваши данные хранятся и откуда они взялись;</li>
+            <li>потребовать исправить неточные данные;</li>
+            <li>отозвать согласие и потребовать удаления;</li>
+            <li>получить копию своих данных;</li>
+            <li>пожаловаться в Роскомнадзор или обратиться в суд.</li>
+          </ul>
+          <p>
+            Запрос направляется через форму или письмом. Ответ и удаление — в течение тридцати дней,
+            обычно быстрее.
+          </p>
+
+          <h2>10. Изменения</h2>
+          <p>
+            Документ обновляется, когда меняется сайт или состав сервисов. Действующая редакция всегда
+            лежит по этому адресу, дата вступления в силу указана вверху. История правок открыта: сайт
+            публикуется из открытого репозитория, и каждое изменение этого текста видно в его истории.
+          </p>
+        </Fragment>
+      ) : (
+        <Fragment>
+          <p>
+            Absolute security does not exist, and promising it would be a lie. What is listed closes the
+            ordinary leak paths for a site this size: no storage, minimal data, keys kept apart from
+            code, encrypted transport.
+          </p>
+
+          <h2>8. If a breach happens</h2>
+          <p>
+            If an incident affects your data, the controller notifies the supervisory authority within
+            the statutory deadline and tells you directly when you are affected: what happened, which
+            data was involved and what has been done. No silence, no “we handled it quietly”.
+          </p>
+
+          <h2>9. Your rights</h2>
+          <p>At any time you may:</p>
+          <ul>
+            <li>ask what data is held about you and where it came from;</li>
+            <li>have inaccurate data corrected;</li>
+            <li>withdraw consent and ask for erasure;</li>
+            <li>receive a copy of your data;</li>
+            <li>complain to a supervisory authority — in the UK, the Information Commissioner’s Office.</li>
+          </ul>
+          <p>Send the request through the form or by email. Response and erasure within thirty days, usually sooner.</p>
+
+          <h2>10. Changes</h2>
+          <p>
+            This document is updated whenever the site or its services change. The current version always
+            lives at this address, with the effective date at the top. The edit history is public: the
+            site is published from an open repository, so every change to this text is visible there.
+          </p>
+        </Fragment>
+      )
+    }
+  </div>
+
+  <div class="mt-14 flex flex-wrap gap-3 border-t border-slate-1/25 pt-8">
+    <a href={url(ru ? '/' : '/en/')} class="btn btn-ghost">{ru ? 'На главную' : 'Home'}</a>
+    <a href={url(ru ? '/usloviya/' : '/en/terms/')} class="btn btn-ghost">
+      {ru ? 'Условия работы' : 'Terms of engagement'}
     </a>
   </div>
 </article>
+
+<script>
+  // Адрес лежит в разметке кодированным: сборщикам спама он не достаётся,
+  // а человеку ссылка открывается как обычная почтовая.
+  const el = document.getElementById('privacy-mail') as HTMLAnchorElement | null;
+  const b64 = el?.dataset.mail;
+  if (el && b64) {
+    const addr = atob(b64);
+    el.href = `mailto:${addr}`;
+    el.textContent = addr;
+  }
+</script>

@@ -87,14 +87,26 @@ const blocks = ru
         ],
       },
       {
-        h: '9. Конфиденциальность и публикации',
+        h: '9. Доступы и безопасность',
         p: [
-          'Всё, что заказчик передаёт по проекту, считается конфиденциальным и не раскрывается третьим лицам.',
-          'Работа показывается в портфолио только с письменного разрешения заказчика. Отказ не влияет ни на цену, ни на сроки, ни на объём.',
+          'Доступы запрашиваются по минимуму: только то, без чего работа невозможна, и только на время работы. Права администратора, доступ к боевой базе или к переписке с клиентами запрашиваются, лишь когда задача прямо этого требует.',
+          'Пароли, ключи и токены не пересылаются в мессенджерах и почтой открытым текстом — только через хранилище секретов или одноразовую ссылку. В коде и в репозитории секретов не остаётся: если что-то попало туда по недосмотру, ключ считается скомпрометированным, отзывается и выпускается заново.',
+          'После сдачи проекта заказчик отзывает выданные доступы, а Исполнитель удаляет со своей стороны копии данных и ключей. Если нужен доступ для сопровождения — он остаётся по отдельной договорённости и в оговорённом объёме.',
+          'Работа ведётся на устройстве с шифрованием диска, отдельными учётными записями для клиентских проектов и двухфакторной аутентификацией везде, где сервис её поддерживает.',
+          'Если Исполнитель обнаружит утечку, уязвимость или подозрительную активность, затрагивающую систему заказчика, он сообщает об этом в течение суток с момента обнаружения — вместе с тем, что уже сделано для ограничения ущерба. Это правило действует и тогда, когда причиной оказался сам Исполнитель.',
+          'Абсолютной защиты не существует. Исполнитель применяет принятые в отрасли меры, но не даёт гарантии, что систему невозможно взломать — особенно после того, как её начали менять другие люди или подключили сторонние сервисы.',
         ],
       },
       {
-        h: '10. Споры',
+        h: '10. Конфиденциальность и публикации',
+        p: [
+          'Всё, что заказчик передаёт по проекту, считается конфиденциальным и не раскрывается третьим лицам. Отдельное соглашение о неразглашении подписывается по требованию заказчика — без наценки и без обсуждений.',
+          'Работа показывается в портфолио только с письменного разрешения заказчика. Отказ не влияет ни на цену, ни на сроки, ни на объём.',
+          'В разработке используются вспомогательные инструменты, включая генеративные модели. Данные заказчика в обучение сторонних моделей не передаются, а исключительные права на результат переходят к заказчику по правилам раздела 4 — независимо от того, какими инструментами он получен.',
+        ],
+      },
+      {
+        h: '11. Споры',
         p: [
           'Стороны решают разногласия переговорами. Претензия рассматривается в течение 15 рабочих дней с момента получения.',
           'Если договориться не удалось, спор рассматривается по месту нахождения Исполнителя, если договором не установлено иное.',
@@ -164,14 +176,26 @@ const blocks = ru
         ],
       },
       {
-        h: '9. Confidentiality and publication',
+        h: '9. Access and security',
         p: [
-          'Everything the client shares on the project is treated as confidential and is not disclosed to third parties.',
-          'Work appears in the portfolio only with the client’s written permission. Declining affects neither price, nor timeline, nor scope.',
+          'Access is requested at the minimum: only what the work cannot proceed without, and only for as long as the work lasts. Administrator rights, production databases and customer correspondence are requested solely when the task actually demands them.',
+          'Passwords, keys and tokens are never sent in plain text over messengers or email — only through a secret store or a one-time link. No secrets are left in the code or the repository: if something slips in, the key is treated as compromised, revoked and reissued.',
+          'After delivery the client revokes the access granted, and the Contractor deletes their copies of data and keys. Where access is needed for ongoing support, it stays by separate agreement and in an agreed scope.',
+          'Work is done on a device with full-disk encryption, separate accounts for client projects, and two-factor authentication wherever the service supports it.',
+          'If the Contractor discovers a breach, a vulnerability or suspicious activity affecting the client’s system, they report it within 24 hours of discovery, together with what has already been done to contain it. This holds even when the Contractor turns out to be the cause.',
+          'Absolute security does not exist. The Contractor applies industry-standard measures but gives no guarantee that a system cannot be broken into — particularly once other people have modified it or third-party services have been connected.',
         ],
       },
       {
-        h: '10. Disputes',
+        h: '10. Confidentiality and publication',
+        p: [
+          'Everything the client shares on the project is treated as confidential and is not disclosed to third parties. A separate non-disclosure agreement is signed on the client’s request — no surcharge, no argument.',
+          'Work appears in the portfolio only with the client’s written permission. Declining affects neither price, nor timeline, nor scope.',
+          'Development uses assistive tooling, including generative models. Client data is not fed into training of third-party models, and exclusive rights to the result pass to the client under section 4 regardless of which tools produced it.',
+        ],
+      },
+      {
+        h: '11. Disputes',
         p: [
           'The parties settle disagreements by negotiation. A claim is reviewed within 15 business days of receipt.',
           'If no agreement is reached, the dispute is heard at the Contractor’s location unless the agreement says otherwise.',
