@@ -1,0 +1,225 @@
+---
+/**
+ * Условия работы.
+ *
+ * Задача страницы — защитить исполнителя, но защита работает только тогда,
+ * когда пункт исполним. Условия вроде «ответственность исключается полностью»
+ * по российскому праву ничтожны и в споре не спасут, зато создают ощущение,
+ * что вопрос закрыт. Поэтому здесь только то, что суд обычно принимает:
+ * ограничение суммой договора, переход прав по факту оплаты, сдвиг сроков
+ * при простое по вине заказчика, отсутствие гарантий делового результата.
+ *
+ * Это не оферта: страница описывает правила, договор подписывается отдельно.
+ * Иначе публикация превратилась бы в публичное предложение, которое связывает
+ * исполнителя условиями до всякого разговора.
+ */
+import { site, url, type Locale } from '../data/site';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const ru = locale === 'ru';
+const who = site.person.name || site.brand;
+const updated = ru ? '1 августа 2026 года' : '1 August 2026';
+
+const blocks = ru
+  ? [
+      {
+        h: '1. Что это за документ',
+        p: [
+          `Здесь описано, как ${who} («Исполнитель») работает с заказчиками. Документ не является офертой и не создаёт обязательств сам по себе: условия конкретного проекта фиксируются в отдельном договоре или счёте-договоре, который подписывают обе стороны.`,
+          'Если условие договора расходится с текстом на этой странице, действует договор.',
+        ],
+      },
+      {
+        h: '2. Границы работы',
+        p: [
+          'Состав работ фиксируется письменно до начала: что входит, что не входит, что считается готовым результатом. Всё, чего нет в этом перечне, в работу не входит.',
+          'Пожелания, возникшие после согласования состава, оформляются отдельно — с собственным сроком и стоимостью. Это не отказ помочь, а защита обеих сторон: без этого правила смета и срок перестают что-либо значить.',
+        ],
+      },
+      {
+        h: '3. Цена и оплата',
+        p: [
+          'Стоимость называется после разбора задачи и фиксируется в договоре. Названная цена действительна 14 календарных дней — дальше объём мог измениться, и оценку нужно повторить.',
+          'Работа ведётся по этапам с предоплатой каждого этапа. При просрочке оплаты работа приостанавливается, а срок сдачи сдвигается на время простоя.',
+          'Стоимость сторонних сервисов — хостинг, домены, платные API, магазины приложений — оплачивается заказчиком отдельно и в смету не входит, если прямо не написано обратное.',
+        ],
+      },
+      {
+        h: '4. Права на результат',
+        p: [
+          'Исключительные права на созданный код и материалы переходят к заказчику в момент полной оплаты соответствующего этапа. До оплаты права остаются у Исполнителя.',
+          'Доступы к репозиторию и инфраструктуре передаются заказчику с первого дня работы — но передача доступа не является передачей прав.',
+          'За Исполнителем сохраняется право использовать общие технические решения, приёмы и наработки в других проектах. Это не касается ваших данных, текстов, брендинга и бизнес-логики, специфичной для вашего дела.',
+        ],
+      },
+      {
+        h: '5. Что нужно от заказчика',
+        p: [
+          'Доступы, данные, тексты и ответы на вопросы предоставляются в согласованные сроки. Каждый день ожидания сдвигает срок сдачи на такой же день.',
+          'Заказчик отвечает за законность переданных материалов и данных: тексты, изображения, персональные данные клиентов, права на используемые бренды.',
+          'Если работа остановлена по инициативе заказчика больше чем на 30 дней, проект считается приостановленным: возобновление обсуждается заново, цена пересчитывается по актуальной загрузке.',
+        ],
+      },
+      {
+        h: '6. За что Исполнитель отвечает',
+        p: [
+          'Исполнитель отвечает за то, что система работает так, как описано в согласованном составе работ. Дефекты, найденные в течение 30 дней после сдачи, устраняются бесплатно.',
+          'Дефект — это расхождение с тем, что было согласовано. Новое пожелание дефектом не является и оценивается отдельно.',
+        ],
+      },
+      {
+        h: '7. За что Исполнитель не отвечает',
+        p: [
+          'Исполнитель не гарантирует делового результата: роста выручки, позиций в поиске, количества заявок, доходности торговой стратегии. Эти величины зависят от рынка и решений заказчика, а не от качества кода.',
+          'Исполнитель не отвечает за сбои и изменения сторонних сервисов: хостинга, платёжных систем, мессенджеров, поставщиков моделей, бирж, магазинов приложений. Их отказ не является нарушением договора.',
+          'Исполнитель не отвечает за работу системы после того, как в неё внесены изменения другими людьми.',
+          'Ответственность Исполнителя за любые убытки ограничена суммой, фактически полученной по договору. Упущенная выгода не возмещается.',
+        ],
+      },
+      {
+        h: '8. Прекращение работы',
+        p: [
+          'Любая сторона может прекратить работу, письменно уведомив другую. Оплачивается фактически выполненный на момент уведомления объём, результат этого объёма передаётся заказчику.',
+          'Исполнитель вправе отказаться от проекта, если задача выходит за рамки согласованного, требует нарушения закона или если сотрудничество стало невозможным по причинам, не зависящим от него.',
+        ],
+      },
+      {
+        h: '9. Конфиденциальность и публикации',
+        p: [
+          'Всё, что заказчик передаёт по проекту, считается конфиденциальным и не раскрывается третьим лицам.',
+          'Работа показывается в портфолио только с письменного разрешения заказчика. Отказ не влияет ни на цену, ни на сроки, ни на объём.',
+        ],
+      },
+      {
+        h: '10. Споры',
+        p: [
+          'Стороны решают разногласия переговорами. Претензия рассматривается в течение 15 рабочих дней с момента получения.',
+          'Если договориться не удалось, спор рассматривается по месту нахождения Исполнителя, если договором не установлено иное.',
+        ],
+      },
+    ]
+  : [
+      {
+        h: '1. What this document is',
+        p: [
+          `This page describes how ${who} (the "Contractor") works with clients. It is not a public offer and creates no obligations on its own: the terms of a specific project are fixed in a separate agreement signed by both parties.`,
+          'Where the agreement differs from this page, the agreement prevails.',
+        ],
+      },
+      {
+        h: '2. Scope',
+        p: [
+          'The scope is written down before work starts: what is included, what is not, and what counts as delivered. Anything absent from that list is out of scope.',
+          'Requests that appear after the scope is agreed are handled separately, with their own timeline and price. This is not a refusal to help — without this rule, the quote and the deadline stop meaning anything.',
+        ],
+      },
+      {
+        h: '3. Price and payment',
+        p: [
+          'The price is named after the task is analysed and fixed in the agreement. A quote is valid for 14 calendar days; after that the scope may have moved and the estimate has to be repeated.',
+          'Work runs in stages with each stage paid up front. If payment is late, work pauses and the delivery date shifts by the length of the pause.',
+          'Third-party costs — hosting, domains, paid APIs, app stores — are paid by the client and are not part of the quote unless stated otherwise.',
+        ],
+      },
+      {
+        h: '4. Rights to the result',
+        p: [
+          'Exclusive rights to the code and materials pass to the client upon full payment for the relevant stage. Until payment, the rights remain with the Contractor.',
+          'Repository and infrastructure access is handed over from day one — but access is not a transfer of rights.',
+          'The Contractor keeps the right to reuse general technical solutions and know-how in other projects. This does not extend to your data, texts, branding or business logic specific to your company.',
+        ],
+      },
+      {
+        h: '5. What the client provides',
+        p: [
+          'Access, data, texts and answers are provided within agreed timeframes. Every day of waiting moves the delivery date by the same day.',
+          'The client is responsible for the legality of the materials and data they supply: texts, images, personal data of their customers, rights to the brands used.',
+          'If work is halted at the client’s initiative for more than 30 days, the project is treated as suspended: resuming it is negotiated again and re-priced against current availability.',
+        ],
+      },
+      {
+        h: '6. What the Contractor is responsible for',
+        p: [
+          'The Contractor is responsible for the system working as described in the agreed scope. Defects found within 30 days of delivery are fixed at no cost.',
+          'A defect is a deviation from what was agreed. A new request is not a defect and is quoted separately.',
+        ],
+      },
+      {
+        h: '7. What the Contractor is not responsible for',
+        p: [
+          'No business outcome is guaranteed: revenue growth, search positions, number of enquiries, or the profitability of a trading strategy. Those depend on the market and on the client’s decisions, not on code quality.',
+          'The Contractor is not responsible for outages or changes in third-party services: hosting, payment systems, messengers, model providers, exchanges, app stores. Their failure is not a breach of contract.',
+          'The Contractor is not responsible for the system after other people have modified it.',
+          'The Contractor’s liability for any losses is limited to the amount actually received under the agreement. Lost profit is not compensated.',
+        ],
+      },
+      {
+        h: '8. Ending the work',
+        p: [
+          'Either party may end the work by written notice. The volume actually completed at the moment of notice is paid for, and its result is handed to the client.',
+          'The Contractor may decline a project if the task goes beyond what was agreed, requires breaking the law, or if cooperation has become impossible for reasons outside their control.',
+        ],
+      },
+      {
+        h: '9. Confidentiality and publication',
+        p: [
+          'Everything the client shares on the project is treated as confidential and is not disclosed to third parties.',
+          'Work appears in the portfolio only with the client’s written permission. Declining affects neither price, nor timeline, nor scope.',
+        ],
+      },
+      {
+        h: '10. Disputes',
+        p: [
+          'The parties settle disagreements by negotiation. A claim is reviewed within 15 business days of receipt.',
+          'If no agreement is reached, the dispute is heard at the Contractor’s location unless the agreement says otherwise.',
+        ],
+      },
+    ];
+---
+
+<article class="shell py-14 md:py-20">
+  <p class="plate">{ru ? 'Правовая информация' : 'Legal'}</p>
+  <h1 class="mt-5 text-big">{ru ? 'Условия работы' : 'Terms of engagement'}</h1>
+  <p class="mt-5 max-w-2xl text-[1rem] leading-relaxed text-steel-300">
+    {
+      ru
+        ? 'Правила, по которым я берусь за проекты и довожу их до конца. Читаются за пять минут и написаны для того, чтобы обеим сторонам было понятно, чего ждать — до подписания договора, а не после.'
+        : 'The rules by which I take projects on and see them through. They read in five minutes and exist so that both sides know what to expect — before the contract is signed, not after.'
+    }
+  </p>
+  <p class="mt-3 font-mono text-[0.72rem] tracking-widest text-slate-1 uppercase">
+    {ru ? 'Обновлено' : 'Updated'}: {updated}
+  </p>
+
+  <div class="mt-12 grid max-w-3xl gap-10">
+    {
+      blocks.map((b) => (
+        <section class="reveal">
+          <h2 class="text-[1.15rem] leading-tight md:text-[1.3rem]">{b.h}</h2>
+          <div class="mt-3 grid gap-3">
+            {b.p.map((t) => (
+              <p class="text-[0.96rem] leading-relaxed text-steel-300">{t}</p>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <div class="panel mt-14 max-w-3xl rounded-2xl p-6 md:p-8">
+    <p class="plate !text-cyan">{ru ? 'Важно' : 'Important'}</p>
+    <p class="mt-3 text-[0.95rem] leading-relaxed text-steel-300">
+      {
+        ru
+          ? 'Эта страница описывает практику работы, а не заменяет договор и не является юридической консультацией. Условия рассчитаны на работу с компаниями и индивидуальными предпринимателями. При работе с физическим лицом как с потребителем часть ограничений ответственности по закону не применяется — в таком случае условия согласовываются отдельно.'
+          : 'This page describes how the work runs; it does not replace a contract and is not legal advice. The terms assume work with companies and sole traders. When working with a consumer, some limitations of liability do not apply by law, and terms are agreed separately in that case.'
+      }
+    </p>
+    <a href={url(ru ? '/#kontakt' : '/en/#contact')} class="btn btn-primary mag mt-6">
+      {ru ? 'Обсудить задачу' : 'Start a project'} <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>

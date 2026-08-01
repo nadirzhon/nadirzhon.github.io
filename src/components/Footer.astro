@@ -89,7 +89,10 @@ const contactHref = locale === 'ru' ? '/#kontakt' : '/en/#contact';
     <div class="shell flex flex-col gap-2 py-6 font-mono text-[0.7rem] tracking-wider text-steel-300 sm:flex-row sm:justify-between">
       <span>© {year} {site.brand}. {tr('footerRights', locale)}.</span>
       <span class="flex flex-wrap items-center gap-x-4 gap-y-1">
-        <a href={url(locale === 'ru' ? '/politika/' : '/en/privacy/')} class="transition-colors hover:text-brass">
+        <a href={url(locale === 'ru' ? '/usloviya/' : '/en/terms/')} class="link-sweep transition-colors hover:text-cyan">
+          {locale === 'ru' ? 'Условия работы' : 'Terms'}
+        </a>
+        <a href={url(locale === 'ru' ? '/politika/' : '/en/privacy/')} class="link-sweep transition-colors hover:text-cyan">
           {locale === 'ru' ? 'Обработка персональных данных' : 'Privacy policy'}
         </a>
         <span>{locale === 'ru' ? site.city : site.cityEn}</span>
