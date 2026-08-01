@@ -14,7 +14,7 @@ const contact = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
 const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
 ---
 
-<article>
+<article data-service-code={s.code}>
   <!-- Заголовок -->
   <section class="border-b border-slate-1/20 py-14 md:py-20">
     <div class="shell">
@@ -223,5 +223,19 @@ const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
 
     boxes.forEach((b) => b.addEventListener('change', update));
     update();
+  }
+
+  // Уходя отсюда в форму заявки, человек не должен заново выбирать направление:
+  // запоминаем услугу, с которой он пришёл, — форма отметит её сама.
+  const page = document.querySelector<HTMLElement>('[data-service-code]');
+  const code = page?.dataset.serviceCode;
+  if (code) {
+    document
+      .querySelectorAll<HTMLAnchorElement>('a[href*="#kontakt"], a[href*="#contact"]')
+      .forEach((a) =>
+        a.addEventListener('click', () => {
+          try { sessionStorage.setItem('autonoma.service', code); } catch {}
+        }),
+      );
   }
 </script>
