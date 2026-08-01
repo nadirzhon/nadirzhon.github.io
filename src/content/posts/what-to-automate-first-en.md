@@ -5,6 +5,7 @@ lang: 'en'
 date: 2026-07-14
 tags: ['automation', 'method', 'small business']
 readingTime: 8
+cover: '/blog/avtomatizirovat.jpg'
 ---
 
 The most common mistake in a first automation project is starting with whatever hurts loudest. What hurts loudest is usually whatever irritates the founder personally: an awkward spreadsheet, a broken report, a salesperson who forgets to call back. These are real problems, and they are almost always economically small.
