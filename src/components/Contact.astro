@@ -118,6 +118,7 @@ const budgets =
       data-mail={site.formAccessKey ? undefined : site.email}
       data-mailb64={mailFallback}
       data-relay={site.telegramRelay || undefined}
+      data-metrika={site.metrika || undefined}
       novalidate
     >
       {/* Полоса заполнения: видно, сколько осталось, — форма перестаёт быть ямой */}
@@ -532,6 +533,14 @@ const budgets =
       status.style.color = ok ? 'var(--color-moss-200)' : '#e0885f';
     };
 
+    // Цель для Метрики и Директа. Считается только состоявшаяся заявка:
+    // по кликам реклама оптимизироваться не умеет, по заявкам — умеет.
+    const goal = () => {
+      const id = form.dataset.metrika;
+      const ym = (window as any).ym;
+      if (id && typeof ym === 'function') ym(Number(id), 'reachGoal', 'zayavka');
+    };
+
     // Радио скрыто под плиткой, поэтому браузер о нём ничего не скажет —
     // проверяем сами и говорим об этом там, где человек смотрит.
     if (!radios.some((r) => r.checked)) {
@@ -619,6 +628,7 @@ const budgets =
         if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(contact)) data.append('replyto', contact);
         const res = await fetch(endpoint, { method: 'POST', body: data });
         if (!res.ok) throw new Error(String(res.status));
+        goal();
         form.reset();
         // Форма пуста — плитки, подсказка и полоса должны это показывать
         try { sessionStorage.removeItem('autonoma.service'); } catch {}

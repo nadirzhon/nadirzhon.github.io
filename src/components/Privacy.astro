@@ -28,12 +28,14 @@ const processors = ru
       { n: 'Telegram', r: 'дублирует заявку в личные сообщения оператора', g: 'ОАЭ' },
       { n: 'Cloudflare', r: 'DNS домена и ретранслятор заявок в Telegram', g: 'США' },
       { n: 'GitHub Pages', r: 'хранит и отдаёт страницы сайта', g: 'США' },
+      { n: 'Яндекс.Метрика', r: 'обезличенная статистика посещений и заявок', g: 'Россия' },
     ]
   : [
       { n: 'Web3Forms', r: 'delivers the enquiry to the controller’s mailbox', g: 'USA' },
       { n: 'Telegram', r: 'mirrors the enquiry to the controller’s direct messages', g: 'UAE' },
       { n: 'Cloudflare', r: 'domain DNS and the relay that forwards enquiries', g: 'USA' },
       { n: 'GitHub Pages', r: 'stores and serves the site’s pages', g: 'USA' },
+      { n: 'Yandex Metrica', r: 'anonymous visit and enquiry statistics', g: 'Russia' },
     ];
 
 /** Меры защиты. Обещать здесь можно только то, что реально сделано. */
@@ -68,8 +70,8 @@ const measures = ru
         p: 'Учётные записи, куда приходят заявки, закрыты уникальными паролями и двухфакторной аутентификацией.',
       },
       {
-        h: 'Ни аналитики, ни рекламных счётчиков',
-        p: 'Нет Метрики, нет Analytics, нет пикселей и рекламных сетей. Cookie для отслеживания не ставятся, профилирование не ведётся, за посетителями сайт не следит.',
+        h: 'Статистика без слежки за человеком',
+        p: 'Стоит только Яндекс.Метрика, и у неё выключен вебвизор — тот самый режим, который записывает, что вы печатаете в форме. Ни Google Analytics, ни рекламных пикселей, ни продажи данных сетям.',
       },
     ]
   : [
@@ -102,8 +104,8 @@ const measures = ru
         p: 'The accounts that receive enquiries are secured with unique passwords and two-factor authentication.',
       },
       {
-        h: 'No analytics, no ad trackers',
-        p: 'No Analytics, no pixels, no ad networks. No tracking cookies, no profiling — the site does not follow its visitors.',
+        h: 'Statistics without following you around',
+        p: 'Only Yandex Metrica is installed, with session recording switched off — the mode that would capture what you type into the form. No Google Analytics, no ad pixels, no selling data to networks.',
       },
     ];
 ---
@@ -152,6 +154,15 @@ const measures = ru
             бюджета и время. Она обезличена: ни имени, ни контакта, ни текста в ней нет, и установить
             по ней человека невозможно. Нужна она ровно для одного — считать, сколько заявок приходит.
           </p>
+          <p>
+            Ещё сайт считает посещения через Яндекс.Метрику: с какой страницы вы пришли, какие
+            страницы открыли, с телефона или с компьютера, из какого примерно города. Для этого
+            Метрика ставит свои cookie. Эти сведения обезличены и нужны, чтобы понимать, окупается
+            ли реклама и где на сайте люди теряются. Режим записи действий (вебвизор) выключен
+            намеренно — иначе он сохранял бы то, что вы печатаете в форме. Отказаться просто:
+            блокировщик рекламы или запрет cookie в браузере полностью отключают счётчик, и на
+            работу сайта это никак не влияет.
+          </p>
 
           <h2>3. Зачем и на каком основании</h2>
           <p>
@@ -193,6 +204,14 @@ const measures = ru
             A separate technical record notes that an enquiry happened — direction, budget range and
             timestamp. It is anonymous: no name, no contact, no text, and it cannot identify a person.
             Its only purpose is counting enquiries.
+          </p>
+          <p>
+            The site also counts visits through Yandex Metrica: the page you arrived from, the pages
+            you opened, phone or desktop, and an approximate city. Metrica sets its own cookies for
+            this. The data is anonymous and exists to show whether advertising pays off and where
+            people get lost on the site. Session recording is deliberately switched off — otherwise it
+            would capture what you type into the form. Opting out is simple: an ad blocker or blocked
+            cookies disable the counter entirely, and the site works exactly the same.
           </p>
 
           <h2>3. Purpose and legal basis</h2>
