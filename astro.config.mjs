@@ -10,7 +10,7 @@ import tailwindcss from '@tailwindcss/vite';
  *   свой домен:    npm run build
  *   GitHub Pages:  задаются SITE_URL и BASE_PATH (см. .github/workflows/deploy.yml)
  */
-const site = process.env.SITE_URL ?? 'https://autonoma.studio';
+const site = process.env.SITE_URL ?? 'https://autonoma.uk';
 const base = process.env.BASE_PATH ?? '/';
 
 export default defineConfig({
