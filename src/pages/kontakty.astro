@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import Contact from '../components/Contact.astro';
+import Repos from '../components/Repos.astro';
+---
+
+<Base
+  locale="ru"
+  altPath="/en/contact/"
+  title="Контакты"
+  description="Как связаться и что происходит после заявки: сроки ответа, часы работы, порядок начала проекта и договор."
+>
+  <Contact locale="ru" />
+  <Repos locale="ru" />
+</Base>
