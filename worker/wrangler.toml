@@ -1,0 +1,18 @@
+# Развёртывание ретранслятора заявок.
+#
+#   npx wrangler kv namespace create LEADS   — создать хранилище, вписать id ниже
+#   npx wrangler deploy                      — выложить воркер
+#   npx wrangler secret put BOT_TOKEN        — и так для каждого секрета
+#
+# Секреты в этот файл не попадают: они живут в Cloudflare и в git не хранятся.
+
+name = "autonoma-leads"
+main = "telegram-relay.js"
+compatibility_date = "2026-08-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://autonoma.uk, https://nadirzhon.github.io"
+
+[[kv_namespaces]]
+binding = "LEADS"
+id = "a3c1084be5b744a2b6336a6058f368c8"

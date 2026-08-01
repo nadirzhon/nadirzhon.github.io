@@ -5,7 +5,7 @@
 export const site = {
   brand: 'AUTONOMA',
   brandMark: 'AN',
-  domain: 'nadirzhon.github.io',
+  domain: 'autonoma.uk',
   email: 'anodirzon4@gmail.com',
   /**
    * Ник нигде не показывается на странице — только адрес ссылки.
@@ -85,10 +85,11 @@ export const site = {
   formAccessKey: '53dc5b82-fa67-40b1-a143-509c185829c6',
   formEndpoint: 'https://api.web3forms.com/submit',
   /**
-   * Дублирование заявок в Telegram. Пока пусто — заявки идут только на почту.
-   * Как включить за десять минут: worker/README.md
+   * Дублирование заявок в Telegram: ретранслятор на Cloudflare Workers.
+   * Токен бота живёт в секретах воркера, здесь только его адрес.
+   * Как это устроено и как поднять заново: worker/README.md
    */
-  telegramRelay: '',
+  telegramRelay: 'https://tg.autonoma.uk',
 } as const;
 
 export type Locale = 'ru' | 'en';
