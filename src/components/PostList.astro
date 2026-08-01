@@ -30,9 +30,21 @@ const dateFmt = new Intl.DateTimeFormat(locale === 'ru' ? 'ru-RU' : 'en-GB', {
         <li class="reveal group border-b border-slate-1/25">
           <a
             href={url(`${base}/${p.id.replace(/-(ru|en)$/, '')}/`)}
-            class="grid gap-x-8 gap-y-3 py-8 transition-[padding] duration-300 group-hover:px-3 md:grid-cols-[9rem_1fr]"
+            class="grid gap-x-8 gap-y-3 py-8 transition-[padding] duration-300 group-hover:px-3 md:grid-cols-[9rem_11rem_1fr]"
           >
-            <div class="font-mono text-[0.72rem] tracking-widest text-slate-1 uppercase">
+            {p.data.cover && (
+              <div class="order-first overflow-hidden rounded-xl border border-slate-1/25 md:order-none md:col-start-2">
+                <img
+                  src={p.data.cover}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  class="block aspect-[16/9] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                />
+              </div>
+            )}
+
+            <div class="font-mono text-[0.72rem] tracking-widest text-slate-1 uppercase md:col-start-1 md:row-start-1">
               <div>{dateFmt.format(p.data.date)}</div>
               <div class="mt-1.5 text-slate-1/70">
                 {p.data.readingTime} {tr('minRead', locale)}

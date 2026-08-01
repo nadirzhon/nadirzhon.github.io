@@ -31,6 +31,8 @@ const posts = defineCollection({
     date: z.coerce.date(),
     tags: z.array(z.string()).default([]),
     readingTime: z.number().default(6),
+    /** Обложка записи. Иллюстрация, а не скриншот работы — это важно различать. */
+    cover: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });

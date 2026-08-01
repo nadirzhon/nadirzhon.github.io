@@ -5,6 +5,7 @@ lang: 'en'
 date: 2026-07-26
 tags: ['chatbots', 'customer experience', 'practice']
 readingTime: 7
+cover: '/blog/chatbot.jpg'
 ---
 
 Most people already have an opinion about chatbots, and it is bad. It was earned honestly: for years companies installed a window that was good at asking questions and bad at answering them.

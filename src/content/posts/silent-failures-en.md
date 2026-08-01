@@ -5,6 +5,7 @@ lang: 'en'
 date: 2026-06-18
 tags: ['reliability', 'trading systems', 'post-mortem']
 readingTime: 7
+cover: '/blog/silent-failures.jpg'
 ---
 
 The expensive failure is not the one where a service crashes. A crash is visible: an alert fires, someone wakes up, someone fixes it. The expensive failure is when everything is green, every metric is normal, and the work is not getting done.
