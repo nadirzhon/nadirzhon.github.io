@@ -49,6 +49,52 @@ const budgets =
           ))
         }
       </ul>
+
+      {/* Рабочие условия: клиент должен понимать, когда ему ответят и с кем
+          он имеет дело, ещё до того, как что-то отправит */}
+      <dl class="mt-10 grid gap-px overflow-hidden rounded-2xl border border-steel-300/15 bg-steel-300/10 sm:grid-cols-2">
+        <div class="bg-ink-800/80 px-5 py-4">
+          <dt class="plate">{locale === 'ru' ? 'Отвечаю' : 'Reply'}</dt>
+          <dd class="mt-1.5 text-[0.9rem] text-steel-100">
+            {locale === 'ru' ? site.work.reply : site.work.replyEn}
+          </dd>
+        </div>
+        <div class="bg-ink-800/80 px-5 py-4">
+          <dt class="plate">{locale === 'ru' ? 'Часы работы' : 'Hours'}</dt>
+          <dd class="mt-1.5 text-[0.9rem] text-steel-100">
+            {locale === 'ru' ? site.work.hours : site.work.hoursEn}
+            <span class="block font-mono text-[0.72rem] text-slate-1">{site.work.tz}</span>
+          </dd>
+        </div>
+        <div class="bg-ink-800/80 px-5 py-4">
+          <dt class="plate">{locale === 'ru' ? 'Языки' : 'Languages'}</dt>
+          <dd class="mt-1.5 text-[0.9rem] text-steel-100">{site.work.languages}</dd>
+        </div>
+        <div class="bg-ink-800/80 px-5 py-4">
+          <dt class="plate">{locale === 'ru' ? 'Работаю по договору' : 'Contract'}</dt>
+          <dd class="mt-1.5 text-[0.9rem] text-steel-100">
+            {
+              site.work.legalForm
+                ? (locale === 'ru' ? site.work.legalForm : site.work.legalFormEn || site.work.legalForm)
+                : locale === 'ru' ? 'Всегда, с любой суммы' : 'Always, at any budget'
+            }
+            {site.work.inn && (
+              <span class="block font-mono text-[0.72rem] text-slate-1">ИНН {site.work.inn}</span>
+            )}
+          </dd>
+        </div>
+      </dl>
+
+      <p class="mt-6 text-[0.86rem] leading-relaxed text-slate-1">
+        {
+          locale === 'ru'
+            ? 'Перед стартом подписываем договор. Правила работы — границы, оплата, права на код — описаны на отдельной странице.'
+            : 'We sign a contract before starting. The rules — scope, payment, rights to the code — are on a separate page.'
+        }
+        <a href={url(locale === 'ru' ? '/usloviya/' : '/en/terms/')} class="link-sweep ml-1 text-steel-100">
+          {locale === 'ru' ? 'Условия работы' : 'Terms of engagement'}
+        </a>
+      </p>
     </div>
 
     <form
@@ -108,7 +154,7 @@ const budgets =
         </span>
       </label>
 
-      <button type="submit" class="btn !border-brass !bg-brass !text-steel-50 justify-center hover:!bg-brass-200">
+      <button type="submit" class="btn btn-primary mag justify-center">
         {tr('formSend', locale)}
       </button>
 
