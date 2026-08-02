@@ -8,15 +8,23 @@ interface Props {
   /** На главной показываем срез, на странице кейсов — всё */
   limit?: number;
   showHeading?: boolean;
+  /** slug услуги: на её странице показываем только относящиеся к ней работы */
+  service?: string;
 }
-const { locale, limit, showHeading = true } = Astro.props;
+const { locale, limit, showHeading = true, service } = Astro.props;
 
-const all = (await getCollection('cases', (c) => c.data.lang === locale && !c.data.draft)).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+const all = (
+  await getCollection(
+    'cases',
+    (c) => c.data.lang === locale && !c.data.draft && (!service || c.data.service === service),
+  )
+).sort((a, b) => a.data.order - b.data.order);
 const items = limit ? all.slice(0, limit) : all;
+// У услуги может не быть кейсов — пустой раздел с заголовком хуже отсутствия раздела
 const base = locale === 'ru' ? '/keysy' : '/en/work';
 ---
+
+{ items.length > 0 && (
 
 <section class="border-b border-slate-1/20 py-20 md:py-28">
   <div class="shell">
@@ -122,3 +130,4 @@ const base = locale === 'ru' ? '/keysy' : '/en/work';
     position: relative;
   }
 </style>
+) }

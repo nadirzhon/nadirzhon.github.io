@@ -1,6 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ServiceDetail from '../../components/ServiceDetail.astro';
+import CaseList from '../../components/CaseList.astro';
+import Contact from '../../components/Contact.astro';
 import { services } from '../../data/services';
 
 export function getStaticPaths() {
@@ -17,4 +19,8 @@ const { service } = Astro.props;
   description={`${service.tagline.ru}. ${service.intro.ru.slice(0, 130)}…`}
 >
   <ServiceDetail service={service} locale="ru" />
+  {/* Работы по этой же услуге и форма прямо здесь: трафик с рекламы
+      не должен уходить на главную ради того, чтобы написать */}
+  <CaseList locale="ru" service={service.slug.ru} />
+  <Contact locale="ru" preselect={service.code} />
 </Base>
