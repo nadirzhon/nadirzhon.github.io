@@ -10,7 +10,8 @@ interface Props {
 const { service: s, locale } = Astro.props;
 const base = locale === 'ru' ? '/uslugi' : '/en/services';
 const home = url(locale === 'ru' ? '/' : '/en/');
-const contact = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
+// Форма стоит на этой же странице — уводить человека на главную незачем
+const contact = locale === 'ru' ? '#kontakt' : '#contact';
 const others = orderedServices.filter((o) => o.code !== s.code).slice(0, 4);
 ---
 

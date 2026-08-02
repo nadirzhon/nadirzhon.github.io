@@ -5,8 +5,13 @@ import { orderedServices } from '../data/services';
 
 interface Props {
   locale: Locale;
+  /**
+   * Код услуги (S-02 и т.п.). На странице услуги направление уже известно —
+   * отмечаем его сразу, чтобы человек с рекламы не выбирал то, что и так понятно.
+   */
+  preselect?: string;
 }
-const { locale } = Astro.props;
+const { locale, preselect } = Astro.props;
 
 // Выбор направления делает заявку осмысленной ещё до текста: человек не обязан
 // формулировать, к какой услуге относится его задача — он просто указывает пальцем.
@@ -147,6 +152,7 @@ const budgets =
                   type="radio"
                   name="service"
                   class="svc__input"
+                  checked={preselect === s.code}
                   value={`${s.code} · ${s.title}`}
                   data-code={s.code}
                   data-tagline={s.tagline}
