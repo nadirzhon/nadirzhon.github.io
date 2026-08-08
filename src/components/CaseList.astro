@@ -10,8 +10,10 @@ interface Props {
   showHeading?: boolean;
   /** slug услуги: на её странице показываем только относящиеся к ней работы */
   service?: string;
+  /** Крутить живой сайт в обложке кейса вместо статичного снимка (только на странице кейсов) */
+  liveEmbeds?: boolean;
 }
-const { locale, limit, showHeading = true, service } = Astro.props;
+const { locale, limit, showHeading = true, service, liveEmbeds = false } = Astro.props;
 
 const all = (
   await getCollection(
@@ -55,25 +57,55 @@ const base = locale === 'ru' ? '/keysy' : '/en/work';
         <div class:list={['mt-14 grid gap-3 md:gap-4', items.length > 1 && 'md:grid-cols-2']}>
           {items.map((c) => (
             <article class="reveal group panel relative flex flex-col overflow-hidden rounded-2xl">
-              {c.data.cover && (
-                <a
-                  href={url(`${base}/${c.id.replace(/-(ru|en)$/, '')}/`)}
-                  class="relative block overflow-hidden"
-                  tabindex="-1"
-                  aria-hidden="true"
-                >
-                  <img
-                    src={c.data.cover}
-                    alt=""
+              {liveEmbeds && c.data.live ? (
+                <div class="relative block aspect-[16/9] overflow-hidden bg-void">
+                  <iframe
+                    src={c.data.live}
+                    title=""
+                    tabindex="-1"
+                    aria-hidden="true"
                     loading="lazy"
-                    decoding="async"
-                    class="block aspect-[16/9] w-full object-cover object-top transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+                    scrolling="no"
+                    class="case-live-frame absolute top-0 left-0 origin-top-left border-0"
                   />
                   <span
                     aria-hidden="true"
-                    class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(9,13,22,0.96),rgba(9,13,22,0.35)_52%,transparent)]"
+                    class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(9,13,22,0.96),rgba(9,13,22,0.28)_52%,rgba(9,13,22,0.05))]"
                   />
-                </a>
+                  <span class="pointer-events-none absolute top-4 left-4 inline-flex items-center gap-2 rounded-full bg-void/70 px-3 py-1.5 font-mono text-[0.62rem] font-semibold tracking-widest text-cyan uppercase backdrop-blur-sm">
+                    <span class="live-dot inline-block h-1.5 w-1.5 rounded-full bg-cyan" />
+                    Live
+                  </span>
+                  <a
+                    href={c.data.live}
+                    target="_blank"
+                    rel="noopener"
+                    class="absolute right-4 bottom-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-steel-50/25 bg-void/70 px-3.5 py-1.5 font-mono text-[0.66rem] tracking-widest text-steel-50 uppercase backdrop-blur-sm transition-colors hover:border-cyan hover:text-cyan"
+                  >
+                    {locale === 'ru' ? 'Открыть сайт' : 'Open site'} <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              ) : (
+                c.data.cover && (
+                  <a
+                    href={url(`${base}/${c.id.replace(/-(ru|en)$/, '')}/`)}
+                    class="relative block overflow-hidden"
+                    tabindex="-1"
+                    aria-hidden="true"
+                  >
+                    <img
+                      src={c.data.cover}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      class="block aspect-[16/9] w-full object-cover object-top transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+                    />
+                    <span
+                      aria-hidden="true"
+                      class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(9,13,22,0.96),rgba(9,13,22,0.35)_52%,transparent)]"
+                    />
+                  </a>
+                )
               )}
 
               <div class="flex flex-1 flex-col p-7 md:p-9">
@@ -128,6 +160,31 @@ const base = locale === 'ru' ? '/keysy' : '/en/work';
 <style>
   article {
     position: relative;
+  }
+  /* Живой сайт в обложке: рендерим в масштабе, чтобы вписать десктопную страницу в карточку */
+  .case-live-frame {
+    width: 250%;
+    height: 250%;
+    transform: scale(0.4);
+    pointer-events: none;
+  }
+  .live-dot {
+    box-shadow: 0 0 8px var(--color-cyan);
+    animation: live-pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes live-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .live-dot {
+      animation: none;
+    }
   }
 </style>
 ) }

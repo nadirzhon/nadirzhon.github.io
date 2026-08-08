@@ -17,6 +17,7 @@ outcomes:
     label: 'lines of hand-written JavaScript'
 stack: ['HTML', 'CSS', 'JavaScript', 'WebGL', 'Canvas']
 cover: '/work/svetopis/hero.jpg'
+live: 'https://autonoma.uk/svetopis/'
 order: 2
 ---
 

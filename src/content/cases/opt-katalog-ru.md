@@ -17,6 +17,7 @@ outcomes:
     label: 'фотографий нужно, чтобы запуститься'
 stack: ['HTML', 'CSS', 'JavaScript', 'Python', 'Cloudflare Workers']
 cover: '/work/opt-katalog/hero.jpg'
+live: 'https://autonoma.uk/stroyflex/'
 order: 4
 ---
 
