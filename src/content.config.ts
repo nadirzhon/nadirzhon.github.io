@@ -17,6 +17,8 @@ const cases = defineCollection({
     stack: z.array(z.string()),
     /** Обложка: снимок работающей системы. Без неё кейс — просто текст. */
     cover: z.string().optional(),
+    /** URL живого сайта: если задан, в карточке кейса крутится настоящий сайт, а не статичная обложка. */
+    live: z.string().optional(),
     order: z.number().default(99),
     draft: z.boolean().default(false),
   }),
