@@ -83,6 +83,14 @@ export const site = {
 
     // ── AI + безопасность (на Claude / MCP) ──────────────────────────────
     {
+      name: 'agentstrike', lang: 'Python', group: 'ai', url: 'https://github.com/nadirzhon/agentstrike',
+      note: { ru: '«Metasploit для AI-агентов»: red-team-фреймворк prompt injection с генетическим мутатором и canary-доказательством пробоя', en: 'A "Metasploit for AI agents" — prompt-injection red-team framework with a genetic mutator and canary-proven breaches' },
+    },
+    {
+      name: 'poisondoc', lang: 'Python', group: 'ai', url: 'https://github.com/nadirzhon/poisondoc',
+      note: { ru: 'Indirect injection с двух сторон: генерирует «отравленные» документы и детектирует скрытые инъекции до того, как их прочтёт LLM', en: 'Indirect injection, both ends — crafts poisoned documents and detects hidden injections before an LLM reads them' },
+    },
+    {
       name: 'vigil', lang: 'Python', group: 'ai', url: 'https://github.com/nadirzhon/vigil',
       note: { ru: 'AI-ревью безопасности для каждого pull request на Claude: инъекции, секреты, ошибки авторизации', en: 'AI security review for every pull request, powered by Claude — injection, secrets, authz bugs' },
     },
@@ -108,6 +116,14 @@ export const site = {
     },
 
     // ── Безопасность (инструменты на чистом Python) ──────────────────────
+    {
+      name: 'pathfinder', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/pathfinder',
+      note: { ru: 'Планировщик атаки: из данных recon строит цепочки атак от внешнего доступа до данных и ранжирует их с привязкой к MITRE ATT&CK', en: 'Attack-path planner — chains recon facts into end-to-end paths and ranks them, labelled with MITRE ATT&CK' },
+    },
+    {
+      name: 'exploit-synth', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/exploit-synth',
+      note: { ru: 'CVE → безопасный PoC: классифицирует уязвимость и генерирует неразрушающую проверку присутствия (детект, не оружие)', en: 'CVE → safe PoC — classifies the bug and generates a non-destructive presence check (detection, not weaponization)' },
+    },
     {
       name: 'sentinel', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/sentinel',
       note: { ru: 'Единая security-сюита: recon, DAST, поиск утечек в git и статический анализ в одной команде, ноль зависимостей', en: 'Unified security suite — recon, DAST, git-leak hunting and static analysis in one command, zero deps' },
