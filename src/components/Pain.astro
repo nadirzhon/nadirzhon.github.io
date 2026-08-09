@@ -84,8 +84,8 @@ const week = days.map((d, di) =>
                   <div class="grid flex-1 grid-cols-24 gap-[3px]">
                     {row.map((cell, hi) => (
                       <span
-                        class:list={['hour-cell aspect-square', cell.human ? 'bg-steel-300/25' : 'bg-cyan/55']}
-                        style={`--d:${(di * 24 + hi) * 4}ms`}
+                        class:list={['hour-cell aspect-square', cell.human ? 'bg-steel-300/25' : 'bg-cyan/55 sys']}
+                        style={`--d:${(di * 24 + hi) * 4}ms;--p:${(di * 24 + hi) * 13}ms`}
                       />
                     ))}
                   </div>
@@ -127,10 +127,26 @@ const week = days.map((d, di) =>
       animation: cell-in 0.4s var(--ease-station) forwards;
       animation-delay: var(--d);
     }
+    /* Системные часы (24/7) не просто появляются, а живут: по ним бесконечно
+       бежит волна свечения — видно, что машина работает, пока человек спит.
+       cell-in двигает opacity/transform, sys-wave — только яркость: не конфликтуют. */
+    .reveal.is-in .hour-cell.sys {
+      animation:
+        cell-in 0.4s var(--ease-station) var(--d) forwards,
+        sys-wave 2.6s ease-in-out var(--p) infinite;
+    }
     @keyframes cell-in {
       to {
         opacity: 1;
         transform: none;
+      }
+    }
+    @keyframes sys-wave {
+      0%, 100% {
+        filter: brightness(1);
+      }
+      50% {
+        filter: brightness(1.7) saturate(1.2);
       }
     }
   }
