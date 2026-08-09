@@ -110,11 +110,40 @@ const ctaHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
           }
         </dl>
 
-        <div class="px-5 pt-1 pb-5">
-          <div class="h-2 w-full overflow-hidden bg-steel-300/15">
-            <div id="out-bar" class="h-full rounded-full bg-gradient-to-r from-cyan to-violet transition-[width] duration-500 ease-out" style="width:60%"></div>
+        <div class="flex items-center gap-5 px-5 pt-3 pb-5">
+          <div class="relative shrink-0">
+            <svg width="88" height="88" viewBox="0 0 120 120" class="-rotate-90" aria-hidden="true">
+              <circle class="calc-ring-track" cx="60" cy="60" r="52" fill="none" stroke-width="10" />
+              <circle
+                id="out-ring"
+                cx="60"
+                cy="60"
+                r="52"
+                fill="none"
+                stroke-width="10"
+                stroke-linecap="round"
+                stroke="url(#calcGrad)"
+                stroke-dasharray="326.7"
+                stroke-dashoffset="130.7"
+                style="transition: stroke-dashoffset 0.5s var(--ease-station, ease)"
+              />
+              <defs>
+                <linearGradient id="calcGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="var(--color-cyan)" />
+                  <stop offset="1" stop-color="var(--color-violet)" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <span
+              id="out-ring-label"
+              class="absolute inset-0 grid place-items-center font-mono text-[1rem] font-bold text-steel-50 tabular-nums"
+              >60%</span
+            >
           </div>
-          <p class="mt-4 text-[0.76rem] leading-relaxed text-steel-300/70">{tr('calcFormula', locale)}</p>
+          <div class="min-w-0">
+            <p class="plate !text-steel-300">{locale === 'ru' ? 'Автоматизируется' : 'Automated'}</p>
+            <p class="mt-2 text-[0.76rem] leading-relaxed text-steel-300/70">{tr('calcFormula', locale)}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -128,31 +157,70 @@ const ctaHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
 <style>
   .calc-range {
     appearance: none;
-    height: 2px;
-    background: color-mix(in oklab, var(--color-steel-300) 35%, transparent);
+    height: 6px;
+    border-radius: 999px;
+    /* Заливка до бегунка задаётся из JS через --fill; за ней — приглушённый трек */
+    background: linear-gradient(
+      90deg,
+      var(--color-brass) 0 var(--fill, 50%),
+      color-mix(in oklab, var(--color-steel-300) 28%, transparent) var(--fill, 50%) 100%
+    );
     cursor: pointer;
+    outline: none;
   }
   .calc-range::-webkit-slider-thumb {
     appearance: none;
-    width: 18px;
-    height: 18px;
-    background: var(--color-brass);
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 50% 40%, #fff2cf, var(--color-brass) 60%);
     border: 2px solid var(--color-ink);
-    box-shadow: 0 0 0 1px var(--color-brass);
+    box-shadow:
+      0 0 0 1px var(--color-brass),
+      0 0 14px color-mix(in oklab, var(--color-brass) 70%, transparent);
     cursor: grab;
-    transition: transform 0.15s ease;
+    transition: transform 0.18s var(--ease-back, cubic-bezier(0.34, 1.56, 0.64, 1)),
+      box-shadow 0.18s ease;
   }
-  .calc-range::-webkit-slider-thumb:active {
-    transform: scale(1.15);
+  .calc-range:hover::-webkit-slider-thumb {
+    transform: scale(1.1);
+  }
+  .calc-range:active::-webkit-slider-thumb {
+    transform: scale(1.22);
+    box-shadow:
+      0 0 0 1px var(--color-brass),
+      0 0 22px color-mix(in oklab, var(--color-brass) 90%, transparent);
     cursor: grabbing;
   }
-  .calc-range::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border: 2px solid var(--color-ink);
+  .calc-range:focus-visible::-webkit-slider-thumb {
+    outline: 2px solid var(--color-cyan);
+    outline-offset: 3px;
+  }
+  .calc-range::-moz-range-progress {
+    height: 6px;
+    border-radius: 999px;
     background: var(--color-brass);
-    box-shadow: 0 0 0 1px var(--color-brass);
+  }
+  .calc-range::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--color-ink);
+    border-radius: 999px;
+    background: radial-gradient(circle at 50% 40%, #fff2cf, var(--color-brass) 60%);
+    box-shadow: 0 0 0 1px var(--color-brass), 0 0 14px color-mix(in oklab, var(--color-brass) 70%, transparent);
     cursor: grab;
+  }
+  /* Пульс на строке экономии при пересчёте */
+  @keyframes calc-pop {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+  .calc-pop { animation: calc-pop 0.4s var(--ease-station, ease); }
+  .calc-ring-track { stroke: color-mix(in oklab, var(--color-steel-300) 20%, transparent); }
+  @media (prefers-reduced-motion: reduce) {
+    .calc-pop { animation: none; }
+    .calc-range::-webkit-slider-thumb { transition: none; }
   }
 </style>
 
@@ -173,10 +241,46 @@ const ctaHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
       HTMLInputElement
     >;
 
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const money = (n: number) =>
       loc === 'ru-RU'
         ? `${Math.round(n).toLocaleString('ru-RU')} ${cur}`
         : `${cur}${Math.round(n).toLocaleString('en-US')}`;
+
+    // Плавный «набег» числа к новому значению — цифры не прыгают, а перетекают.
+    const anims = new Map<HTMLElement, { raf: number; cur: number }>();
+    function animateNum(elm: HTMLElement, target: number, fmt: (n: number) => string) {
+      const state = anims.get(elm) ?? { raf: 0, cur: target };
+      const from = state.cur;
+      if (reduce || from === target) {
+        if (state.raf) cancelAnimationFrame(state.raf);
+        elm.textContent = fmt(target);
+        anims.set(elm, { raf: 0, cur: target });
+        return;
+      }
+      if (state.raf) cancelAnimationFrame(state.raf);
+      const start = performance.now();
+      const dur = 380;
+      const tick = (now: number) => {
+        const t = Math.min(1, (now - start) / dur);
+        const e = 1 - Math.pow(1 - t, 3); // easeOutCubic
+        const v = from + (target - from) * e;
+        elm.textContent = fmt(v);
+        if (t < 1) {
+          anims.set(elm, { raf: requestAnimationFrame(tick), cur: v });
+        } else {
+          elm.textContent = fmt(target);
+          anims.set(elm, { raf: 0, cur: target });
+        }
+      };
+      anims.set(elm, { raf: requestAnimationFrame(tick), cur: from });
+    }
+
+    const CIRC = 2 * Math.PI * 52; // длина окружности кольца автоматизации
+    const ring = el('out-ring') as unknown as SVGCircleElement;
+    const ringLabel = el('out-ring-label');
+    const saved = el('out-saved');
+    let popTimer = 0;
 
     function render() {
       const people = +inputs.people.value;
@@ -189,17 +293,32 @@ const ctaHref = url(locale === 'ru' ? '/#kontakt' : '/en/#contact');
         const out = el(`${id}-val`);
         const v = +input.value;
         out.textContent = (id === 'rate' ? v.toLocaleString(loc) : String(v)) + (input.dataset.suffix ?? '');
+        // Заливка трека до бегунка
+        const pct = ((v - +input.min) / (+input.max - +input.min)) * 100;
+        input.style.setProperty('--fill', `${pct}%`);
       }
 
       const annual = people * hours * rate * WEEKS;
-      const saved = annual * auto;
+      const savedVal = annual * auto;
       const hoursBack = people * hours * WEEKS * auto;
-      const monthly = saved / 12;
 
-      el('out-cost').textContent = money(annual);
-      el('out-saved').textContent = money(saved);
-      el('out-hours').textContent = Math.round(hoursBack).toLocaleString(loc);
-      (el('out-bar') as HTMLElement).style.width = `${auto * 100}%`;
+      animateNum(el('out-cost'), annual, money);
+      animateNum(saved, savedVal, money);
+      animateNum(el('out-hours'), hoursBack, (n) => Math.round(n).toLocaleString(loc));
+
+      // Кольцо автоматизации
+      ring.style.strokeDashoffset = String(CIRC * (1 - auto));
+      ringLabel.textContent = `${Math.round(auto * 100)}%`;
+
+      // Короткий пульс на строке экономии — глаз ловит, что число ожило
+      if (!reduce) {
+        saved.classList.remove('calc-pop');
+        clearTimeout(popTimer);
+        // reflow, чтобы анимация перезапустилась
+        void saved.offsetWidth;
+        saved.classList.add('calc-pop');
+        popTimer = window.setTimeout(() => saved.classList.remove('calc-pop'), 420);
+      }
     }
 
     ids.forEach((i) => inputs[i].addEventListener('input', render));
