@@ -2,6 +2,7 @@
 import { site, url, type Locale } from '../data/site';
 import { tr } from '../data/i18n';
 import { orderedServices } from '../data/services';
+import ContactLinks from './ContactLinks.astro';
 
 interface Props {
   locale: Locale;
@@ -10,10 +11,6 @@ const { locale } = Astro.props;
 const year = new Date().getFullYear();
 const base = locale === 'ru' ? '/uslugi' : '/en/services';
 const contactHref = locale === 'ru' ? '/#kontakt' : '/en/#contact';
-
-// Почта лежит в разметке кодированной base64: сборщики адресов видят только
-// набор символов, а рабочий mailto собирается в браузере (см. скрипт ниже).
-const mailB64 = Buffer.from(site.email, 'utf-8').toString('base64');
 ---
 
 <footer class="on-dark bg-ink text-steel-200">
@@ -28,23 +25,9 @@ const mailB64 = Buffer.from(site.email, 'utf-8').toString('base64');
       </div>
       <p class="mt-5 max-w-xs text-[0.9rem] leading-relaxed text-steel-300">{tr('footerLine', locale)}</p>
 
-      {/* Прямые каналы связи — помимо формы. Почта деобфусцируется в браузере. */}
-      <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.9rem]">
-        <a
-          data-mailb64={mailB64}
-          href="#"
-          class="footer-mail inline-flex items-center gap-2 text-steel-100 transition-colors hover:text-brass"
-        >
-          <span aria-hidden="true">✉</span>{locale === 'ru' ? 'Написать на почту' : 'Email me'}
-        </a>
-        <a
-          href={site.telegramUrl}
-          target="_blank"
-          rel="noopener"
-          class="inline-flex items-center gap-2 text-steel-100 transition-colors hover:text-brass"
-        >
-          <span aria-hidden="true">✈</span>Telegram
-        </a>
+      {/* Прямые каналы связи — помимо формы. Почты деобфусцируются в браузере. */}
+      <div class="mt-6">
+        <ContactLinks locale={locale} variant="footer" />
       </div>
 
       <div class="mt-6">
