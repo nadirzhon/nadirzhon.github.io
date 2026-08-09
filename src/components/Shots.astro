@@ -10,6 +10,8 @@ interface Shot {
   src: string;
   title: string;
   note: string;
+  type?: 'image' | 'video';
+  poster?: string;
 }
 interface Props {
   shots: Shot[];
@@ -35,21 +37,41 @@ const { shots, plate = 'Экраны', lead } = Astro.props;
               class="shot panel group block w-full overflow-hidden rounded-2xl text-left"
               data-full={s.src}
               data-title={s.title}
+              data-type={s.type ?? 'image'}
             >
               <span class="relative block overflow-hidden">
-                <img
-                  src={s.src}
-                  alt={s.title}
-                  loading="lazy"
-                  decoding="async"
-                  class="block w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                />
+                {s.type === 'video' ? (
+                  <video
+                    src={s.src}
+                    poster={s.poster}
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    class="block w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  />
+                ) : (
+                  <img
+                    src={s.src}
+                    alt={s.title}
+                    loading="lazy"
+                    decoding="async"
+                    class="block w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  />
+                )}
                 <span
                   aria-hidden="true"
                   class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(5,7,12,0.85),transparent_46%)]"
                 />
+                {s.type === 'video' && (
+                  <span class="pointer-events-none absolute inset-0 grid place-items-center">
+                    <span class="grid h-14 w-14 place-items-center rounded-full border border-steel-50/40 bg-void/60 text-steel-50 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+                      <span aria-hidden="true" class="ml-0.5 text-[1.1rem]">▶</span>
+                    </span>
+                  </span>
+                )}
                 <span class="absolute right-4 bottom-4 rounded-full border border-steel-300/25 bg-void/70 px-3 py-1.5 font-mono text-[0.62rem] tracking-widest text-steel-200 uppercase backdrop-blur-sm">
-                  открыть
+                  {s.type === 'video' ? 'смотреть' : 'открыть'}
                 </span>
               </span>
               <span class="block px-5 py-4">
@@ -81,6 +103,12 @@ const { shots, plate = 'Экраны', lead } = Astro.props;
   </button>
   <figure class="w-full max-w-[92rem]">
     <img id="shot-img" src="" alt="" class="max-h-[80svh] w-full rounded-xl object-contain" />
+    <video
+      id="shot-video"
+      class="hidden max-h-[80svh] w-full rounded-xl object-contain"
+      controls
+      playsinline
+    ></video>
     <figcaption id="shot-cap" class="mt-4 text-center font-mono text-[0.72rem] tracking-widest text-steel-300 uppercase"></figcaption>
   </figure>
 </div>
@@ -88,14 +116,26 @@ const { shots, plate = 'Экраны', lead } = Astro.props;
 <script>
   const view = document.getElementById('shot-view');
   const img = document.getElementById('shot-img') as HTMLImageElement | null;
+  const video = document.getElementById('shot-video') as HTMLVideoElement | null;
   const cap = document.getElementById('shot-cap');
   let opener: HTMLElement | null = null;
 
-  const open = (src: string, title: string, from: HTMLElement) => {
+  const open = (src: string, title: string, type: string, from: HTMLElement) => {
     if (!view || !img || !cap) return;
     opener = from;
-    img.src = src;
-    img.alt = title;
+    if (type === 'video' && video) {
+      img.classList.add('hidden');
+      img.src = '';
+      video.classList.remove('hidden');
+      video.src = src;
+      video.play().catch(() => {});
+    } else {
+      video?.classList.add('hidden');
+      if (video) video.src = '';
+      img.classList.remove('hidden');
+      img.src = src;
+      img.alt = title;
+    }
     cap.textContent = title;
     view.classList.remove('hidden');
     view.classList.add('grid');
@@ -105,6 +145,10 @@ const { shots, plate = 'Экраны', lead } = Astro.props;
 
   const close = () => {
     if (!view) return;
+    if (video) {
+      video.pause();
+      video.src = '';
+    }
     view.classList.add('hidden');
     view.classList.remove('grid');
     document.body.style.overflow = '';
@@ -112,7 +156,9 @@ const { shots, plate = 'Экраны', lead } = Astro.props;
   };
 
   document.querySelectorAll<HTMLElement>('.shot').forEach((el) => {
-    el.addEventListener('click', () => open(el.dataset.full ?? '', el.dataset.title ?? '', el));
+    el.addEventListener('click', () =>
+      open(el.dataset.full ?? '', el.dataset.title ?? '', el.dataset.type ?? 'image', el),
+    );
   });
 
   document.getElementById('shot-close')?.addEventListener('click', close);

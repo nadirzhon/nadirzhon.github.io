@@ -17,6 +17,25 @@ outcomes:
     label: 'работа без ручного вмешательства'
 stack: ['Python', 'Rust', 'PostgreSQL', 'Redis', 'Docker', 'Prometheus']
 cover: '/work/hean/live-dashboard.jpg'
+shots:
+  - src: '/work/hean/live-dashboard.jpg'
+    title: 'Живая панель'
+    note: 'Состояние счёта, кривая капитала, риск-статус и открытые позиции в реальном времени'
+  - src: '/work/hean/tactical-center.jpg'
+    title: 'Тактический центр'
+    note: 'Что система решает прямо сейчас и почему — сигналы, фильтры, причины отказов'
+  - src: '/work/hean/risk-center.jpg'
+    title: 'Риск-контур'
+    note: 'Лимиты, просадка, аварийная остановка. Защита депозита отдельным слоем'
+  - src: '/work/hean/physics-lab.jpg'
+    title: 'Физическая лаборатория'
+    note: 'Рыночная термодинамика: температура, энтропия, определение фазы рынка'
+  - src: '/work/hean/neuro-map.jpg'
+    title: 'Нейрокарта'
+    note: 'Связи между инструментами и переток влияния между ними'
+  - src: '/work/hean/sota-modules.jpg'
+    title: 'Модули интеллекта'
+    note: 'Пятнадцать стратегий и слой принятия решений: что включено и как себя ведёт'
 order: 1
 ---
 

@@ -2,6 +2,7 @@
 import { url } from '../../../data/site';
 import { getCollection, render } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
+import Shots from '../../../components/Shots.astro';
 import { tr } from '../../../data/i18n';
 
 export async function getStaticPaths() {
@@ -63,5 +64,15 @@ const d = item.data;
         <a href={url("/en/#contact")} class="btn btn-primary">{tr('navContact', 'en')} <span aria-hidden="true">→</span></a>
       </div>
     </div>
+
+    {
+      d.shots.length > 0 && (
+        <Shots
+          shots={d.shots}
+          plate="Screens"
+          lead="Shots of the working system, not mockups. Tap any to open full-screen."
+        />
+      )
+    }
   </article>
 </Base>
