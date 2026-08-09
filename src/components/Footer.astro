@@ -10,6 +10,10 @@ const { locale } = Astro.props;
 const year = new Date().getFullYear();
 const base = locale === 'ru' ? '/uslugi' : '/en/services';
 const contactHref = locale === 'ru' ? '/#kontakt' : '/en/#contact';
+
+// Почта лежит в разметке кодированной base64: сборщики адресов видят только
+// набор символов, а рабочий mailto собирается в браузере (см. скрипт ниже).
+const mailB64 = Buffer.from(site.email, 'utf-8').toString('base64');
 ---
 
 <footer class="on-dark bg-ink text-steel-200">
@@ -23,6 +27,26 @@ const contactHref = locale === 'ru' ? '/#kontakt' : '/en/#contact';
         <span class="font-display text-[0.95rem] font-bold text-steel-50">{site.brand}</span>
       </div>
       <p class="mt-5 max-w-xs text-[0.9rem] leading-relaxed text-steel-300">{tr('footerLine', locale)}</p>
+
+      {/* Прямые каналы связи — помимо формы. Почта деобфусцируется в браузере. */}
+      <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.9rem]">
+        <a
+          data-mailb64={mailB64}
+          href="#"
+          class="footer-mail inline-flex items-center gap-2 text-steel-100 transition-colors hover:text-brass"
+        >
+          <span aria-hidden="true">✉</span>{locale === 'ru' ? 'Написать на почту' : 'Email me'}
+        </a>
+        <a
+          href={site.telegramUrl}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center gap-2 text-steel-100 transition-colors hover:text-brass"
+        >
+          <span aria-hidden="true">✈</span>Telegram
+        </a>
+      </div>
+
       <div class="mt-6">
         <a href={url(contactHref)} class="btn btn-ghost !px-4 !py-2">
           {tr('navContact', locale)} <span aria-hidden="true">→</span>
@@ -99,3 +123,17 @@ const contactHref = locale === 'ru' ? '/#kontakt' : '/en/#contact';
     </div>
   </div>
 </footer>
+
+<script>
+  // Собираем рабочий mailto в браузере, чтобы почты не было в статичном HTML.
+  // Обрабатываем все ссылки с data-mailb64 на странице (футер и блок контактов).
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('a[data-mailb64]')) {
+    try {
+      const email = atob(a.dataset.mailb64 || '');
+      if (!email) continue;
+      a.href = 'mailto:' + email;
+      // Где нужен адрес текстом (data-mail-show), показываем сам email.
+      if (a.dataset.mailShow === '1') a.textContent = email;
+    } catch {}
+  }
+</script>
