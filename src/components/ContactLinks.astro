@@ -50,65 +50,43 @@ const channels = [
 const mails = [site.email, site.email2].filter(Boolean) as string[];
 ---
 
+{/* Только иконки — сами контакты (номера, ники, адреса) не показываем.
+    Канал понятен по иконке; подпись доступна ассистивным технологиям и как
+    подсказка при наведении (title/aria-label). Почта — через обфускацию. */}
 {
-  variant === 'footer' ? (
-    <div class="flex flex-wrap items-center gap-x-5 gap-y-2.5 text-[0.9rem]">
-      {channels.map((c) => (
-        <a
-          href={c.href}
-          {...(c.ext ? { target: '_blank', rel: 'noopener' } : {})}
-          class="inline-flex items-center gap-2 text-steel-100 transition-colors hover:text-brass"
-          aria-label={c.label}
-        >
-          <svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0" fill="currentColor" aria-hidden="true"><path d={ICONS[c.icon]} /></svg>
-          {c.label}
-        </a>
-      ))}
-      {mails.map((m) => (
-        <a
-          data-mailb64={b64(m)}
-          href="#"
-          class="footer-mail inline-flex items-center gap-2 text-steel-100 transition-colors hover:text-brass"
-          aria-label="Email"
-        >
-          <svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0" fill="currentColor" aria-hidden="true"><path d={ICONS.mail} /></svg>
-          {ru ? 'Почта' : 'Email'}
-        </a>
-      ))}
-    </div>
-  ) : (
-    <ul class="grid gap-2.5 sm:grid-cols-2">
-      {channels.map((c) => (
-        <li>
-          <a
-            href={c.href}
-            {...(c.ext ? { target: '_blank', rel: 'noopener' } : {})}
-            class="group flex items-center gap-3 rounded-xl border border-steel-300/20 bg-ink-800/50 px-4 py-3 transition-colors hover:border-cyan/50"
-          >
-            <svg viewBox="0 0 24 24" class="h-5 w-5 shrink-0 text-cyan" fill="currentColor" aria-hidden="true"><path d={ICONS[c.icon]} /></svg>
-            <span class="min-w-0">
-              <span class="block font-mono text-[0.64rem] tracking-widest text-slate-1 uppercase">{c.label}</span>
-              <span class="block truncate text-[0.9rem] text-steel-50">{c.value}</span>
-            </span>
-          </a>
-        </li>
-      ))}
-      {mails.map((m) => (
-        <li>
-          <a
-            data-mailb64={b64(m)}
-            data-mail-show="1"
-            href="#"
-            class="footer-mail group flex items-center gap-3 rounded-xl border border-steel-300/20 bg-ink-800/50 px-4 py-3 transition-colors hover:border-cyan/50"
-          >
-            <svg viewBox="0 0 24 24" class="h-5 w-5 shrink-0 text-cyan" fill="currentColor" aria-hidden="true"><path d={ICONS.mail} /></svg>
-            <span class="min-w-0">
-              <span class="block font-mono text-[0.64rem] tracking-widest text-slate-1 uppercase">{ru ? 'Почта' : 'Email'}</span>
-              <span class="block truncate text-[0.9rem] text-steel-50">{ru ? 'нажмите, чтобы написать' : 'click to email'}</span>
-            </span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  )
+  (() => {
+    const sizeBtn = variant === 'footer' ? 'h-9 w-9' : 'h-11 w-11';
+    const sizeIco = variant === 'footer' ? 'h-4 w-4' : 'h-5 w-5';
+    const mailLabel = ru ? 'Написать на почту' : 'Email';
+    return (
+      <ul class="flex flex-wrap items-center gap-2.5">
+        {channels.map((c) => (
+          <li>
+            <a
+              href={c.href}
+              {...(c.ext ? { target: '_blank', rel: 'noopener' } : {})}
+              title={c.label}
+              aria-label={c.label}
+              class={`grid ${sizeBtn} place-items-center rounded-full border border-steel-300/25 bg-ink-800/50 text-steel-100 transition-all hover:-translate-y-0.5 hover:border-cyan/60 hover:text-cyan`}
+            >
+              <svg viewBox="0 0 24 24" class={sizeIco} fill="currentColor" aria-hidden="true"><path d={ICONS[c.icon]} /></svg>
+            </a>
+          </li>
+        ))}
+        {mails.map((m) => (
+          <li>
+            <a
+              data-mailb64={b64(m)}
+              href="#"
+              title={mailLabel}
+              aria-label={mailLabel}
+              class={`footer-mail grid ${sizeBtn} place-items-center rounded-full border border-steel-300/25 bg-ink-800/50 text-steel-100 transition-all hover:-translate-y-0.5 hover:border-cyan/60 hover:text-cyan`}
+            >
+              <svg viewBox="0 0 24 24" class={sizeIco} fill="currentColor" aria-hidden="true"><path d={ICONS.mail} /></svg>
+            </a>
+          </li>
+        ))}
+      </ul>
+    );
+  })()
 }
