@@ -2,6 +2,7 @@
 import { site, url, type Locale } from '../data/site';
 import { tr } from '../data/i18n';
 import { orderedServices } from '../data/services';
+import ContactLinks from './ContactLinks.astro';
 
 interface Props {
   locale: Locale;
@@ -104,32 +105,17 @@ const budgets =
       </dl>
 
       {/* Прямые каналы — на случай, если человеку удобнее написать, а не
-          заполнять форму. Почта деобфусцируется скриптом футера. */}
+          заполнять форму. Почты деобфусцируются скриптом футера. */}
       <div class="mt-8 border-t border-steel-300/20 pt-6">
         <p class="plate !text-steel-300">{locale === 'ru' ? 'Или напишите напрямую' : 'Or reach me directly'}</p>
-        <div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 text-[0.95rem]">
-          <a
-            data-mailb64={mailFallback}
-            data-mail-show="1"
-            href="#"
-            class="footer-mail inline-flex items-center gap-2 text-steel-50 transition-colors hover:text-cyan"
-          >
-            <span aria-hidden="true">✉</span>{locale === 'ru' ? 'почта' : 'email'}
-          </a>
-          <a
-            href={site.telegramUrl}
-            target="_blank"
-            rel="noopener"
-            class="inline-flex items-center gap-2 text-steel-50 transition-colors hover:text-cyan"
-          >
-            <span aria-hidden="true">✈</span>Telegram
-          </a>
+        <div class="mt-4">
+          <ContactLinks locale={locale} variant="aside" />
         </div>
-        <p class="mt-3 text-[0.8rem] leading-relaxed text-slate-1">
+        <p class="mt-4 text-[0.8rem] leading-relaxed text-slate-1">
           {
             locale === 'ru'
-              ? 'Форма надёжнее — заявка не потеряется и сразу видно направление. Но если удобнее — пишите прямо.'
-              : 'The form is safer — nothing gets lost and the direction is clear. But if it’s easier, write directly.'
+              ? 'Форма надёжнее — заявка не потеряется и сразу видно направление. Но если удобнее — пишите в любой канал.'
+              : 'The form is safer — nothing gets lost and the direction is clear. But if it’s easier, use any channel.'
           }
         </p>
       </div>
