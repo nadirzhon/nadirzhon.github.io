@@ -44,6 +44,9 @@ const { src, alt } = Astro.props;
     width: 100%;
     height: auto;
     object-fit: cover;
+    /* Портрет снят в тёмном коридоре — слегка вытягиваем тени и контраст,
+       чтобы статичный вариант (моб./reduced-motion/без WebGL) читался. */
+    filter: brightness(1.08) contrast(1.05) saturate(1.03);
     transition: opacity 0.6s var(--ease-station);
   }
   /* Канвас перекрывает картинку только когда сцена действительно ожила */
@@ -105,7 +108,13 @@ const { src, alt } = Astro.props;
     const tex = new THREE.Texture(img);
     tex.needsUpdate = true;
     tex.colorSpace = THREE.SRGBColorSpace;
-    tex.minFilter = THREE.LinearFilter;
+    // Резкость: трилинейная фильтрация + анизотропия, иначе портрет мылится
+    // на наклонённых складках сильнее, чем нативный <img>. Three обрежет
+    // значение до максимума, который поддерживает GPU.
+    tex.generateMipmaps = true;
+    tex.minFilter = THREE.LinearMipmapLinearFilter;
+    tex.magFilter = THREE.LinearFilter;
+    tex.anisotropy = 8;
 
     // Сетка должна быть плотной: на редкой ткань ломается гранями,
     // а не гнётся. 64×80 — предел, после которого разницы уже не видно.
@@ -159,8 +168,12 @@ const { src, alt } = Astro.props;
         varying float vShade;
         void main() {
           vec4 c = texture2D(uTex, vUv);
-          // Складки светлее, впадины темнее — рельеф вместо плоской картинки
-          c.rgb *= 1.0 + vShade * 1.9;
+          // Рельеф складок — деликатный, чтобы читалось как ткань, а не как
+          // мигающая яркость. Раньше множитель 1.9 пересвечивал и «портил» фото.
+          c.rgb *= 1.0 + vShade * 0.55;
+          // Лёгкое вытягивание теней: портрет снят в тёмном коридоре, без этого
+          // лицо тонет. Гамма < 1 поднимает середину, не выбивая света.
+          c.rgb = pow(clamp(c.rgb, 0.0, 1.0), vec3(0.9));
           gl_FragColor = c;
         }
       `,

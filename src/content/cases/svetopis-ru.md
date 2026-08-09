@@ -18,6 +18,13 @@ outcomes:
 stack: ['HTML', 'CSS', 'JavaScript', 'WebGL', 'Canvas']
 cover: '/work/svetopis/hero.jpg'
 live: 'https://autonoma.uk/svetopis/'
+shots:
+  - src: '/work/svetopis/hero.jpg'
+    title: 'Витрина фотографа'
+    note: 'Первый экран на чистом WebGL-шейдере — без единой внешней библиотеки'
+  - src: '/work/svetopis/scroll.jpg'
+    title: 'Инерционная прокрутка'
+    note: 'Плавная лента работ с бронированием даты — вся логика написана вручную на JavaScript'
 order: 2
 ---
 

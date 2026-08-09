@@ -19,6 +19,24 @@ const cases = defineCollection({
     cover: z.string().optional(),
     /** URL живого сайта: если задан, в карточке кейса крутится настоящий сайт, а не статичная обложка. */
     live: z.string().optional(),
+    /**
+     * Галерея материалов кейса: экраны системы и видео работы. Показывается
+     * блоком «Экраны» на странице кейса, каждый элемент открывается на весь
+     * экран. Раньше жила захардкоженной в [slug].astro — теперь грузится сюда.
+     */
+    shots: z
+      .array(
+        z.object({
+          src: z.string(),
+          title: z.string(),
+          note: z.string(),
+          /** 'image' (по умолчанию) или 'video' (mp4/webm). */
+          type: z.enum(['image', 'video']).default('image'),
+          /** Постер для видео — кадр-заглушка до запуска. */
+          poster: z.string().optional(),
+        }),
+      )
+      .default([]),
     order: z.number().default(99),
     draft: z.boolean().default(false),
   }),

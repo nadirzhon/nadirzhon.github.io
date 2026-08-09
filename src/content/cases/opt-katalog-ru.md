@@ -18,6 +18,13 @@ outcomes:
 stack: ['HTML', 'CSS', 'JavaScript', 'Python', 'Cloudflare Workers']
 cover: '/work/opt-katalog/hero.jpg'
 live: 'https://autonoma.uk/stroyflex/'
+shots:
+  - src: '/work/opt-katalog/hero.jpg'
+    title: 'Главная склада'
+    note: 'Оптовая витрина стройхимии: заявка собирается списком, цену считают на весь набор сразу'
+  - src: '/work/opt-katalog/catalog.jpg'
+    title: 'Каталог на 617 позиций'
+    note: 'Прайс из Excel превращается в рабочий каталог одной командой, фильтрация мгновенная'
 order: 4
 ---
 

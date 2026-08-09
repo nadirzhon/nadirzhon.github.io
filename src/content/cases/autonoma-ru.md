@@ -17,6 +17,13 @@ outcomes:
     label: 'до первой отрисовки'
 stack: ['Astro', 'TypeScript', 'Tailwind', 'three.js', 'GSAP', 'Cloudflare Workers']
 cover: '/work/autonoma/hero.jpg'
+shots:
+  - src: '/work/autonoma/hero.jpg'
+    title: 'Живая главная'
+    note: 'Градиентный заголовок и constellation на three.js — первый экран, который сам ведёт к заявке'
+  - src: '/work/autonoma/services.jpg'
+    title: 'Услуги'
+    note: 'Пять направлений: что делаю, за какой результат отвечаю и с чего начинается работа'
 order: 3
 ---
 
