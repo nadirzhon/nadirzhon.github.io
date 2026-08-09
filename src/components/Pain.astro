@@ -162,11 +162,52 @@ const week = days.map((d, di) =>
         : 'More than half. You already pay for automation — in salaries, overtime and lost leads. The difference is that money never comes back.';
     };
 
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Счётчик набегает к новому значению целыми числами — «живой» отклик на клик.
+    let raf = 0;
+    let shown = 0;
+    const animateCount = (target: number) => {
+      if (reduce) {
+        count.textContent = String(target);
+        shown = target;
+        return;
+      }
+      const from = shown;
+      const start = performance.now();
+      const dur = 320;
+      if (raf) cancelAnimationFrame(raf);
+      const tick = (now: number) => {
+        const t = Math.min(1, (now - start) / dur);
+        const e = 1 - Math.pow(1 - t, 3);
+        const v = Math.round(from + (target - from) * e);
+        count.textContent = String(v);
+        shown = v;
+        if (t < 1) raf = requestAnimationFrame(tick);
+        else {
+          count.textContent = String(target);
+          shown = target;
+        }
+      };
+      raf = requestAnimationFrame(tick);
+    };
+
+    // Диагностика меняет тон по мере накопления симптомов: спокойный → тревожный.
+    const tone = (ratio: number) => {
+      if (ratio >= 0.66) return { bar: 'linear-gradient(90deg,#e0885f,#d1495b)', text: '#e8a08a' };
+      if (ratio >= 0.33) return { bar: 'linear-gradient(90deg,var(--color-cyan),var(--color-brass))', text: 'var(--color-brass)' };
+      return { bar: 'linear-gradient(90deg,var(--color-cyan),var(--color-violet))', text: '' };
+    };
+
     const update = () => {
       const n = boxes.filter((b) => b.checked).length;
-      count.textContent = String(n);
-      bar.style.width = `${(n / boxes.length) * 100}%`;
+      const ratio = n / boxes.length;
+      animateCount(n);
+      bar.style.width = `${ratio * 100}%`;
+      const t = tone(ratio);
+      bar.style.background = t.bar;
       verdict.textContent = say(n);
+      verdict.style.color = t.text || '';
     };
 
     boxes.forEach((b) => b.addEventListener('change', update));
