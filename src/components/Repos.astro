@@ -13,6 +13,30 @@ interface Props {
 }
 const { locale } = Astro.props;
 const ru = locale === 'ru';
+
+// Репозитории сгруппированы по смыслу: сперва то, что можно открыть и потрогать
+// (живые демо), затем AI-направление, затем инструменты безопасности. Внутри
+// группы порядок сохраняется из site.ts.
+type Repo = (typeof site.repos)[number];
+const groups: { key: string; title: { ru: string; en: string }; hint: { ru: string; en: string } }[] = [
+  {
+    key: 'web',
+    title: { ru: 'Живые демо', en: 'Live demos' },
+    hint: { ru: 'Открываются прямо в браузере — без установки', en: 'Open right in the browser — nothing to install' },
+  },
+  {
+    key: 'ai',
+    title: { ru: 'AI и безопасность', en: 'AI security' },
+    hint: { ru: 'Агенты и инструменты на Claude и MCP', en: 'Agents and tooling built on Claude and MCP' },
+  },
+  {
+    key: 'sec',
+    title: { ru: 'Инструменты безопасности', en: 'Security tooling' },
+    hint: { ru: 'Сканеры и утилиты на чистом Python', en: 'Scanners and utilities in pure Python' },
+  },
+];
+const byGroup = (k: string): Repo[] => site.repos.filter((r) => ((r as Repo).group ?? 'sec') === k);
+const total = site.repos.length;
 ---
 
 <section class="border-t border-slate-1/25 py-16 md:py-24">
@@ -26,45 +50,75 @@ const ru = locale === 'ru';
         <p class="mt-4 max-w-2xl text-[1rem] leading-relaxed text-steel-300">
           {
             ru
-              ? 'Портфолио легко нарисовать. Репозиторий — нет: там видно, как код написан, сколько там тестов и как долго проект живёт. Смотрите сами.'
-              : 'A portfolio is easy to draw. A repository is not: you can see how the code is written, how many tests it has and how long the project has lived. See for yourself.'
+              ? `Портфолио легко нарисовать. Репозиторий — нет: там видно, как код написан, сколько там тестов и как долго проект живёт. ${total} открытых проектов — смотрите сами.`
+              : `A portfolio is easy to draw. A repository is not: you can see how the code is written, how many tests it has and how long it has lived. ${total} open projects — see for yourself.`
           }
         </p>
       </div>
     </div>
 
-    <ul data-stagger class="mt-10 grid gap-3 md:mt-14 md:grid-cols-3">
-      {
-        site.repos.map((r) => (
-          <li>
-            <a
-              href={r.url}
-              target="_blank"
-              rel="noopener"
-              class="panel group flex h-full flex-col rounded-2xl p-6 md:p-7"
-            >
-              <span class="flex items-center gap-2.5">
-                <svg viewBox="0 0 16 16" class="h-4 w-4 shrink-0 text-steel-300 transition-colors group-hover:text-cyan" aria-hidden="true" fill="currentColor">
-                  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-                </svg>
-                <span class="font-mono text-[0.86rem] font-medium">{r.name}</span>
-              </span>
-              <span class="mt-3 flex-1 text-[0.9rem] leading-snug text-steel-300">{r.note[locale]}</span>
-              <span class="mt-5 inline-flex items-center gap-2 font-mono text-[0.7rem] tracking-widest text-steel-300/70 uppercase transition-colors group-hover:text-cyan">
-                {ru ? 'открыть на GitHub' : 'open on GitHub'}
-                <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">↗</span>
-              </span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+    {
+      groups.map((g) => {
+        const items = byGroup(g.key);
+        if (items.length === 0) return null;
+        return (
+          <div class="mt-14 md:mt-16">
+            <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-slate-1/20 pb-4">
+              <h3 class="font-display text-[1.15rem] font-bold md:text-[1.3rem]">{g.title[locale]}</h3>
+              <span class="font-mono text-[0.72rem] tracking-widest text-slate-1 uppercase">{items.length}</span>
+              <span class="text-[0.9rem] text-steel-300">{g.hint[locale]}</span>
+            </div>
+
+            <ul data-stagger class="mt-6 grid gap-3 md:grid-cols-3">
+              {items.map((r) => (
+                <li class="panel group flex h-full flex-col rounded-2xl p-6 md:p-7">
+                  <span class="flex items-center gap-2.5">
+                    <svg viewBox="0 0 16 16" class="h-4 w-4 shrink-0 text-steel-300 transition-colors group-hover:text-cyan" aria-hidden="true" fill="currentColor">
+                      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    <span class="font-mono text-[0.86rem] font-medium">{r.name}</span>
+                    {(r as Repo).lang && (
+                      <span class="ml-auto rounded-full border border-slate-1/30 px-2 py-0.5 font-mono text-[0.6rem] tracking-wide text-slate-1">
+                        {(r as Repo).lang}
+                      </span>
+                    )}
+                  </span>
+                  <span class="mt-3 flex-1 text-[0.9rem] leading-snug text-steel-300">{r.note[locale]}</span>
+                  <span class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[0.7rem] tracking-widest uppercase">
+                    {(r as Repo).demo && (
+                      <a
+                        href={(r as Repo).demo}
+                        target="_blank"
+                        rel="noopener"
+                        class="inline-flex items-center gap-1.5 text-cyan transition-colors hover:text-steel-50"
+                      >
+                        {ru ? 'живое демо' : 'live demo'}
+                        <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-0.5">↗</span>
+                      </a>
+                    )}
+                    <a
+                      href={r.url}
+                      target="_blank"
+                      rel="noopener"
+                      class="inline-flex items-center gap-1.5 text-steel-300/70 transition-colors hover:text-cyan"
+                    >
+                      GitHub
+                      <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-0.5">↗</span>
+                    </a>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })
+    }
 
     <a
       href={site.github}
       target="_blank"
       rel="noopener"
-      class="btn btn-ghost mag mt-8"
+      class="btn btn-ghost mag mt-10"
     >
       {ru ? 'Весь профиль на GitHub' : 'Full GitHub profile'}
       <span aria-hidden="true">↗</span>
