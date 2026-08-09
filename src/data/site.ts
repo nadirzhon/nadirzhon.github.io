@@ -55,20 +55,122 @@ export const site = {
    * Приватные сюда не добавляем: ссылка, которая ведёт на 404, хуже её отсутствия.
    */
   repos: [
+    // ── Живые демо (можно открыть прямо в браузере) ──────────────────────
     {
-      name: 'HEAN-META',
-      url: 'https://github.com/nadirzhon/HEAN-META',
-      note: { ru: 'Торговая система: 13 пакетов, Rust-ускорители, iOS и веб-панель', en: 'Trading system: 13 packages, Rust accelerators, iOS and web dashboard' },
+      name: 'shadowmap', lang: 'JavaScript', group: 'web', url: 'https://github.com/nadirzhon/shadowmap', demo: 'https://autonoma.uk/shadowmap/',
+      note: { ru: 'Живая карта кибератак в реальном времени: SSH/RDP/веб-угрозы, анимированные дуги по миру', en: 'Real-time global cyberattack map: live SSH/RDP/web threats with animated arcs' },
     },
     {
-      name: 'svetopis',
-      url: 'https://github.com/nadirzhon/svetopis',
-      note: { ru: 'Сайт фотографа: WebGL-шейдер, инерционная прокрутка, бронирование', en: 'Photographer site: WebGL shader, inertial scroll, booking flow' },
+      name: 'crackvis', lang: 'JavaScript', group: 'web', url: 'https://github.com/nadirzhon/crackvis', demo: 'https://autonoma.uk/crackvis/',
+      note: { ru: 'Интерактивный визуализатор взлома пароля: видно, как ваш пароль атакуют в реальном времени', en: 'Interactive password-cracking visualizer — watch a password get attacked live' },
     },
     {
-      name: 'nadirzhon.github.io',
-      url: 'https://github.com/nadirzhon/nadirzhon.github.io',
-      note: { ru: 'Этот сайт: Astro 5, Tailwind 4, three.js, GSAP', en: 'This site: Astro 5, Tailwind 4, three.js, GSAP' },
+      name: 'sora-sushi', lang: 'JavaScript', group: 'web', url: 'https://github.com/nadirzhon/sora-sushi', demo: 'https://autonoma.uk/sora-sushi/',
+      note: { ru: 'Лендинг суши-кафе: 3D-герой, меню и доставка на three.js + GSAP', en: 'Sushi café landing: 3D hero, menu and delivery on three.js + GSAP' },
+    },
+    {
+      name: 'svetopis', lang: 'JavaScript', group: 'web', url: 'https://github.com/nadirzhon/svetopis', demo: 'https://autonoma.uk/svetopis/',
+      note: { ru: 'Сайт фотографа: WebGL-шейдер, инерционная прокрутка, онлайн-бронирование — без единой библиотеки', en: 'Photographer site: WebGL shader, inertial scroll, booking — zero libraries' },
+    },
+    {
+      name: 'stroyflex', lang: 'JavaScript', group: 'web', url: 'https://github.com/nadirzhon/stroyflex', demo: 'https://autonoma.uk/stroyflex/',
+      note: { ru: 'Оптовый каталог стройхимии: 617 позиций, мгновенная фильтрация прайса из Excel', en: 'Wholesale construction-chemistry catalog: 617 items, instant filtering from an Excel price list' },
+    },
+    {
+      name: 'tools', lang: 'JavaScript', group: 'web', url: 'https://github.com/nadirzhon/tools', demo: 'https://autonoma.uk/tools/',
+      note: { ru: 'Живой хаб security-инструментов: витрина проектов с встроенными демо', en: 'Live security-tooling hub — a showcase with embedded demos' },
+    },
+
+    // ── AI + безопасность (на Claude / MCP) ──────────────────────────────
+    {
+      name: 'vigil', lang: 'Python', group: 'ai', url: 'https://github.com/nadirzhon/vigil',
+      note: { ru: 'AI-ревью безопасности для каждого pull request на Claude: инъекции, секреты, ошибки авторизации', en: 'AI security review for every pull request, powered by Claude — injection, secrets, authz bugs' },
+    },
+    {
+      name: 'specter', lang: 'Python', group: 'ai', url: 'https://github.com/nadirzhon/specter',
+      note: { ru: 'Автономный AI-агент разведки: Claude планирует и ведёт recon, затем пишет отчёт по важности находок', en: 'Autonomous AI recon agent — Claude plans and runs recon, then writes a severity-graded report' },
+    },
+    {
+      name: 'offsec-mcp', lang: 'Python', group: 'ai', url: 'https://github.com/nadirzhon/offsec-mcp',
+      note: { ru: 'MCP-сервер с наступательными инструментами для AI-агентов — только с явной авторизацией', en: 'MCP server giving AI agents authorized-only offensive-security tools' },
+    },
+    {
+      name: 'mcpscan', lang: 'Python', group: 'ai', url: 'https://github.com/nadirzhon/mcpscan',
+      note: { ru: 'Сканер безопасности MCP-серверов: отравление инструментов, лишние привилегии, скрытые инструкции', en: 'Security scanner for MCP servers — tool poisoning, over-privileged tools, hidden instructions' },
+    },
+    {
+      name: 'state-of-mcp-security', lang: 'Python', group: 'ai', url: 'https://github.com/nadirzhon/state-of-mcp-security',
+      note: { ru: 'Воспроизводимый аудит MCP-серверов: у 75% нашлись проблемы харденинга уровня medium и выше', en: 'Reproducible MCP-server audit — 75% had a medium+ hardening issue' },
+    },
+    {
+      name: 'phantasm', lang: 'Python', group: 'ai', url: 'https://github.com/nadirzhon/phantasm',
+      note: { ru: 'AI-анализатор фишинга и социальной инженерии: распознаёт тактики манипуляции в реальном времени', en: 'AI phishing & social-engineering analyzer — detects manipulation tactics in real time' },
+    },
+
+    // ── Безопасность (инструменты на чистом Python) ──────────────────────
+    {
+      name: 'sentinel', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/sentinel',
+      note: { ru: 'Единая security-сюита: recon, DAST, поиск утечек в git и статический анализ в одной команде, ноль зависимостей', en: 'Unified security suite — recon, DAST, git-leak hunting and static analysis in one command, zero deps' },
+    },
+    {
+      name: 'argus', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/argus',
+      note: { ru: 'Статический сканер безопасности с AST taint-анализом: доказывает поток данных, ноль зависимостей, HTML/SARIF', en: 'Static security scanner with AST taint analysis — proves dataflow, zero deps, HTML/SARIF' },
+    },
+    {
+      name: 'web-vuln-scanner', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/web-vuln-scanner',
+      note: { ru: 'Сканер веб-уязвимостей: SQLi, XSS, SSRF, open redirect, заголовки безопасности — по OWASP Top 10', en: 'Web vulnerability scanner: SQLi, XSS, SSRF, open redirect, security headers — OWASP Top 10' },
+    },
+    {
+      name: 'reconwave', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/reconwave',
+      note: { ru: 'Асинхронная разведка периметра: непрерывный мониторинг поддоменов, граф активов, диффы изменений', en: 'Async attack-surface recon: continuous subdomain monitoring, asset graph, diffing' },
+    },
+    {
+      name: 'ssh-honeypot', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/ssh-honeypot',
+      note: { ru: 'SSH-ловушка: логирует введённые креды, геолокация атакующих, алерты в Telegram, фейковый shell', en: 'SSH honeypot: logs credentials, geolocates attackers, Telegram alerts, fake shell' },
+    },
+    {
+      name: 'jwt-security-analyzer', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/jwt-security-analyzer',
+      note: { ru: 'Анализатор JWT: alg:none, слабые секреты, валидация claims, подделка подписи', en: 'JWT analyzer: alg:none, weak secrets, claim validation, signature forging' },
+    },
+    {
+      name: 'password-auditor', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/password-auditor',
+      note: { ru: 'Взлом хешей (MD5/SHA1/bcrypt), аудит парольной политики и движок мутаций', en: 'Hash cracker (MD5/SHA1/bcrypt), password-policy audit and a mutation engine' },
+    },
+    {
+      name: 'cve-forge', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/cve-forge',
+      note: { ru: 'Автоматизация CVE→эксплойт: мониторинг свежих CVE, матчинг с вашими активами, генерация Nuclei-шаблонов', en: 'CVE-to-exploit automation: monitors fresh CVEs, matches your assets, auto-generates Nuclei templates' },
+    },
+    {
+      name: 'phishing-url-detector', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/phishing-url-detector',
+      note: { ru: 'ML-классификатор фишинговых URL: инженерия признаков + Random Forest', en: 'ML-based phishing-URL classifier: feature engineering + Random Forest' },
+    },
+    {
+      name: 'osint-aggregator', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/osint-aggregator',
+      note: { ru: 'OSINT-автоматизация: Shodan, VirusTotal, WHOIS, DNS, перебор поддоменов → HTML-отчёт', en: 'OSINT automation: Shodan, VirusTotal, WHOIS, DNS, subdomain enum → HTML report' },
+    },
+    {
+      name: 'jsintel', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/jsintel',
+      note: { ru: 'Разведка по JS-бандлам: извлекает секреты, эндпоинты, параметры и карту API', en: 'JavaScript intelligence — extracts secrets, endpoints, params and API maps from JS bundles' },
+    },
+    {
+      name: 'log-analyzer-siem', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/log-analyzer-siem',
+      note: { ru: 'Мини-SIEM: разбор логов SSH/nginx/Apache, детект брутфорса, оповещения об аномалиях', en: 'Mini-SIEM: SSH/nginx/Apache log analysis, brute-force detection, anomaly alerts' },
+    },
+    {
+      name: 'dossier', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/dossier',
+      note: { ru: 'OSINT-отчёт одной командой: домен/IP/почта → красивый HTML-отчёт', en: 'One-command OSINT report: domain/IP/email → a clean HTML report' },
+    },
+    {
+      name: 'network-anomaly-detector', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/network-anomaly-detector',
+      note: { ru: 'Анализ сетевого трафика в реальном времени: сканы портов, ARP-спуфинг, DNS-туннели (Scapy)', en: 'Real-time traffic analysis: port scans, ARP spoofing, DNS tunneling (Scapy)' },
+    },
+    {
+      name: 'custom-port-scanner', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/custom-port-scanner',
+      note: { ru: 'Многопоточный TCP/UDP-сканер портов с фингерпринтом сервисов и выводом в JSON', en: 'Multithreaded TCP/UDP port scanner with service fingerprinting and JSON output' },
+    },
+    {
+      name: 'ctf-writeups', lang: 'Python', group: 'sec', url: 'https://github.com/nadirzhon/ctf-writeups',
+      note: { ru: 'Разборы CTF (HTB/TryHackMe) и PoC-инструменты — задокументированная методология пентеста', en: 'CTF writeups (HTB/TryHackMe) and PoC tools — documented penetration-testing methodology' },
     },
   ],
 
